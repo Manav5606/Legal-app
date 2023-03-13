@@ -40,8 +40,9 @@ class _HomePageState extends ConsumerState<HomePage>
           ),
           child: Row(
             children: [
-              const SizedBox(width: 400),
+              const Expanded(flex: 1, child: SizedBox()),
               Expanded(
+                flex: 3,
                 child: TabBar(
                     controller: _tabController,
                     indicatorColor: AppColors.blueColor,
@@ -51,7 +52,7 @@ class _HomePageState extends ConsumerState<HomePage>
                                 .copyWith(color: AppColors.blueColor)))
                         .toList()),
               ),
-              const SizedBox(width: 400),
+              const Expanded(flex: 1, child: SizedBox()),
             ],
           ),
         ),

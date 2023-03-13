@@ -4,6 +4,15 @@ abstract class AppColors {
   static Color get blueColor => const Color(0xFF1A548D);
   static Color get lightBlueColor => const Color(0xFFF3F9FF);
   static Color get darkBlueColor => const Color(0xFF0068AC);
+  static Color get redColor => const Color(0xFF650000);
+  static Color get lightRedColor => const Color.fromARGB(255, 240, 215, 215);
+  static Color get darkRedColor => const Color(0xFFAE0000);
+  static Color get orangeColor => const Color(0xFFFF5C00);
+  static Color get lightOrangeColor => const Color.fromARGB(255, 247, 206, 180);
+  static Color get darkOrangeColor => const Color(0xFFD75A00);
+  static Color get greenColor => const Color(0xFF42FF00);
+  static Color get lightGreenColor => const Color.fromARGB(255, 231, 250, 224);
+  static Color get darkGreenColor => const Color(0xFF41C503);
   static Color get yellowColor => const Color(0xFFFBD962);
   static Color get blackColor => const Color(0xFF000000);
   static Color get darkCharcoal => const Color(0xFF313131);
