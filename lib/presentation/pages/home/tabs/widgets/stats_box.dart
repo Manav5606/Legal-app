@@ -9,6 +9,7 @@ class StatsBox extends StatelessWidget {
   final String title;
   final String value;
   final bool selected;
+  final Function()? onTap;
 
   const StatsBox({
     super.key,
@@ -18,28 +19,32 @@ class StatsBox extends StatelessWidget {
     required this.title,
     required this.value,
     required this.selected,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      width: 250,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: regColor),
-        color: selected ? lightColor : AppColors.whiteColor,
-      ),
-      padding: const EdgeInsets.all(18),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(title,
-              style: FontStyles.font18Semibold.copyWith(color: darkColor)),
-          Text(value,
-              style: FontStyles.font18Semibold.copyWith(color: darkColor)),
-        ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 100,
+        width: 250,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: regColor),
+          color: selected ? lightColor : AppColors.whiteColor,
+        ),
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(title,
+                style: FontStyles.font18Semibold.copyWith(color: darkColor)),
+            Text(value,
+                style: FontStyles.font18Semibold.copyWith(color: darkColor)),
+          ],
+        ),
       ),
     );
   }

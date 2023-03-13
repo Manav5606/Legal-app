@@ -30,7 +30,7 @@ class _HomePageState extends ConsumerState<HomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
+        body: ListView(
       children: [
         const Header(),
         Container(
@@ -56,14 +56,18 @@ class _HomePageState extends ConsumerState<HomePage>
             ],
           ),
         ),
-        Expanded(
-          child: TabBarView(
-            controller: _tabController,
-            children: const [
-              DashboardTab(),
-              InboxTab(),
-              NotificationTab(),
-            ],
+        Container(
+          color: AppColors.whiteColor,
+          height: MediaQuery.of(context).size.height * 0.7,
+          child: Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: const [
+                DashboardTab(),
+                InboxTab(),
+                NotificationTab(),
+              ],
+            ),
           ),
         ),
         const Footer(),

@@ -21,6 +21,7 @@ abstract class AppColors {
   static Color get whiteColor => const Color(0xFFFFFFFF);
   static Color get shadowColor => const Color(0xffD6D6D6);
   static Color get greyColor => const Color(0xffB8BBC9);
+  static Color get lightGreyColor => const Color(0xffFAFBFF);
   static Color get greyColorform => const Color(0xffb8b8b9);
   static Color get greyTextField => const Color(0xff4B506D);
 }
