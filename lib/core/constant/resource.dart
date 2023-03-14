@@ -46,4 +46,5 @@ abstract class Assets {
   static const String uploadiconhighlight =
       'assets/icons/upload_icon_higlight.svg';
   static const String loginicon = 'assets/icons/login_icon.svg';
+  static const String personImage = 'assets/images/person.png';
 }
