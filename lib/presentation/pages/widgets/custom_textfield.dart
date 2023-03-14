@@ -1,8 +1,11 @@
 import 'package:admin/core/constant/colors.dart';
+import 'package:admin/core/constant/fontstyles.dart';
+import 'package:admin/core/constant/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class PrimaryTextField extends FormField<String> {
+class CustomTextField extends FormField<String> {
+  final String? label;
   final String hintText;
   final bool readOnly;
   final int maxLines;
@@ -16,16 +19,20 @@ class PrimaryTextField extends FormField<String> {
   final List<TextInputFormatter>? inputFormatters;
   final VoidCallback? onTap;
 
-  PrimaryTextField({
+  static const Color defaultBackgroundColor = Color(0xffFAFBFF);
+
+  CustomTextField({
     Key? key,
+    this.label,
     required this.hintText,
     required this.controller,
     this.keyboardType = TextInputType.text,
     this.obscureText = false,
     this.prefixIcon,
-    this.suffixIcon,
+    this.suffixIcon =
+        const IconButton(onPressed: null, icon: SizedBox.shrink()),
     this.inputFormatters,
-    this.backgroundColor = AppColors.lightBacgroundColor,
+    this.backgroundColor = defaultBackgroundColor,
     this.maxLines = 1,
     this.readOnly = false,
     this.showBorder = true,
@@ -48,9 +55,9 @@ class PrimaryTextField extends FormField<String> {
 
             BoxBorder setBorder() {
               Color borderColor = (!field.isValid && field.errorText == null)
-                  ? AppColors.lightBacgroundColor
+                  ? defaultBackgroundColor
                   : field.isValid
-                      ? AppColors.lightBacgroundColor
+                      ? defaultBackgroundColor
                       : Colors.red;
               return Border.all(width: 0.8, color: borderColor);
             }
@@ -61,6 +68,11 @@ class PrimaryTextField extends FormField<String> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Visibility(
+                      visible: label != null,
+                      child: Text(label!,
+                          style: FontStyles.font14Semibold
+                              .copyWith(color: AppColors.greyColor))),
                   Container(
                     padding: suffixIcon != null
                         ? EdgeInsets.only(left: Sizes.s12.h)
@@ -76,7 +88,7 @@ class PrimaryTextField extends FormField<String> {
                       border: showBorder ? setBorder() : null,
                     ),
                     child: TextField(
-                      cursorColor: AppColors.primaryColor,
+                      cursorColor: AppColors.greyColor,
                       autocorrect: false,
                       style: TextStyle(
                         color: Colors.black,
@@ -93,7 +105,7 @@ class PrimaryTextField extends FormField<String> {
                       obscureText: obscureText,
                       inputFormatters: inputFormatters,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.zero,
+                        isDense: true,
                         hintText: hintText,
                         prefixIcon: prefixIcon,
                         suffixIcon: suffixIcon,

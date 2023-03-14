@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 class CTAButton extends StatelessWidget {
   final Function()? onTap;
   final String title;
+  final bool fullWidth;
 
-  const CTAButton({super.key, this.onTap, required this.title});
+  const CTAButton(
+      {super.key, this.onTap, required this.title, this.fullWidth = false});
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +16,10 @@ class CTAButton extends StatelessWidget {
         onTap: onTap,
         child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 14),
+            width: fullWidth ? MediaQuery.of(context).size.width : null,
             decoration: BoxDecoration(
                 color: AppColors.yellowColor,
                 borderRadius: BorderRadius.circular(8)),
-            child: Text(title, style: FontStyles.font14Bold)));
+            child: Center(child: Text(title, style: FontStyles.font14Bold))));
   }
 }

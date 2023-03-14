@@ -10,7 +10,7 @@ abstract class AppRoutes {
 }
 
 final routeLoggedOut = RouteMap(
-  onUnknownRoute: (_) => const Redirect(HomePage.routeName),
+  onUnknownRoute: (_) => const Redirect(LoginPage.routeName),
   routes: {
     HomePage.routeName: (_) => const MaterialPage(child: HomePage()),
     LoginPage.routeName: (_) => const MaterialPage(child: LoginPage()),
@@ -18,7 +18,7 @@ final routeLoggedOut = RouteMap(
   },
 );
 final routeLoggedIn = RouteMap(
-  onUnknownRoute: (_) => const Redirect(HomePage.routeName),
+  onUnknownRoute: (_) => const Redirect(LoginPage.routeName),
   routes: {
     HomePage.routeName: (_) => const MaterialPage(child: HomePage()),
     LoginPage.routeName: (_) => const MaterialPage(child: LoginPage()),
