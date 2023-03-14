@@ -1,5 +1,6 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
+import 'package:admin/presentation/pages/client/client_page.dart';
 import 'package:admin/presentation/pages/widgets/footer.dart';
 import 'package:admin/presentation/pages/widgets/header.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,8 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
+
+  bool showTabView = false;
 
   @override
   void initState() {
@@ -60,18 +63,31 @@ class _HomePageState extends ConsumerState<HomePage>
           color: AppColors.whiteColor,
           height: MediaQuery.of(context).size.height * 0.7,
           child: Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: const [
-                DashboardTab(),
-                InboxTab(),
-                NotificationTab(),
-              ],
-            ),
+            child: showTabView
+                ? TabBarView(
+                    controller: _tabController,
+                    children: const [
+                      DashboardTab(),
+                      InboxTab(),
+                      NotificationTab(),
+                    ],
+                  )
+                : loadView(ClientPage.routeName),
           ),
         ),
         const Footer(),
       ],
     ));
+  }
+
+  loadView(String viewName) {
+    switch (viewName) {
+      case ClientPage.routeName:
+        return const ClientPage();
+      default:
+        setState(() {
+          showTabView = true;
+        });
+    }
   }
 }

@@ -20,6 +20,8 @@ class CTAButton extends StatelessWidget {
             decoration: BoxDecoration(
                 color: AppColors.yellowColor,
                 borderRadius: BorderRadius.circular(8)),
-            child: Center(child: Text(title, style: FontStyles.font14Bold))));
+            child: fullWidth ? Center(child: _title()) : _title()));
   }
+
+  Text _title() => Text(title, style: FontStyles.font14Bold);
 }

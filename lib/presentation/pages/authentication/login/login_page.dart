@@ -2,11 +2,13 @@ import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
 import 'package:admin/core/constant/sizes.dart';
+import 'package:admin/presentation/pages/home/home_page.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/pages/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:routemaster/routemaster.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   static const String routeName = "/login";
@@ -88,7 +90,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     icon: const Icon(Icons.visibility_off)),
               ),
               const SizedBox(height: 24),
-              CTAButton(title: "Log In", onTap: () {}),
+              CTAButton(
+                  title: "Log In",
+                  onTap: () {
+                    Routemaster.of(context).replace(HomePage.routeName);
+                  }),
             ],
           ),
           const SizedBox.shrink(),
