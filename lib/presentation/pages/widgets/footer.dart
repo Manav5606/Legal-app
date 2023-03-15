@@ -1,7 +1,6 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class Footer extends StatelessWidget {
@@ -16,7 +15,6 @@ class Footer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            flex: 1,
             child: Container(
               padding: EdgeInsets.symmetric(
                   horizontal: MediaQuery.of(context).size.width * 0.05),
@@ -43,7 +41,6 @@ class Footer extends StatelessWidget {
             ),
           ),
           Expanded(
-            flex: 1,
             child: Center(
                 child: CTAButton(title: "Log In / SignUp", onTap: () {})),
           )

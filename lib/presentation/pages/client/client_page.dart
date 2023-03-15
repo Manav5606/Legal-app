@@ -1,6 +1,5 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
-import 'package:admin/presentation/pages/home/tabs/widgets/stats_box.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/utils/web_scroll.dart';
 import 'package:flutter/material.dart';
