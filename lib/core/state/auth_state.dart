@@ -15,67 +15,49 @@ class AuthService extends StateNotifier<AuthState> {
 
   AuthService(this._authRepository)
       : super(const AuthState.unauthenticated(isLoading: true)) {
-    refresh();
     state = state.copyWith(isLoading: false);
   }
 
-  Future<void> refresh() async {
-    try {
-      // final user = await _authRepository.get();
-      // setUser(user);
-    } on RepositoryException catch (_) {
-      // logger.info('Not authenticated');
-      state = state.copyWith(
-          // user: null,
-          isLoading: false);
-    }
+  void setUser(User user) {
+    state = state.copyWith(isLoading: false, user: user);
   }
 
-  // void setUser(Account user) {
-  //   state = state.copyWith(isLoading: false, user: user);
-  // }
-
-  // Future<void> signOut() async {
-  //   try {
-  //     await _authRepository.deleteSession(sessionId: 'current');
-  //     // logger.info('Sign out successful');
-  //     state = const AuthState.unauthenticated();
-  //   } on RepositoryException catch (e) {
-  //     state = state.copyWith(error: AppError(message: e.message));
-  //   }
-  // }
+  Future<void> signOut() async {
+    try {
+      await _authRepository.logoutUser();
+      state = const AuthState.unauthenticated();
+    } on RepositoryException catch (e) {
+      state = state.copyWith(error: AppError(message: e.message));
+    }
+  }
 }
 
 class AuthState extends StateBase {
-  // final Account? user;
+  final User? user;
   final bool isLoading;
 
   const AuthState({
-    // this.user,
+    this.user,
     this.isLoading = false,
     AppError? error,
   }) : super(error: error);
 
   const AuthState.unauthenticated({this.isLoading = false})
-      :
-        // user = null,
+      : user = null,
         super(error: null);
 
-  bool get isAuthenticated => true; // user != null;
+  bool get isAuthenticated => user != null;
 
   @override
-  List<Object?> get props => [
-        // user,
-        isLoading, error
-      ];
+  List<Object?> get props => [user, isLoading, error];
 
   AuthState copyWith({
-    // Account? user,
+    User? user,
     bool? isLoading,
     AppError? error,
   }) =>
       AuthState(
-        // user: user ?? this.user,
+        user: user ?? this.user,
         isLoading: isLoading ?? this.isLoading,
         error: error ?? this.error,
       );

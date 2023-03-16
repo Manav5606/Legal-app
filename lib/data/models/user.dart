@@ -1,41 +1,35 @@
 import 'package:admin/core/enum/role.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 class User {
   final String id;
   final int createdAt;
+  final String createdBy;
   final String name;
-  final Role role;
+  final UserType userType;
   final String email;
   final int phoneNumber;
-  final String? categoryId;
-  final String? groupId;
-  final String? typeId;
-  final String? headingId;
 
   User({
     required this.id,
     required this.createdAt,
     required this.name,
-    required this.role,
+    required this.userType,
+    required this.createdBy,
     required this.email,
     required this.phoneNumber,
-    this.categoryId,
-    this.groupId,
-    this.typeId,
-    this.headingId,
   });
 
   factory User.fromSnapshot(DocumentSnapshot snapshot) {
     final Map<String, dynamic> data = (snapshot.data() as Map<String, dynamic>);
     return User(
       id: snapshot.id,
-      createdAt: data['createdAt'],
+      createdAt: data['created_at'],
       name: data['name'],
-      role: data['role'],
+      createdBy: data['created_by'],
+      userType: data['user_type'],
       email: data['email'],
-      phoneNumber: data['phoneNumber'],
+      phoneNumber: data['phone_number'],
     );
   }
 }
