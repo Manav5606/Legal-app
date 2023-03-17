@@ -11,14 +11,14 @@ final _isAuthLoading =
 
 final globalScaffold = GlobalKey<ScaffoldMessengerState>();
 
-class LegalAdmin extends ConsumerStatefulWidget {
-  const LegalAdmin({super.key});
+class LegalApp extends ConsumerStatefulWidget {
+  const LegalApp({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _LegalAdminState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _LegalAppState();
 }
 
-class _LegalAdminState extends ConsumerState<LegalAdmin> {
+class _LegalAppState extends ConsumerState<LegalApp> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(_isAuthLoading);

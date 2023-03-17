@@ -6,9 +6,15 @@ class CTAButton extends StatelessWidget {
   final Function()? onTap;
   final String title;
   final bool fullWidth;
+  final double? radius;
 
-  const CTAButton(
-      {super.key, this.onTap, required this.title, this.fullWidth = false});
+  const CTAButton({
+    super.key,
+    this.onTap,
+    required this.title,
+    this.fullWidth = false,
+    this.radius,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +25,7 @@ class CTAButton extends StatelessWidget {
             width: fullWidth ? MediaQuery.of(context).size.width : null,
             decoration: BoxDecoration(
                 color: AppColors.yellowColor,
-                borderRadius: BorderRadius.circular(8)),
+                borderRadius: BorderRadius.circular(radius ?? 8)),
             child: fullWidth ? Center(child: _title()) : _title()));
   }
 

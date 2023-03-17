@@ -50,6 +50,12 @@ abstract class FontStyles {
         fontWeight: FontWeight.w600,
         color: AppColors.blueColor,
       );
+  static TextStyle get font48bold => TextStyle(
+        fontFamily: 'Poppins',
+        fontSize: 48,
+        fontWeight: FontWeight.bold,
+        color: AppColors.blackColor,
+      );
   static TextStyle get font10Medium => TextStyle(
         fontFamily: 'Poppins',
         fontSize: 10,

@@ -41,10 +41,12 @@ abstract class Assets {
       'assets/icons/VectorquotationMark.svg';
   static const String iconsVectoryellowSquare =
       'assets/icons/VectoryellowSquare.svg';
+  static const String iconsVectorGreySquare = 'assets/icons/grey_box.svg';
 
   static const String uploadicon = 'assets/icons/upload_icon.svg';
   static const String uploadiconhighlight =
       'assets/icons/upload_icon_higlight.svg';
   static const String loginicon = 'assets/icons/login_icon.svg';
+  static const String servicesBGDesign = 'assets/icons/serviceBG.svg';
   static const String personImage = 'assets/images/person.png';
 }

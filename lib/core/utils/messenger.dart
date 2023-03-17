@@ -1,4 +1,4 @@
-import 'package:admin/legal_admin.dart';
+import 'package:admin/legal_app.dart';
 import 'package:flutter/material.dart';
 
 class Messenger {

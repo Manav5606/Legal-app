@@ -3,15 +3,37 @@ import 'dart:developer';
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
+import 'package:admin/core/provider.dart';
+import 'package:admin/data/models/models.dart';
+import 'package:admin/presentation/pages/authentication/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:routemaster/routemaster.dart';
 
 // TODO make all displayed text dynamic
-class Header extends StatelessWidget {
+class Header extends ConsumerStatefulWidget {
   const Header({super.key});
 
   @override
+  ConsumerState<Header> createState() => _HeaderState();
+}
+
+class _HeaderState extends ConsumerState<Header> {
+  late bool isAuthenticated;
+  late User? user;
+
+  @override
+  void initState() {
+    super.initState();
+    isAuthenticated = ref.read(AppState.auth).isAuthenticated;
+    user = ref.read(AppState.auth).user;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    ref.watch(AppState.auth).isAuthenticated;
+    ref.watch(AppState.auth).user;
     return Column(
       children: [
         topBar(),
@@ -93,33 +115,58 @@ class Header extends StatelessWidget {
             style: FontStyles.font12Regular,
           ),
           const Spacer(),
-          Text(
-            "Role ⬇️",
-            style:
-                FontStyles.font12Regular.copyWith(color: AppColors.yellowColor),
-          ),
-          const SizedBox(
-            width: 11.22,
-          ),
-          Text(
-            "Admin Name",
-            style: FontStyles.font12Regular,
-          ),
-          const SizedBox(
-            width: 11.22,
-          ),
-          Divider(color: AppColors.yellowColor, thickness: 3),
-          const SizedBox(
-            width: 9.68,
-            child: CircleAvatar(),
-          ),
-          DropdownMenu(
-              dropdownMenuEntries: ["Profile", "History", "Sign out"]
-                  .map((e) => DropdownMenuEntry(value: e, label: e))
-                  .toList(),
-              onSelected: (value) {
-                log(value.toString());
-              }),
+          isAuthenticated
+              ? Row(children: [
+                  Text(
+                    "Role ⬇ ${user?.userType.name}",
+                    style: FontStyles.font12Regular
+                        .copyWith(color: AppColors.yellowColor),
+                  ),
+                  const SizedBox(
+                    width: 11.22,
+                  ),
+                  Text(
+                    "${user?.name}",
+                    style: FontStyles.font12Regular,
+                  ),
+                  const SizedBox(
+                    width: 11.22,
+                  ),
+                  Divider(color: AppColors.yellowColor, thickness: 3),
+                  const SizedBox(
+                    width: 9.68,
+                    child: CircleAvatar(),
+                  ),
+                  DropdownMenu(
+                      dropdownMenuEntries: ["Profile", "History", "Sign out"]
+                          .map((e) => DropdownMenuEntry(value: e, label: e))
+                          .toList(),
+                      onSelected: (value) {
+                        log(value.toString());
+                      }),
+                ])
+              : Row(
+                  children: [
+                    TextButton.icon(
+                        onPressed: () =>
+                            Routemaster.of(context).push(LoginPage.routeName),
+                        icon: Icon(Icons.login_rounded,
+                            color: AppColors.yellowColor),
+                        label: Text("Login",
+                            style: FontStyles.font12Regular
+                                .copyWith(color: AppColors.yellowColor))),
+                    const SizedBox(
+                      width: 11.22,
+                    ),
+                    TextButton(
+                        onPressed: () => Routemaster.of(context)
+                            .push(RegisterPage.routeName),
+                        child: Text("New User?",
+                            style: FontStyles.font12Regular.copyWith(
+                                color: AppColors.whiteColor,
+                                decoration: TextDecoration.underline))),
+                  ],
+                ),
           const SizedBox(
             width: 11.22,
           ),
