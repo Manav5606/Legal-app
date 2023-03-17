@@ -30,7 +30,9 @@ class User {
       createdAt: data['created_at'],
       name: data['name'],
       createdBy: data['created_by'],
-      userType: data['user_type'],
+      userType: UserType.values.firstWhere(
+          (element) => element.name == data['user_type'],
+          orElse: () => UserType.user),
       email: data['email'],
       phoneNumber: data['phone_number'],
     );
