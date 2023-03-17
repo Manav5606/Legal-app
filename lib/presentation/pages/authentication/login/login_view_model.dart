@@ -64,6 +64,7 @@ class LoginViewModel extends BaseViewModel {
           Messenger.showSnackbar(l.message);
           return false;
         }, (r) {
+          Messenger.showSnackbar("Logged In ✅");
           return true;
         });
       }
