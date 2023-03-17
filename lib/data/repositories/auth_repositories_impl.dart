@@ -56,4 +56,64 @@ class AuthRepositoryImpl extends AuthRepository with RepositoryExceptionMixin {
     // TODO: implement logoutUser
     throw UnimplementedError();
   }
+
+  @override
+  Stream<Either<AppError, model.User>> getUser() async* {
+    try {
+      Either<AppError, model.User> localValue = Left(AppError(message: ''));
+
+      final fbUiD = _firebaseAuth.currentUser?.uid;
+      if (fbUiD == null) {
+        yield Left(AppError(message: "Unauthenticated"));
+      } else {
+        await for (final doc in _firebaseFirestore
+            .collection(FirebaseConfig.userCollection)
+            .doc(fbUiD)
+            .snapshots()) {
+          yield Right(model.User.fromSnapshot((doc)));
+        }
+      }
+
+      yield localValue;
+    } on FirebaseException catch (e) {
+      yield Left(AppError(
+        message: "Firebase Error",
+        description: "Failed to retrive User Info.",
+        exception: e,
+        stackTrace: e.stackTrace,
+      ));
+    }
+  }
+
+  /// TODO Add OTP logic Later
+  @override
+  Future<Either<model.AppError, model.User>> registerWithEmailPassword({
+    required String password,
+    required model.User user,
+  }) async {
+    try {
+      final result = await _firebaseAuth.createUserWithEmailAndPassword(
+          email: user.email, password: password);
+      final User? firebaseUser = result.user;
+      if (firebaseUser == null) {
+        return Left(
+            AppError(message: "Something went wrong. Can't create account."));
+      }
+      await _firebaseFirestore
+          .collection(FirebaseConfig.userCollection)
+          .doc(firebaseUser.uid)
+          .set(user.toJson());
+      return Right(model.User.fromSnapshot((await _firebaseFirestore
+          .collection(FirebaseConfig.userCollection)
+          .doc(firebaseUser.uid)
+          .get())));
+    } on FirebaseAuthException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
 }

@@ -1,22 +1,49 @@
 import 'package:admin/core/provider.dart';
-import 'package:admin/core/state/auth_state.dart';
 import 'package:admin/core/utils/messenger.dart';
-import 'package:admin/data/repositories/index.dart';
+import 'package:admin/domain/provider/auth_provider.dart';
 import 'package:admin/presentation/base_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _loginViewModel = ChangeNotifierProvider((ref) => LoginViewModel(
-    ref.read(Repository.auth), ref.read(AppState.auth.notifier)));
+final _loginViewModel = ChangeNotifierProvider(
+    (ref) => LoginViewModel(ref.read(AppState.auth.notifier)));
 
 class LoginViewModel extends BaseViewModel {
   static ChangeNotifierProvider<LoginViewModel> get provider => _loginViewModel;
-  LoginViewModel(this._authRepositoryImpl, this._authService);
-  final AuthService _authService;
-  final AuthRepositoryImpl _authRepositoryImpl;
+  LoginViewModel(this._authProvider);
+  final AuthProvider _authProvider;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  bool _passwordVisible = false;
+
+  String? nameError;
+  String? passwordError;
+
+  bool get showPassword => _passwordVisible;
+
+  void togglePasswordVisibility() {
+    _passwordVisible = !_passwordVisible;
+    notifyListeners();
+  }
+
+  void clearError() {
+    nameError = passwordError = null;
+    notifyListeners();
+  }
+
+  bool _validateValues() {
+    clearError();
+    if (nameController.text.isEmpty) {
+      nameError = "This field is required.";
+    }
+    if (passwordController.text.isEmpty) {
+      passwordError = "This field is required.";
+    }
+
+    return nameError == null && passwordError == null;
+  }
 
   @override
   void dispose() {
@@ -25,12 +52,25 @@ class LoginViewModel extends BaseViewModel {
     super.dispose();
   }
 
-  Future<void> login() async {
+  Future<bool> login() async {
     try {
       toggleLoadingOn(true);
-      
+      if (_validateValues()) {
+        final result = await _authProvider.login(
+          email: nameController.text,
+          password: passwordController.text,
+        );
+        result.fold((l) async {
+          Messenger.showSnackbar(l.message);
+          return false;
+        }, (r) {
+          return true;
+        });
+      }
+      return false;
     } catch (e) {
       Messenger.showSnackbar(e.toString());
+      return false;
     } finally {
       toggleLoadingOn(false);
     }

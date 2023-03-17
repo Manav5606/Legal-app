@@ -18,7 +18,7 @@ class CustomTextField extends FormField<String> {
   final bool showBorder;
   final List<TextInputFormatter>? inputFormatters;
   final VoidCallback? onTap;
-
+  final String? errorText;
   static const Color defaultBackgroundColor = Color(0xffFAFBFF);
 
   CustomTextField({
@@ -37,13 +37,14 @@ class CustomTextField extends FormField<String> {
     this.readOnly = false,
     this.showBorder = true,
     this.onTap,
+    this.errorText,
     AutovalidateMode autovalidateMode = AutovalidateMode.onUserInteraction,
-    FormFieldValidator<String>? validator,
+    // FormFieldValidator<String>? validator,
     ValueChanged<String>? onChanged,
   }) : super(
           key: key,
           initialValue: controller.text,
-          validator: validator,
+          // validator: validator,
           autovalidateMode: autovalidateMode,
           builder: (FormFieldState<String> field) {
             void onChangedHandler(String value) {
@@ -110,6 +111,7 @@ class CustomTextField extends FormField<String> {
                         prefixIcon: prefixIcon,
                         suffixIcon: suffixIcon,
                         border: InputBorder.none,
+                        errorText: errorText,
                       ),
                     ),
                   ),

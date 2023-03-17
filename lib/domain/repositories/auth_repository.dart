@@ -6,5 +6,10 @@ abstract class AuthRepository {
     required String email,
     required String password,
   });
+  Future<Either<AppError, User>> registerWithEmailPassword({
+    required String password,
+    required User user,
+  });
   Future<void> logoutUser();
+  Stream<Either<AppError, User>> getUser();
 }

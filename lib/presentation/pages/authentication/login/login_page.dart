@@ -2,6 +2,7 @@ import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
 import 'package:admin/core/constant/sizes.dart';
+import 'package:admin/presentation/pages/authentication/login/login_view_model.dart';
 import 'package:admin/presentation/pages/home/home_page.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/pages/widgets/custom_textfield.dart';
@@ -19,8 +20,17 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
+  late final LoginViewModel _viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _viewModel = ref.read(LoginViewModel.provider);
+  }
+
   @override
   Widget build(BuildContext context) {
+    ref.watch(LoginViewModel.provider);
     return Scaffold(
       body: Row(
         children: [
@@ -73,26 +83,34 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               CustomTextField(
                 label: "LOGIN",
                 hintText: "Username/ Email address/ Phone Number",
-                controller: nameController,
+                controller: _viewModel.nameController,
+                readOnly: _viewModel.isLoading,
+                errorText: _viewModel.nameError,
               ),
               const SizedBox(height: 18),
               CustomTextField(
                 label: "PASSWORD",
                 hintText: "Password",
-                controller: passwordController,
-                obscureText: true,
+                controller: _viewModel.passwordController,
+                readOnly: _viewModel.isLoading,
+                obscureText: _viewModel.showPassword,
+                errorText: _viewModel.passwordError,
                 suffixIcon: IconButton(
-                    onPressed: () {
-                      // Toogle password visibility
-                    },
-                    icon: const Icon(Icons.visibility_off)),
+                    onPressed: _viewModel.togglePasswordVisibility,
+                    icon: Icon(_viewModel.showPassword
+                        ? Icons.visibility_off
+                        : Icons.visibility)),
               ),
               const SizedBox(height: 24),
               CTAButton(
                   title: "Log In",
-                  onTap: () {
-                    Routemaster.of(context).replace(HomePage.routeName);
-                  }),
+                  onTap: _viewModel.isLoading
+                      ? null
+                      : () async {
+                          if (await _viewModel.login()) {
+                            Routemaster.of(context).replace(HomePage.routeName);
+                          }
+                        }),
             ],
           ),
           const SizedBox.shrink(),

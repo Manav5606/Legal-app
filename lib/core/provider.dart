@@ -1,5 +1,6 @@
 import 'package:admin/core/state/auth_state.dart';
 import 'package:admin/data/repositories/index.dart';
+import 'package:admin/domain/provider/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 abstract class Repository {
@@ -7,6 +8,6 @@ abstract class Repository {
 }
 
 abstract class AppState {
-  static StateNotifierProvider<AuthService, AuthState> get auth =>
-      AuthService.provider;
+  static StateNotifierProvider<AuthProvider, AuthState> get auth =>
+      AuthProvider.provider;
 }

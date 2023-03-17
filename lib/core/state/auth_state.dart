@@ -18,9 +18,9 @@ class AuthService extends StateNotifier<AuthState> {
     state = state.copyWith(isLoading: false);
   }
 
-  void setUser(User user) {
-    state = state.copyWith(isLoading: false, user: user);
-  }
+  // void setUser(User user) {
+  //   state = state.copyWith(isLoading: false, user: user);
+  // }
 
   Future<void> signOut() async {
     try {

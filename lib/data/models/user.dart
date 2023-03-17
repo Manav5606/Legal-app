@@ -1,23 +1,26 @@
 import 'package:admin/core/enum/role.dart';
+import 'package:admin/data/models/client.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class User {
-  final String id;
-  final int createdAt;
-  final String createdBy;
+  String? id;
+  int? createdAt;
+  String? createdBy;
   final String name;
   final UserType userType;
   final String email;
   final int phoneNumber;
+  Client? client;
 
   User({
-    required this.id,
-    required this.createdAt,
+    this.id,
+    this.createdAt,
     required this.name,
     required this.userType,
-    required this.createdBy,
+    this.createdBy,
     required this.email,
     required this.phoneNumber,
+    this.client,
   });
 
   factory User.fromSnapshot(DocumentSnapshot snapshot) {
@@ -32,4 +35,28 @@ class User {
       phoneNumber: data['phone_number'],
     );
   }
+
+  User copyWith({
+    Client? client,
+    String? name,
+    UserType? userType,
+    String? email,
+    int? phoneNumber,
+  }) =>
+      User(
+        name: name ?? this.name,
+        userType: userType ?? this.userType,
+        email: email ?? this.email,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        client: client ?? this.client,
+      );
+
+  Map<String, dynamic> toJson() => {
+        "created_at": createdAt ?? DateTime.now().millisecondsSinceEpoch,
+        "name": name,
+        "created_by": createdBy,
+        "user_type": userType.name,
+        "email": email,
+        "phone_number": phoneNumber,
+      };
 }
