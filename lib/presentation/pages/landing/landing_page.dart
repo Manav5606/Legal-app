@@ -1,13 +1,18 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
+import 'package:admin/data/models/news.dart';
 import 'package:admin/presentation/pages/widgets/banner.dart';
+import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/pages/widgets/footer.dart';
+import 'package:admin/presentation/pages/widgets/frequent_service_container.dart';
 import 'package:admin/presentation/pages/widgets/header.dart';
+import 'package:admin/presentation/pages/widgets/news_tile.dart';
 import 'package:admin/presentation/pages/widgets/service_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:admin/data/models/models.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LandingPage extends ConsumerStatefulWidget {
   static const String routeName = "/landing";
@@ -19,6 +24,20 @@ class LandingPage extends ConsumerStatefulWidget {
 }
 
 class _LandingPageState extends ConsumerState<LandingPage> {
+  final _news = [
+    News(
+        headline:
+            "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year ended on 31.03.2021 under the Companies Act, 2013",
+        createdAt: DateTime.now().millisecondsSinceEpoch),
+    News(
+        headline:
+            "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year ended on 31.03.2021 under the Companies Act, 2013",
+        createdAt: DateTime.now().millisecondsSinceEpoch),
+    News(
+        headline:
+            "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year ended on 31.03.2021 under the Companies Act, 2013",
+        createdAt: DateTime.now().millisecondsSinceEpoch),
+  ];
   final _bannerList = [
     BannerDetail(
         title: "Lorem Ipsum Lorem Ipsum Lorem Ipsum",
@@ -52,7 +71,9 @@ class _LandingPageState extends ConsumerState<LandingPage> {
     "GST",
     "Other Business",
     "Lorem Ipsum",
-    "Lorem Ipsum"
+    "Lorem Ipsum",
+    "Lorem Ipsum",
+    "Lorem Ipsum",
   ];
 
   final _category = [
@@ -105,7 +126,8 @@ class _LandingPageState extends ConsumerState<LandingPage> {
             bannerDetails: _bannerList,
           ),
           _services(700),
-          _frequentlyUsedServices(400),
+          _frequentlyUsedServices(350),
+          _newsAndUpdates(800),
           Stack(
             children: [
               // TODO add contacts us
@@ -123,13 +145,13 @@ class _LandingPageState extends ConsumerState<LandingPage> {
       child: Stack(
         children: [
           Container(
-            height: height * 0.6,
+            height: height * 0.75,
             color: AppColors.blueColor,
           ),
           Align(
             alignment: Alignment.center,
             child: SizedBox(
-              width: height * 1.6,
+              width: height * 3,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -138,8 +160,13 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                       style: FontStyles.font24Semibold
                           .copyWith(color: AppColors.yellowColor)),
                   Wrap(
-                    children:
-                        _frequentlyUsedServicesList.map((e) => null).toList(),
+                    spacing: 8,
+                    alignment: WrapAlignment.start,
+                    runSpacing: 8,
+                    children: _frequentlyUsedServicesList
+                        .map((e) => FrequentServiceContainer(
+                            serviceName: e, width: height * 3))
+                        .toList(),
                   ),
                 ],
               ),
@@ -196,6 +223,77 @@ class _LandingPageState extends ConsumerState<LandingPage> {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _newsAndUpdates(double height) {
+    return SizedBox(
+      height: height,
+      width: height * 1.6,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 1,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text("Recent news and updates",
+                    textAlign: TextAlign.left,
+                    style: FontStyles.font24Semibold
+                        .copyWith(color: AppColors.blackColor, fontSize: 32)),
+                const SizedBox(height: 18),
+                ..._news.map((e) => NewsTile(news: e)).toList(),
+                const SizedBox(height: 18),
+                const CTAButton(title: "Show all", radius: 100),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Column(
+              children: [
+                const Spacer(),
+                SizedBox(
+                  height: height * 0.8,
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: SvgPicture.asset(Assets.iconsVectoryellowSquare,
+                            height: 100, width: 100),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: SvgPicture.asset(Assets.iconsVectorblueSquare,
+                            height: 50, width: 50),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Expanded(
+                          child: Container(
+                            height: height / 2,
+                            width: height / 2,
+                            color: Colors.pink,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //   children: _category
+          //       .map((category) =>
+          //           ServiceContainer(category: category, width: height * 1.6))
+          //       .toList(),
+          // ),
         ],
       ),
     );
