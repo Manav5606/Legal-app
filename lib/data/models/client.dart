@@ -7,7 +7,7 @@ class Client {
   final String permanentAddress;
   final String workingStartHours;
   final String workingEndHours;
-  final int backAccountNumber;
+  final int bankAccountNumber;
   final String bankAccountIFSC;
   final String bankAccountName;
   final List<Qualification> qualification;
@@ -19,9 +19,21 @@ class Client {
     required this.permanentAddress,
     required this.workingStartHours,
     required this.workingEndHours,
-    required this.backAccountNumber,
+    required this.bankAccountNumber,
     required this.bankAccountIFSC,
     required this.bankAccountName,
     required this.qualification,
   });
+
+  Map<String, dynamic> toJson() => {
+        "user_id": userID,
+        "company_name": companyName,
+        "permanent_address": permanentAddress,
+        "working_start_hours": workingStartHours,
+        "working_end_hours": workingEndHours,
+        "bank_account_number": bankAccountNumber,
+        "bank_account_ifsc": bankAccountIFSC,
+        "bank_account_name": bankAccountName,
+        "qualification": qualification.map((e) => e.toJson()).toList()
+      };
 }

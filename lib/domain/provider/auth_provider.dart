@@ -49,13 +49,16 @@ class AuthProvider extends StateNotifier<AuthState> {
   Future<Either<AppError, User>> register({
     required User user,
     required String password,
+    bool streamUser = false,
   }) async {
     final result = await _authRepositoryImpl.registerWithEmailPassword(
       password: password,
       user: user,
     );
     if (result.isRight()) {
-      startStreamingUserData();
+      if (streamUser) {
+        startStreamingUserData();
+      }
     }
     return result;
   }

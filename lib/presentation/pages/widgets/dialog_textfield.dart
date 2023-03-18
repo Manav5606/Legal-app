@@ -69,7 +69,7 @@ class DialogTextField extends FormField<String> {
                 children: [
                   Visibility(
                       visible: label != null,
-                      child: Text(label!,
+                      child: Text(label ?? "",
                           style: FontStyles.font14Semibold
                               .copyWith(color: AppColors.greyColor))),
                   Container(
@@ -82,10 +82,10 @@ class DialogTextField extends FormField<String> {
                               )
                             : EdgeInsets.zero,
                     child: TextField(
-                      cursorColor: AppColors.lightBlueColor,
+                      cursorColor: AppColors.blueColor,
                       autocorrect: false,
                       style: TextStyle(
-                        color: AppColors.lightBlueColor,
+                        color: AppColors.blueColor,
                         fontSize: Sizes.s16.sp,
                         fontWeight: FontWeight.w400,
                       ),

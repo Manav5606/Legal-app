@@ -26,6 +26,7 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("Add New Client",
@@ -33,10 +34,11 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
                   .copyWith(color: AppColors.blueColor)),
           Text("Add your new client here",
               style: FontStyles.font12Regular
-                  .copyWith(color: AppColors.lightBlueColor)),
+                  .copyWith(color: AppColors.blueColor)),
           DialogTextField(
-              hintText: "Full Name / Company Name",
-              controller: _viewModel.nameController),
+            hintText: "Full Name / Company Name",
+            controller: _viewModel.nameController,
+          ),
           DialogTextField(
               hintText: "Phone Number",
               controller: _viewModel.numberController),
@@ -51,9 +53,11 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
                       style: FontStyles.font12Regular
                           .copyWith(color: AppColors.blueColor))),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  await _viewModel.createClient();
+                },
                 child: Text(
-                  "Add Services",
+                  "Add Client",
                   style: FontStyles.font12Regular
                       .copyWith(color: AppColors.whiteColor),
                 ),
