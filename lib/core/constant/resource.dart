@@ -34,6 +34,7 @@ abstract class Assets {
   static const String iconsVectormail = 'assets/icons/Vectormail.svg';
   static const String iconsVectoroverlayleft =
       'assets/icons/Vectoroverlayleft.svg';
+  static const String iconsVectoroverlayright = 'assets/icons/overlayright.svg';
   static const String iconsVectoroverlaysquare =
       'assets/icons/Vectoroverlaysquare.svg';
   static const String iconsVectorphone = 'assets/icons/Vectorphone.svg';
@@ -47,6 +48,6 @@ abstract class Assets {
   static const String uploadiconhighlight =
       'assets/icons/upload_icon_higlight.svg';
   static const String loginicon = 'assets/icons/login_icon.svg';
-  static const String servicesBGDesign = 'assets/icons/serviceBG.svg';
+  static const String servicesBGDesign = 'assets/images/service-bg.png';
   static const String personImage = 'assets/images/person.png';
 }

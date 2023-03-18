@@ -4,10 +4,10 @@ import 'package:admin/core/constant/resource.dart';
 import 'package:admin/presentation/pages/widgets/banner.dart';
 import 'package:admin/presentation/pages/widgets/footer.dart';
 import 'package:admin/presentation/pages/widgets/header.dart';
+import 'package:admin/presentation/pages/widgets/service_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:admin/data/models/models.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class LandingPage extends ConsumerStatefulWidget {
   static const String routeName = "/landing";
@@ -45,6 +45,54 @@ class _LandingPageState extends ConsumerState<LandingPage> {
         imageUrl: Assets.personImage,
         btnText: "btnText"),
   ];
+
+  final _frequentlyUsedServicesList = [
+    "Business",
+    "Taxation",
+    "GST",
+    "Other Business",
+    "Lorem Ipsum",
+    "Lorem Ipsum"
+  ];
+
+  final _category = [
+    Category(
+      id: "b",
+      name: "Business",
+      iconUrl: "",
+      description:
+          "I have used multiple offline & online CAs/ Lawyers. LegalRaasta clearly provided the best service and fast. Their team helped me protect my brand with trademark registration.",
+      addedAt: DateTime.now().millisecondsSinceEpoch,
+      addedBy: "",
+    ),
+    Category(
+      id: "f",
+      name: "finance",
+      iconUrl: "",
+      description:
+          "I have used multiple offline & online CAs/ Lawyers. LegalRaasta clearly provided the best service and fast. Their team helped me protect my brand with trademark registration.",
+      addedAt: DateTime.now().millisecondsSinceEpoch,
+      addedBy: "",
+    ),
+    Category(
+      id: "l",
+      name: "legal",
+      iconUrl: "",
+      description:
+          "I have used multiple offline & online CAs/ Lawyers. LegalRaasta clearly provided the best service and fast. Their team helped me protect my brand with trademark registration.",
+      addedAt: DateTime.now().millisecondsSinceEpoch,
+      addedBy: "",
+    ),
+    Category(
+      id: "a",
+      name: "Advertisment",
+      iconUrl: "",
+      description:
+          "I have used multiple offline & online CAs/ Lawyers. LegalRaasta clearly provided the best service and fast. Their team helped me protect my brand with trademark registration.",
+      addedAt: DateTime.now().millisecondsSinceEpoch,
+      addedBy: "",
+    ),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,12 +105,46 @@ class _LandingPageState extends ConsumerState<LandingPage> {
             bannerDetails: _bannerList,
           ),
           _services(700),
+          _frequentlyUsedServices(400),
           Stack(
             children: [
               // TODO add contacts us
               const Footer(),
             ],
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _frequentlyUsedServices(double height) {
+    return SizedBox(
+      height: height,
+      child: Stack(
+        children: [
+          Container(
+            height: height * 0.6,
+            color: AppColors.blueColor,
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: SizedBox(
+              width: height * 1.6,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Frequently used services",
+                      style: FontStyles.font24Semibold
+                          .copyWith(color: AppColors.yellowColor)),
+                  Wrap(
+                    children:
+                        _frequentlyUsedServicesList.map((e) => null).toList(),
+                  ),
+                ],
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -75,38 +157,44 @@ class _LandingPageState extends ConsumerState<LandingPage> {
         children: [
           SizedBox(
             height: height * 0.55,
-            child: SvgPicture.asset(Assets.servicesBGDesign),
+            width: double.infinity,
+            child: Image.asset(
+              Assets.servicesBGDesign,
+              fit: BoxFit.cover,
+            ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Row(
+          Align(
+            alignment: Alignment.center,
+            child: SizedBox(
+              width: height * 1.6,
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text("Get the best services we offer",
-                      textAlign: TextAlign.left,
-                      style: FontStyles.font24Semibold
-                          .copyWith(color: AppColors.blackColor)),
-                  Text(
-                      "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-                      textAlign: TextAlign.left,
-                      style: FontStyles.font12Regular
-                          .copyWith(color: AppColors.blackLightColor)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text("Get the best services\nwe offer",
+                          textAlign: TextAlign.left,
+                          style: FontStyles.font24Semibold.copyWith(
+                              color: AppColors.blackColor, fontSize: 32)),
+                      const Spacer(),
+                      Text(
+                          "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem \nIpsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
+                          textAlign: TextAlign.left,
+                          style: FontStyles.font14Semibold
+                              .copyWith(color: AppColors.blackLightColor)),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: _category
+                        .map((category) => ServiceContainer(
+                            category: category, width: height * 1.6))
+                        .toList(),
+                  ),
                 ],
               ),
-              ListView.separated(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemBuilder: (_, __) => Container(
-                  height: height * 0.4,
-                  decoration: BoxDecoration(
-                      color: Colors.teal,
-                      borderRadius: BorderRadius.circular(20)),
-                ),
-                separatorBuilder: (_, __) => const SizedBox(width: 12),
-                itemCount: 4,
-              )
-            ],
+            ),
           ),
         ],
       ),
