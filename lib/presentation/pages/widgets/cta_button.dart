@@ -7,6 +7,7 @@ class CTAButton extends StatelessWidget {
   final String title;
   final bool fullWidth;
   final double? radius;
+  final bool loading;
 
   const CTAButton({
     super.key,
@@ -14,12 +15,13 @@ class CTAButton extends StatelessWidget {
     required this.title,
     this.fullWidth = false,
     this.radius,
+    this.loading = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: onTap,
+        onTap: loading ? null : onTap,
         child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 14),
             width: fullWidth ? MediaQuery.of(context).size.width : null,
@@ -29,5 +31,7 @@ class CTAButton extends StatelessWidget {
             child: fullWidth ? Center(child: _title()) : _title()));
   }
 
-  Text _title() => Text(title, style: FontStyles.font14Bold);
+  Widget _title() => loading
+      ? const CircularProgressIndicator.adaptive()
+      : Text(title, style: FontStyles.font14Bold);
 }

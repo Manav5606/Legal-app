@@ -109,6 +109,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               const SizedBox(height: 24),
               CTAButton(
                   title: "Log In",
+                  loading: _viewModel.isLoading,
                   onTap: _viewModel.isLoading
                       ? null
                       : () async {

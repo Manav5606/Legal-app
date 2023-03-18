@@ -1,5 +1,6 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
+import 'package:admin/presentation/pages/client/dialog/add_client_dialog.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/utils/web_scroll.dart';
 import 'package:flutter/material.dart';
@@ -168,7 +169,18 @@ class _ClientPageState extends ConsumerState<ClientPage> {
                 style: FontStyles.font14Semibold),
           ],
         ),
-        CTAButton(title: "Add Client", onTap: () {}),
+        CTAButton(
+            title: "Add Client",
+            onTap: () {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => const Dialog(
+                  insetPadding: EdgeInsets.all(24),
+                  child: AddClientDialog(),
+                ),
+              );
+            }),
       ],
     );
   }
