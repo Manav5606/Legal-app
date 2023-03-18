@@ -3,9 +3,13 @@ import 'dart:developer';
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
+import 'package:admin/core/enum/admin_menu.dart';
+import 'package:admin/core/enum/role.dart';
 import 'package:admin/core/provider.dart';
 import 'package:admin/data/models/models.dart';
 import 'package:admin/presentation/pages/authentication/index.dart';
+import 'package:admin/presentation/pages/client/client_page.dart';
+import 'package:admin/presentation/pages/home/home_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -117,24 +121,38 @@ class _HeaderState extends ConsumerState<Header> {
           const Spacer(),
           isAuthenticated
               ? Row(children: [
-                  Text(
-                    "Role ⬇ ${user?.userType.name}",
-                    style: FontStyles.font12Regular
-                        .copyWith(color: AppColors.yellowColor),
-                  ),
-                  const SizedBox(
-                    width: 11.22,
-                  ),
-                  Text(
-                    "${user?.name}",
-                    style: FontStyles.font12Regular,
-                  ),
+                  user?.userType == UserType.admin
+                      ? PopupMenuButton(
+                          child: Row(
+                            children: [
+                              Text(
+                                "${user?.name}",
+                                style: FontStyles.font12Regular
+                                    .copyWith(color: AppColors.yellowColor),
+                              ),
+                              Icon(Icons.arrow_drop_down,
+                                  color: AppColors.yellowColor)
+                            ],
+                          ),
+                          itemBuilder: (_) => AdminMenu.values
+                              .map((menu) => PopupMenuItem(
+                                    child: Text(menu.title),
+                                    onTap: () => ref
+                                        .read(HomeViewModel.provider)
+                                        .loadOtherView(menu.view),
+                                  ))
+                              .toList(),
+                        )
+                      : Text(
+                          "${user?.name}",
+                          style: FontStyles.font12Regular,
+                        ),
                   const SizedBox(
                     width: 11.22,
                   ),
                   Divider(color: AppColors.yellowColor, thickness: 3),
                   const SizedBox(
-                    width: 9.68,
+                    width: 20,
                     child: CircleAvatar(),
                   ),
                   DropdownMenu(
@@ -143,7 +161,7 @@ class _HeaderState extends ConsumerState<Header> {
                           .toList(),
                       onSelected: (value) {
                         log(value.toString());
-                      }),
+                      })
                 ])
               : Row(
                   children: [

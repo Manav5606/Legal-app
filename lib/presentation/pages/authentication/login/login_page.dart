@@ -1,9 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
 import 'package:admin/core/constant/sizes.dart';
+import 'package:admin/core/enum/role.dart';
 import 'package:admin/presentation/pages/authentication/login/login_view_model.dart';
 import 'package:admin/presentation/pages/home/home_page.dart';
+import 'package:admin/presentation/pages/landing/landing_page.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/pages/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +35,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     ref.watch(LoginViewModel.provider);
+
     return Scaffold(
       body: Row(
         children: [
@@ -107,8 +112,25 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   onTap: _viewModel.isLoading
                       ? null
                       : () async {
-                          if (await _viewModel.login()) {
-                            Routemaster.of(context).replace(HomePage.routeName);
+                          final user = await _viewModel.login();
+                          if (user != null) {
+                            switch (user.userType) {
+                              case UserType.user:
+                                Routemaster.of(context)
+                                    .replace(LandingPage.routeName);
+                                break;
+                              case UserType.admin:
+                                Routemaster.of(context)
+                                    .replace(HomePage.routeName);
+                                break;
+                              case UserType.client:
+                                Routemaster.of(context)
+                                    .replace(LandingPage.routeName);
+                                break;
+                              default:
+                                Routemaster.of(context)
+                                    .replace(LandingPage.routeName);
+                            }
                           }
                         }),
             ],

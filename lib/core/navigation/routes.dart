@@ -23,7 +23,5 @@ final routeLoggedIn = RouteMap(
   routes: {
     LandingPage.routeName: (_) => const MaterialPage(child: LandingPage()),
     HomePage.routeName: (_) => const MaterialPage(child: HomePage()),
-    // LoginPage.routeName: (_) => const MaterialPage(child: LoginPage()),
-    // RegisterPage.routeName: (_) => const MaterialPage(child: RegisterPage()),
   },
 );

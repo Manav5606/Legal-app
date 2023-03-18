@@ -1,6 +1,7 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/presentation/pages/client/client_page.dart';
+import 'package:admin/presentation/pages/home/home_view_model.dart';
 import 'package:admin/presentation/pages/widgets/footer.dart';
 import 'package:admin/presentation/pages/widgets/header.dart';
 import 'package:flutter/material.dart';
@@ -21,17 +22,18 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
-
-  bool showTabView = false;
+  late final HomeViewModel _viewModel;
 
   @override
   void initState() {
     _tabController = TabController(length: 3, vsync: this);
+    _viewModel = ref.read(HomeViewModel.provider);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(HomeViewModel.provider);
     return Scaffold(
         body: ListView(
       children: [
@@ -49,6 +51,10 @@ class _HomePageState extends ConsumerState<HomePage>
                 child: TabBar(
                     controller: _tabController,
                     indicatorColor: AppColors.blueColor,
+                    onTap: (value) {
+                      _viewModel.updateTabView(true);
+                      _tabController.animateTo(value);
+                    },
                     tabs: ["Dashboard", "Inbox", "Notification"]
                         .map((e) => Text(e,
                             style: FontStyles.font24Semibold
@@ -63,7 +69,7 @@ class _HomePageState extends ConsumerState<HomePage>
           color: AppColors.whiteColor,
           height: MediaQuery.of(context).size.height * 0.7,
           child: Expanded(
-            child: showTabView
+            child: _viewModel.showTabView
                 ? TabBarView(
                     controller: _tabController,
                     children: const [
@@ -72,22 +78,11 @@ class _HomePageState extends ConsumerState<HomePage>
                       NotificationTab(),
                     ],
                   )
-                : loadView(ClientPage.routeName),
+                : _viewModel.otherView,
           ),
         ),
         const Footer(),
       ],
     ));
-  }
-
-  loadView(String viewName) {
-    switch (viewName) {
-      case ClientPage.routeName:
-        return const ClientPage();
-      default:
-        setState(() {
-          showTabView = true;
-        });
-    }
   }
 }

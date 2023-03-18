@@ -1,5 +1,6 @@
 import 'package:admin/core/provider.dart';
 import 'package:admin/core/utils/messenger.dart';
+import 'package:admin/data/models/models.dart';
 import 'package:admin/domain/provider/auth_provider.dart';
 import 'package:admin/presentation/base_view_model.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,7 @@ class LoginViewModel extends BaseViewModel {
     super.dispose();
   }
 
-  Future<bool> login() async {
+  Future<User?> login() async {
     try {
       toggleLoadingOn(true);
       if (_validateValues()) {
@@ -62,16 +63,16 @@ class LoginViewModel extends BaseViewModel {
         );
         result.fold((l) async {
           Messenger.showSnackbar(l.message);
-          return false;
+          return null;
         }, (r) {
           Messenger.showSnackbar("Logged In ✅");
-          return true;
+          return r;
         });
       }
-      return false;
+      return null;
     } catch (e) {
       Messenger.showSnackbar(e.toString());
-      return false;
+      return null;
     } finally {
       toggleLoadingOn(false);
     }

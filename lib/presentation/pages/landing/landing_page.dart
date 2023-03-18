@@ -127,7 +127,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
           ),
           _services(700),
           _frequentlyUsedServices(350),
-          _newsAndUpdates(800),
+          // _newsAndUpdates(800),
           Stack(
             children: [
               // TODO add contacts us
