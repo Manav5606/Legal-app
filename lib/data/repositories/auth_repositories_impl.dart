@@ -88,23 +88,20 @@ class AuthRepositoryImpl extends AuthRepository with RepositoryExceptionMixin {
     required model.User user,
   }) async {
     try {
-      final cToken = _firebaseAuth.currentUser!.refreshToken!;
-      final result = await _firebaseAuth.createUserWithEmailAndPassword(
-          email: user.email, password: password);
-      final User? firebaseUser = result.user;
-      if (firebaseUser == null) {
-        return Left(
-            AppError(message: "Something went wrong. Can't create account."));
-      }
-      await _firebaseFirestore
+      // TODO don't delete
+      // final result = await _firebaseAuth.createUserWithEmailAndPassword(
+      //     email: user.email, password: password);
+      // final User? firebaseUser = result.user;
+      // if (firebaseUser == null) {
+      //   return Left(
+      //       AppError(message: "Something went wrong. Can't create account."));
+      // }
+      final doc = await _firebaseFirestore
           .collection(FirebaseConfig.userCollection)
-          .doc(firebaseUser.uid)
-          .set(user.toJson());
-      await _firebaseAuth.signOut();
-      final cre = await _firebaseAuth.signInWithCustomToken(cToken);
+          .add(user.toJson());
       return Right(model.User.fromSnapshot((await _firebaseFirestore
           .collection(FirebaseConfig.userCollection)
-          .doc(firebaseUser.uid)
+          .doc(doc.id)
           .get())));
     } on FirebaseAuthException catch (fae) {
       logger.severe(fae);
