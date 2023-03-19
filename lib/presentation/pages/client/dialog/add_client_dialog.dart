@@ -1,5 +1,6 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
+import 'package:admin/presentation/pages/client/client_view_model.dart';
 import 'package:admin/presentation/pages/client/dialog/add_client_view_model.dart';
 import 'package:admin/presentation/pages/widgets/dialog_textfield.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +55,10 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
                           .copyWith(color: AppColors.blueColor))),
               ElevatedButton(
                 onPressed: () async {
-                  await _viewModel.createClient();
+                  await _viewModel
+                      .createClient()
+                      .then((value) => Navigator.pop(context));
+                  await ref.read(ClientViewModel.provider).fetchClients();
                 },
                 child: Text(
                   "Add Client",

@@ -60,8 +60,6 @@ class AuthRepositoryImpl extends AuthRepository with RepositoryExceptionMixin {
   @override
   Stream<Either<AppError, model.User>> getUser() async* {
     try {
-      Either<AppError, model.User> localValue = Left(AppError(message: ''));
-
       final fbUiD = _firebaseAuth.currentUser?.uid;
       if (fbUiD == null) {
         yield Left(AppError(message: "Unauthenticated"));
@@ -73,8 +71,6 @@ class AuthRepositoryImpl extends AuthRepository with RepositoryExceptionMixin {
           yield Right(model.User.fromSnapshot((doc)));
         }
       }
-
-      yield localValue;
     } on FirebaseException catch (e) {
       yield Left(AppError(
         message: "Firebase Error",
@@ -92,6 +88,7 @@ class AuthRepositoryImpl extends AuthRepository with RepositoryExceptionMixin {
     required model.User user,
   }) async {
     try {
+      final cToken = _firebaseAuth.currentUser!.refreshToken!;
       final result = await _firebaseAuth.createUserWithEmailAndPassword(
           email: user.email, password: password);
       final User? firebaseUser = result.user;
@@ -103,6 +100,8 @@ class AuthRepositoryImpl extends AuthRepository with RepositoryExceptionMixin {
           .collection(FirebaseConfig.userCollection)
           .doc(firebaseUser.uid)
           .set(user.toJson());
+      await _firebaseAuth.signOut();
+      final cre = await _firebaseAuth.signInWithCustomToken(cToken);
       return Right(model.User.fromSnapshot((await _firebaseFirestore
           .collection(FirebaseConfig.userCollection)
           .doc(firebaseUser.uid)

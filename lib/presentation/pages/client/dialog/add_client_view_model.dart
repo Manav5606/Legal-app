@@ -1,9 +1,10 @@
 import 'package:admin/core/enum/role.dart';
 import 'package:admin/core/provider.dart';
 import 'package:admin/core/utils/messenger.dart';
-import 'package:admin/data/models/models.dart';
+import 'package:admin/data/models/models.dart' as model;
 import 'package:admin/domain/provider/auth_provider.dart';
 import 'package:admin/presentation/base_view_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -56,11 +57,13 @@ class AddClientViewModel extends BaseViewModel {
   Future createClient() async {
     if (_validateValues()) {
       final result = await _authProvider.register(
-        user: User(
-            name: nameController.text,
-            userType: UserType.client,
-            email: emailController.text,
-            phoneNumber: int.parse(numberController.text)),
+        user: model.User(
+          name: nameController.text,
+          userType: UserType.client,
+          email: emailController.text,
+          phoneNumber: int.parse(numberController.text),
+          createdBy: FirebaseAuth.instance.currentUser?.uid,
+        ),
         password: "12345@test",
       );
       // TODO ask for other details and add them also
@@ -68,7 +71,7 @@ class AddClientViewModel extends BaseViewModel {
         Messenger.showSnackbar(l.message);
         return null;
       }, (r) {
-        Messenger.showSnackbar("Client Created ✅");
+        Messenger.showSnackbar("Client Created ✅ with Defautl Password");
         return r;
       });
     }

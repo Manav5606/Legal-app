@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 abstract class Repository {
   static Provider<AuthRepositoryImpl> get auth => AuthRepositoryImpl.provider;
+  static Provider<DatabaseRepositoryImpl> get database =>
+      DatabaseRepositoryImpl.provider;
 }
 
 abstract class AppState {
