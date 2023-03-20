@@ -46,7 +46,7 @@ class AuthProvider extends StateNotifier<AuthState> {
     });
   }
 
-  Future<Either<AppError, bool>> register({
+  Future<Either<AppError, User>> register({
     required User user,
     required String password,
     bool streamUser = false,

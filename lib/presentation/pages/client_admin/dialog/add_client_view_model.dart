@@ -39,14 +39,14 @@ class AddClientViewModel extends BaseViewModel {
   bool _validateValues() {
     clearError();
 
-    if (emailController.text.isEmpty && emailController.text.isValidEmail()) {
+    if (emailController.text.isEmpty || !emailController.text.isValidEmail()) {
       emailError = "Please enter a valid Email Address";
     }
     if (nameController.text.isEmpty) {
       nameError = "This field is required";
     }
-    if (numberController.text.isEmpty &&
-        numberController.text.isValidPhoneNumber()) {
+    if (numberController.text.isEmpty ||
+        !numberController.text.isValidPhoneNumber()) {
       numberError = "Please enter a Valid 10 Digit Phone Number";
     }
 
@@ -89,7 +89,7 @@ class AddClientViewModel extends BaseViewModel {
   Future createClient(model.User? existingClient) async {
     if (_validateValues()) {
       toggleLoadingOn(true);
-      late final Either<AppError, bool> result;
+      late final Either<AppError, User> result;
       if (existingClient != null) {
         final _user = existingClient.copyWith(
           name: nameController.text,

@@ -6,11 +6,12 @@ import 'package:admin/presentation/base_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _loginViewModel = ChangeNotifierProvider(
+final _loginViewModel = ChangeNotifierProvider.autoDispose(
     (ref) => LoginViewModel(ref.read(AppState.auth.notifier)));
 
 class LoginViewModel extends BaseViewModel {
-  static ChangeNotifierProvider<LoginViewModel> get provider => _loginViewModel;
+  static AutoDisposeChangeNotifierProvider<LoginViewModel> get provider =>
+      _loginViewModel;
   LoginViewModel(this._authProvider);
   final AuthProvider _authProvider;
 

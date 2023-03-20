@@ -6,7 +6,7 @@ abstract class AuthRepository {
     required String email,
     required String password,
   });
-  Future<Either<AppError, bool>> registerWithEmailPassword({
+  Future<Either<AppError, User>> registerWithEmailPassword({
     required String password,
     required User user,
     required bool createdByAdmin,

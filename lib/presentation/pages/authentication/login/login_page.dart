@@ -5,6 +5,7 @@ import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
 import 'package:admin/core/constant/sizes.dart';
 import 'package:admin/core/enum/role.dart';
+import 'package:admin/presentation/pages/authentication/index.dart';
 import 'package:admin/presentation/pages/authentication/login/login_view_model.dart';
 import 'package:admin/presentation/pages/home/home_page.dart';
 import 'package:admin/presentation/pages/landing/landing_page.dart';
@@ -78,7 +79,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             children: [
               SvgPicture.asset(Assets.iconsTwentyseven, height: 160),
               const SizedBox(height: 24),
-              Text("Admin Login",
+              Text("Login",
                   style: FontStyles.font20Semibold
                       .copyWith(color: AppColors.whiteColor)),
             ],
@@ -134,6 +135,23 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             }
                           }
                         }),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Don't have an account?",
+                      style: FontStyles.font12Regular
+                          .copyWith(color: AppColors.whiteColor)),
+                  const SizedBox(width: 4),
+                  InkWell(
+                    onTap: () =>
+                        Routemaster.of(context).push(RegisterPage.routeName),
+                    child: Text("Register",
+                        style: FontStyles.font14Bold
+                            .copyWith(color: AppColors.yellowColor)),
+                  ),
+                ],
+              ),
             ],
           ),
           const SizedBox.shrink(),
