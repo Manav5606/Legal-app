@@ -9,6 +9,7 @@ abstract class AuthRepository {
   Future<Either<AppError, User>> registerWithEmailPassword({
     required String password,
     required User user,
+    required bool createdByAdmin,
   });
   Future<void> logoutUser();
   Stream<Either<AppError, User>> getUser();

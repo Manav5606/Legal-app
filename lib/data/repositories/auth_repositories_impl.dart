@@ -2,9 +2,11 @@ import 'package:admin/core/constant/firebase_config.dart';
 import 'package:admin/data/models/app_error.dart';
 import 'package:admin/data/models/models.dart' as model;
 import 'package:admin/domain/repositories/auth_repository.dart';
+import 'package:admin/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'index.dart';
 
@@ -81,27 +83,37 @@ class AuthRepositoryImpl extends AuthRepository with RepositoryExceptionMixin {
     }
   }
 
-  /// TODO Add OTP logic Later
   @override
   Future<Either<model.AppError, model.User>> registerWithEmailPassword({
     required String password,
     required model.User user,
+    required bool createdByAdmin,
   }) async {
+    late final UserCredential result;
     try {
-      // TODO don't delete
-      // final result = await _firebaseAuth.createUserWithEmailAndPassword(
-      //     email: user.email, password: password);
-      // final User? firebaseUser = result.user;
-      // if (firebaseUser == null) {
-      //   return Left(
-      //       AppError(message: "Something went wrong. Can't create account."));
-      // }
-      final doc = await _firebaseFirestore
+      if (createdByAdmin) {
+        final tempApp = await Firebase.initializeApp(
+            name: "secondApp", options: DefaultFirebaseOptions.currentPlatform);
+        result = await FirebaseAuth.instanceFor(app: tempApp)
+            .createUserWithEmailAndPassword(
+                email: user.email, password: password);
+        await tempApp.delete();
+      } else {
+        result = await _firebaseAuth.createUserWithEmailAndPassword(
+            email: user.email, password: password);
+      }
+      final User? firebaseUser = result.user;
+      if (firebaseUser == null) {
+        return Left(
+            AppError(message: "Something went wrong. Can't create account."));
+      }
+      await _firebaseFirestore
           .collection(FirebaseConfig.userCollection)
-          .add(user.toJson());
+          .doc(firebaseUser.uid)
+          .set(user.toJson());
       return Right(model.User.fromSnapshot((await _firebaseFirestore
           .collection(FirebaseConfig.userCollection)
-          .doc(doc.id)
+          .doc(firebaseUser.uid)
           .get())));
     } on FirebaseAuthException catch (fae) {
       logger.severe(fae);

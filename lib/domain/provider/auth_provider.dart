@@ -54,6 +54,7 @@ class AuthProvider extends StateNotifier<AuthState> {
     final result = await _authRepositoryImpl.registerWithEmailPassword(
       password: password,
       user: user,
+      createdByAdmin: !streamUser,
     );
     if (result.isRight()) {
       if (streamUser) {
