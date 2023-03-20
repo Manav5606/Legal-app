@@ -57,4 +57,41 @@ class DatabaseRepositoryImpl extends DatabaseRepository
       return Left(AppError(message: "Unkown Error, Plese try again later."));
     }
   }
+
+  @override
+  Future<Either<AppError, bool>> updateUser({required User user}) async {
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseConfig.userCollection)
+          .doc(user.id)
+          .update(user.toJson());
+      return const Right(true);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<AppError, bool>> deactivateUser({required User user}) async {
+    try {
+      final dUser = user.copyWith(isDeactivated: true);
+      await _firebaseFirestore
+          .collection(FirebaseConfig.userCollection)
+          .doc(dUser.id)
+          .update(dUser.toJson());
+      return const Right(true);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
 }

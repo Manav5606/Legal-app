@@ -10,10 +10,12 @@ class User {
   final UserType userType;
   final String email;
   final int phoneNumber;
+  bool isDeactivated;
   Client? client;
 
   User({
     this.id,
+    this.isDeactivated = false,
     this.createdAt,
     required this.name,
     required this.userType,
@@ -35,6 +37,7 @@ class User {
           orElse: () => UserType.user),
       email: data['email'],
       phoneNumber: data['phone_number'],
+      isDeactivated: data['is_deactivated'] ?? false,
     );
   }
 
@@ -44,14 +47,18 @@ class User {
     UserType? userType,
     String? email,
     int? phoneNumber,
+    bool? isDeactivated,
   }) =>
       User(
-        name: name ?? this.name,
-        userType: userType ?? this.userType,
-        email: email ?? this.email,
-        phoneNumber: phoneNumber ?? this.phoneNumber,
-        client: client ?? this.client,
-      );
+          name: name ?? this.name,
+          userType: userType ?? this.userType,
+          email: email ?? this.email,
+          phoneNumber: phoneNumber ?? this.phoneNumber,
+          client: client ?? this.client,
+          isDeactivated: isDeactivated ?? this.isDeactivated,
+          createdAt: createdAt,
+          createdBy: createdBy,
+          id: id);
 
   Map<String, dynamic> toJson() => {
         "created_at": createdAt ?? DateTime.now().millisecondsSinceEpoch,
@@ -60,5 +67,6 @@ class User {
         "user_type": userType.name,
         "email": email,
         "phone_number": phoneNumber,
+        "is_deactivated": isDeactivated,
       };
 }

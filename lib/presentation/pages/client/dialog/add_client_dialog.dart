@@ -1,5 +1,6 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
+import 'package:admin/data/models/models.dart';
 import 'package:admin/presentation/pages/client/client_view_model.dart';
 import 'package:admin/presentation/pages/client/dialog/add_client_view_model.dart';
 import 'package:admin/presentation/pages/widgets/dialog_textfield.dart';
@@ -7,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddClientDialog extends ConsumerStatefulWidget {
-  const AddClientDialog({super.key});
+  final User? clientUser;
+  const AddClientDialog({super.key, this.clientUser});
 
   @override
   ConsumerState<AddClientDialog> createState() => _AddClientDialogState();
@@ -19,6 +21,7 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
   void initState() {
     super.initState();
     _viewModel = ref.read(AddClientViewModel.provider);
+    _viewModel.initClientUser(widget.clientUser);
   }
 
   @override
@@ -32,10 +35,16 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Add New Client",
+            Text(
+                widget.clientUser == null
+                    ? "Add New Client"
+                    : "Update Existing Client",
                 style: FontStyles.font24Semibold
                     .copyWith(color: AppColors.blueColor)),
-            Text("Add your new client here",
+            Text(
+                widget.clientUser == null
+                    ? "Add your new client here"
+                    : "Update your existing client here",
                 style: FontStyles.font12Regular
                     .copyWith(color: AppColors.blueColor)),
             DialogTextField(
@@ -50,6 +59,23 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                Visibility(
+                  visible: widget.clientUser != null,
+                  child: TextButton(
+                      onPressed: _viewModel.isLoading
+                          ? null
+                          : () async {
+                              await _viewModel
+                                  .deactivateClient(widget.clientUser!)
+                                  .then((value) => Navigator.pop(context));
+                              await ref
+                                  .read(ClientViewModel.provider)
+                                  .fetchClients();
+                            },
+                      child: Text("Deactivate Client",
+                          style: FontStyles.font12Regular
+                              .copyWith(color: AppColors.redColor))),
+                ),
                 TextButton(
                     onPressed: _viewModel.isLoading
                         ? null
@@ -62,7 +88,7 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
                       ? null
                       : () async {
                           await _viewModel
-                              .createClient()
+                              .createClient(widget.clientUser)
                               .then((value) => Navigator.pop(context));
                           await ref
                               .read(ClientViewModel.provider)
@@ -71,7 +97,9 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
                   child: _viewModel.isLoading
                       ? const CircularProgressIndicator.adaptive()
                       : Text(
-                          "Add Client",
+                          widget.clientUser == null
+                              ? "Add Client"
+                              : "Update Client",
                           style: FontStyles.font12Regular
                               .copyWith(color: AppColors.whiteColor),
                         ),

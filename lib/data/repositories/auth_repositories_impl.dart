@@ -84,7 +84,7 @@ class AuthRepositoryImpl extends AuthRepository with RepositoryExceptionMixin {
   }
 
   @override
-  Future<Either<model.AppError, model.User>> registerWithEmailPassword({
+  Future<Either<model.AppError, bool>> registerWithEmailPassword({
     required String password,
     required model.User user,
     required bool createdByAdmin,
@@ -111,10 +111,11 @@ class AuthRepositoryImpl extends AuthRepository with RepositoryExceptionMixin {
           .collection(FirebaseConfig.userCollection)
           .doc(firebaseUser.uid)
           .set(user.toJson());
-      return Right(model.User.fromSnapshot((await _firebaseFirestore
-          .collection(FirebaseConfig.userCollection)
-          .doc(firebaseUser.uid)
-          .get())));
+      return const Right(true);
+      // return Right(model.User.fromSnapshot((await _firebaseFirestore
+      //     .collection(FirebaseConfig.userCollection)
+      //     .doc(firebaseUser.uid)
+      //     .get())));
     } on FirebaseAuthException catch (fae) {
       logger.severe(fae);
       return Left(

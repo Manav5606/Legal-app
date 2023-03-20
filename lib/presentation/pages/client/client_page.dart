@@ -88,6 +88,10 @@ class _ClientPageState extends ConsumerState<ClientPage> {
                               rows: _viewModel.getClients.map(
                                 (data) {
                                   return DataRow(
+                                    color: data.isDeactivated
+                                        ? MaterialStateProperty.all(
+                                            AppColors.lightRedColor)
+                                        : null,
                                     cells: [
                                       DataCell(Text(data.id.toString())),
                                       DataCell(Text(data.createdAt.toString())),
@@ -97,7 +101,18 @@ class _ClientPageState extends ConsumerState<ClientPage> {
                                       DataCell(Text(data.email.toString())),
                                       DataCell(TextButton(
                                           child: const Text("Edit"),
-                                          onPressed: () {})),
+                                          onPressed: () {
+                                            showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (_) => Dialog(
+                                                insetPadding:
+                                                    const EdgeInsets.all(24),
+                                                child: AddClientDialog(
+                                                    clientUser: data),
+                                              ),
+                                            );
+                                          })),
                                     ],
                                   );
                                 },
