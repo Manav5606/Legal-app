@@ -1,6 +1,6 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
-import 'package:admin/presentation/pages/client/client_page.dart';
+import 'package:admin/presentation/pages/client_admin/client_page.dart';
 import 'package:admin/presentation/pages/home/home_view_model.dart';
 import 'package:admin/presentation/pages/widgets/footer.dart';
 import 'package:admin/presentation/pages/widgets/header.dart';

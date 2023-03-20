@@ -40,11 +40,11 @@ class DatabaseRepositoryImpl extends DatabaseRepository
   }
 
   @override
-  Future<Either<AppError, List<User>>> fetchAllClients() async {
+  Future<Either<AppError, List<User>>> fetchUsersByType(UserType type) async {
     try {
       final response = await _firebaseFirestore
           .collection(FirebaseConfig.userCollection)
-          .where("user_type", isEqualTo: UserType.client.name)
+          .where("user_type", isEqualTo: type.name)
           .get();
 
       return Right(response.docs.map((doc) => User.fromSnapshot(doc)).toList());

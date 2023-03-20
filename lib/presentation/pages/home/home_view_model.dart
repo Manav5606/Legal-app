@@ -1,5 +1,5 @@
 import 'package:admin/presentation/base_view_model.dart';
-import 'package:admin/presentation/pages/client/client_page.dart';
+import 'package:admin/presentation/pages/client_admin/client_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

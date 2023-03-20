@@ -1,4 +1,5 @@
 import 'package:admin/core/enum/role.dart';
+import 'package:admin/core/extension/validator.dart';
 import 'package:admin/core/provider.dart';
 import 'package:admin/core/utils/messenger.dart';
 import 'package:admin/data/models/models.dart' as model;
@@ -38,14 +39,15 @@ class AddClientViewModel extends BaseViewModel {
   bool _validateValues() {
     clearError();
 
-    if (emailController.text.isEmpty) {
-      emailError = "This field is required";
+    if (emailController.text.isEmpty && emailController.text.isValidEmail()) {
+      emailError = "Please enter a valid Email Address";
     }
     if (nameController.text.isEmpty) {
-      emailError = "This field is required";
+      nameError = "This field is required";
     }
-    if (numberController.text.isEmpty) {
-      emailError = "This field is required";
+    if (numberController.text.isEmpty &&
+        numberController.text.isValidPhoneNumber()) {
+      numberError = "Please enter a Valid 10 Digit Phone Number";
     }
 
     return emailError == null && nameError == null && numberError == null;

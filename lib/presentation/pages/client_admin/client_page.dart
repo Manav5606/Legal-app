@@ -1,7 +1,7 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
-import 'package:admin/presentation/pages/client/client_view_model.dart';
-import 'package:admin/presentation/pages/client/dialog/add_client_dialog.dart';
+import 'package:admin/presentation/pages/client_admin/client_view_model.dart';
+import 'package:admin/presentation/pages/client_admin/dialog/add_client_dialog.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/utils/web_scroll.dart';
 import 'package:flutter/material.dart';
@@ -65,8 +65,8 @@ class _ClientPageState extends ConsumerState<ClientPage> {
                               border: TableBorder.all(
                                   borderRadius: BorderRadius.circular(30),
                                   color: AppColors.greyColor),
-                              sortAscending: true,
-                              sortColumnIndex: 0,
+                              sortAscending: !_viewModel.sortAscending,
+                              sortColumnIndex: _viewModel.sortIndex,
                               dataRowColor: MaterialStateProperty.all(
                                   AppColors.lightGreyColor),
                               headingRowColor: MaterialStateProperty.all(
@@ -77,12 +77,26 @@ class _ClientPageState extends ConsumerState<ClientPage> {
                                   .copyWith(color: AppColors.blackColor),
                               columns: [
                                 DataColumn(
-                                    label: const Text("Client ID"),
-                                    onSort: (_, __) {}),
-                                const DataColumn(label: Text("Date")),
-                                const DataColumn(label: Text("Username")),
-                                const DataColumn(label: Text("Contact")),
-                                const DataColumn(label: Text("Email")),
+                                  label: const Text("Client ID"),
+                                  onSort: _viewModel.sortClients,
+                                ),
+                                DataColumn(
+                                  numeric: true,
+                                  label: const Text("Date"),
+                                  onSort: _viewModel.sortClients,
+                                ),
+                                DataColumn(
+                                  label: const Text("Username"),
+                                  onSort: _viewModel.sortClients,
+                                ),
+                                DataColumn(
+                                  label: const Text("Contact"),
+                                  onSort: _viewModel.sortClients,
+                                ),
+                                DataColumn(
+                                  label: const Text("Email"),
+                                  onSort: _viewModel.sortClients,
+                                ),
                                 const DataColumn(label: Text("Action")),
                               ],
                               rows: _viewModel.getClients.map(

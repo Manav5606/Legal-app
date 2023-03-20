@@ -1,8 +1,8 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/data/models/models.dart';
-import 'package:admin/presentation/pages/client/client_view_model.dart';
-import 'package:admin/presentation/pages/client/dialog/add_client_view_model.dart';
+import 'package:admin/presentation/pages/client_admin/client_view_model.dart';
+import 'package:admin/presentation/pages/client_admin/dialog/add_client_view_model.dart';
 import 'package:admin/presentation/pages/widgets/dialog_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,14 +48,18 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
                 style: FontStyles.font12Regular
                     .copyWith(color: AppColors.blueColor)),
             DialogTextField(
+              errorText: _viewModel.nameError,
               hintText: "Full Name / Company Name",
               controller: _viewModel.nameController,
             ),
             DialogTextField(
+                errorText: _viewModel.numberError,
                 hintText: "Phone Number",
                 controller: _viewModel.numberController),
             DialogTextField(
-                hintText: "Email ID", controller: _viewModel.emailController),
+                errorText: _viewModel.emailError,
+                hintText: "Email ID",
+                controller: _viewModel.emailController),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
