@@ -4,11 +4,10 @@ import 'package:admin/core/utils/messenger.dart';
 import 'package:admin/data/models/models.dart' as model;
 import 'package:admin/domain/provider/auth_provider.dart';
 import 'package:admin/presentation/base_view_model.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _provider = ChangeNotifierProvider(
+final _provider = ChangeNotifierProvider.autoDispose(
     (ref) => AddClientViewModel(ref.read(AppState.auth.notifier)));
 
 class AddClientViewModel extends BaseViewModel {
@@ -16,7 +15,8 @@ class AddClientViewModel extends BaseViewModel {
 
   AddClientViewModel(this._authProvider);
 
-  static ChangeNotifierProvider<AddClientViewModel> get provider => _provider;
+  static AutoDisposeChangeNotifierProvider<AddClientViewModel> get provider =>
+      _provider;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController numberController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
@@ -56,24 +56,30 @@ class AddClientViewModel extends BaseViewModel {
 
   Future createClient() async {
     if (_validateValues()) {
+      toggleLoadingOn(true);
+
       final result = await _authProvider.register(
         user: model.User(
           name: nameController.text,
           userType: UserType.client,
           email: emailController.text,
           phoneNumber: int.parse(numberController.text),
-          createdBy: FirebaseAuth.instance.currentUser?.uid,
+          createdBy: _authProvider.state.user!.id,
         ),
-        password: "12345@test",
+        password: "12345678",
       );
       // TODO ask for other details and add them also
       result.fold((l) async {
         Messenger.showSnackbar(l.message);
+        toggleLoadingOn(false);
         return null;
       }, (r) {
         Messenger.showSnackbar("Client Created ✅ with Defautl Password");
+        toggleLoadingOn(false);
+
         return r;
       });
+      toggleLoadingOn(false);
     }
   }
 }
