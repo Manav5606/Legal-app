@@ -21,20 +21,11 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for android - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -59,5 +50,33 @@ class DefaultFirebaseOptions {
     projectId: 'legaldemo-87a20',
     authDomain: 'legaldemo-87a20.firebaseapp.com',
     storageBucket: 'legaldemo-87a20.appspot.com',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyBFCpBIx8v8G-QHU7PLcjK3HsefTFkkF7Y',
+    appId: '1:763789981693:android:050ac3d6252e8b77b54b94',
+    messagingSenderId: '763789981693',
+    projectId: 'legaldemo-87a20',
+    storageBucket: 'legaldemo-87a20.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyCbv5ggqWKXmikFq58SNgGrDrFuomF1e_8',
+    appId: '1:763789981693:ios:5cd883aa11126902b54b94',
+    messagingSenderId: '763789981693',
+    projectId: 'legaldemo-87a20',
+    storageBucket: 'legaldemo-87a20.appspot.com',
+    iosClientId: '763789981693-ovgojibq9anabu0e3knvmm8fgmrpdfdj.apps.googleusercontent.com',
+    iosBundleId: 'com.example.legalapp',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyCbv5ggqWKXmikFq58SNgGrDrFuomF1e_8',
+    appId: '1:763789981693:ios:5cd883aa11126902b54b94',
+    messagingSenderId: '763789981693',
+    projectId: 'legaldemo-87a20',
+    storageBucket: 'legaldemo-87a20.appspot.com',
+    iosClientId: '763789981693-ovgojibq9anabu0e3knvmm8fgmrpdfdj.apps.googleusercontent.com',
+    iosBundleId: 'com.example.legalapp',
   );
 }

@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "763789981693",
+    "project_id": "legaldemo-87a20",
+    "storage_bucket": "legaldemo-87a20.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:763789981693:android:050ac3d6252e8b77b54b94",
+        "android_client_info": {
+          "package_name": "com.example.legalapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "763789981693-kkb99rc0jdq5s8cunveo12hko8hoajti.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFCpBIx8v8G-QHU7PLcjK3HsefTFkkF7Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "763789981693-kkb99rc0jdq5s8cunveo12hko8hoajti.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "763789981693-4u3878qa4k5t5euodo4rq3fqkmk2m70d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.legal247.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:763789981693:android:82ba3553588ac820b54b94",
+        "android_client_info": {
+          "package_name": "com.legal247.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "763789981693-kkb99rc0jdq5s8cunveo12hko8hoajti.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFCpBIx8v8G-QHU7PLcjK3HsefTFkkF7Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "763789981693-kkb99rc0jdq5s8cunveo12hko8hoajti.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "763789981693-4u3878qa4k5t5euodo4rq3fqkmk2m70d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.legal247.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

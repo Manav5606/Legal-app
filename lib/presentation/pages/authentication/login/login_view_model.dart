@@ -63,7 +63,7 @@ class LoginViewModel extends BaseViewModel {
           password: passwordController.text,
         );
         // TODO add check for isDeactivated
-        result.fold((l) async {
+        return result.fold((l) async {
           Messenger.showSnackbar(l.message);
           return null;
         }, (r) {
