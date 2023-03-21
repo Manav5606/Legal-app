@@ -4,6 +4,7 @@ import 'package:admin/data/models/models.dart';
 import 'package:admin/presentation/pages/client_admin/client_view_model.dart';
 import 'package:admin/presentation/pages/client_admin/dialog/add_client_view_model.dart';
 import 'package:admin/presentation/pages/widgets/dialog_textfield.dart';
+import 'package:admin/presentation/pages/widgets/password_criteria_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -47,19 +48,52 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
                     : "Update your existing client here",
                 style: FontStyles.font12Regular
                     .copyWith(color: AppColors.blueColor)),
+            const SizedBox(height: 12),
             DialogTextField(
+              width: 600 * 0.8,
               errorText: _viewModel.nameError,
-              hintText: "Full Name / Company Name",
+              label: "Full Name / Company Name",
+              hintText: "Name",
               controller: _viewModel.nameController,
             ),
+            const SizedBox(height: 12),
             DialogTextField(
+                width: 600 * 0.8,
                 errorText: _viewModel.numberError,
-                hintText: "Phone Number",
+                hintText: "9999999999",
+                label: "Phone Number",
                 controller: _viewModel.numberController),
+            const SizedBox(height: 12),
             DialogTextField(
+                width: 600 * 0.8,
+                hintText: "xyz@abc.com",
                 errorText: _viewModel.emailError,
-                hintText: "Email ID",
+                label: "Email ID",
                 controller: _viewModel.emailController),
+            const SizedBox(height: 12),
+            Visibility(
+              visible: widget.clientUser == null,
+              child: DialogTextField(
+                  width: 600 * 0.8,
+                  hintText: "Password",
+                  errorText: _viewModel.passwordError,
+                  obscureText: !_viewModel.showPassword,
+                  label: "Password",
+                  suffixIcon: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                          onPressed: _viewModel.togglePasswordVisibility,
+                          icon: Icon(_viewModel.showPassword
+                              ? Icons.visibility_off
+                              : Icons.visibility)),
+                      const PasswordCriteriaDialog(),
+                    ],
+                  ),
+                  controller: _viewModel.passwordController),
+            ),
+            const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -93,10 +127,14 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
                       : () async {
                           await _viewModel
                               .createClient(widget.clientUser)
-                              .then((value) => Navigator.pop(context));
-                          await ref
-                              .read(ClientViewModel.provider)
-                              .fetchClients();
+                              .then((value) async {
+                            if (value != null) {
+                              Navigator.pop(context);
+                              await ref
+                                  .read(ClientViewModel.provider)
+                                  .fetchClients();
+                            }
+                          });
                         },
                   child: _viewModel.isLoading
                       ? const CircularProgressIndicator.adaptive()

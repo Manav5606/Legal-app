@@ -65,8 +65,7 @@ class RegisterViewModel extends BaseViewModel {
     }
     if (passwordController.text.isEmpty ||
         !passwordController.text.isValidPassword()) {
-      passwordError =
-          "Please enter a valid password.\n(WIP) Length >= 8, Digit >= 4, Char >= 4 no Special Char.";
+      passwordError = "Please enter a valid password.";
     } else {
       if (password1Controller.text != passwordController.text) {
         password1Error = "Password doesn't match.";

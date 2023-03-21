@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class DialogTextField extends FormField<String> {
+  final double width;
   final String? label;
   final String hintText;
   final bool readOnly;
@@ -14,16 +15,16 @@ class DialogTextField extends FormField<String> {
   final bool obscureText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final bool showBorder;
   final List<TextInputFormatter>? inputFormatters;
   final VoidCallback? onTap;
   final String? errorText;
-  static const Color defaultBackgroundColor = Color(0xffFAFBFF);
 
   DialogTextField({
     Key? key,
     this.label,
+    required this.width,
     required this.hintText,
     required this.controller,
     this.keyboardType = TextInputType.text,
@@ -32,7 +33,7 @@ class DialogTextField extends FormField<String> {
     this.suffixIcon =
         const IconButton(onPressed: null, icon: SizedBox.shrink()),
     this.inputFormatters,
-    this.backgroundColor = defaultBackgroundColor,
+    this.backgroundColor,
     this.maxLines = 1,
     this.readOnly = false,
     this.showBorder = true,
@@ -52,36 +53,20 @@ class DialogTextField extends FormField<String> {
               }
             }
 
-            // BoxBorder setBorder() {
-            //   Color borderColor = (!field.isValid && field.errorText == null)
-            //       ? defaultBackgroundColor
-            //       : field.isValid
-            //           ? defaultBackgroundColor
-            //           : Colors.red;
-            //   return Border.all(width: 0.8, color: borderColor);
-            // }
-
-            return UnmanagedRestorationScope(
-              bucket: field.bucket,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Visibility(
-                      visible: label != null,
-                      child: Text(label ?? "",
-                          style: FontStyles.font14Semibold
-                              .copyWith(color: AppColors.greyColor))),
-                  Container(
-                    padding: suffixIcon != null
-                        ? EdgeInsets.only(left: Sizes.s12.h)
-                        : prefixIcon == null
-                            ? EdgeInsets.symmetric(
-                                horizontal: Sizes.s12.h,
-                                vertical: maxLines > 1 ? Sizes.s8.h : 0,
-                              )
-                            : EdgeInsets.zero,
-                    child: TextField(
+            return SizedBox(
+              width: width,
+              child: UnmanagedRestorationScope(
+                bucket: field.bucket,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Visibility(
+                        visible: label != null,
+                        child: Text(label ?? "",
+                            style: FontStyles.font14Semibold
+                                .copyWith(color: AppColors.blueColor))),
+                    TextField(
                       cursorColor: AppColors.blueColor,
                       autocorrect: false,
                       style: TextStyle(
@@ -103,26 +88,28 @@ class DialogTextField extends FormField<String> {
                         hintText: hintText,
                         prefixIcon: prefixIcon,
                         suffixIcon: suffixIcon,
-                        border: InputBorder.none,
+                        border: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: backgroundColor ?? AppColors.blueColor)),
                         errorText: errorText,
                       ),
                     ),
-                  ),
-                  if (!field.isValid && field.errorText != null)
-                    Visibility(
-                      visible: !field.isValid,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 7, left: 3),
-                        child: Text(
-                          field.errorText ?? '',
-                          style: TextStyle(
-                            fontSize: Sizes.s12.sp,
-                            color: Colors.red,
+                    if (!field.isValid && field.errorText != null)
+                      Visibility(
+                        visible: !field.isValid,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 7, left: 3),
+                          child: Text(
+                            field.errorText ?? '',
+                            style: TextStyle(
+                              fontSize: Sizes.s12.sp,
+                              color: Colors.red,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             );
           },

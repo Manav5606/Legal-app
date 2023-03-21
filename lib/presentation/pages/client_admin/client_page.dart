@@ -1,5 +1,6 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
+import 'package:admin/core/extension/date.dart';
 import 'package:admin/presentation/pages/client_admin/client_view_model.dart';
 import 'package:admin/presentation/pages/client_admin/dialog/add_client_dialog.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
@@ -90,6 +91,7 @@ class _ClientPageState extends ConsumerState<ClientPage> {
                                   onSort: _viewModel.sortClients,
                                 ),
                                 DataColumn(
+                                  numeric: true,
                                   label: const Text("Contact"),
                                   onSort: _viewModel.sortClients,
                                 ),
@@ -108,7 +110,8 @@ class _ClientPageState extends ConsumerState<ClientPage> {
                                         : null,
                                     cells: [
                                       DataCell(Text(data.id.toString())),
-                                      DataCell(Text(data.createdAt.toString())),
+                                      DataCell(
+                                          Text(data.createdAt!.formatToDate())),
                                       DataCell(Text(data.name.toString())),
                                       DataCell(
                                           Text(data.phoneNumber.toString())),

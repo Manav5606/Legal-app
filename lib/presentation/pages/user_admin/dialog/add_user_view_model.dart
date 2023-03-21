@@ -23,16 +23,25 @@ class AddUserViewModel extends BaseViewModel {
 
   static AutoDisposeChangeNotifierProvider<AddUserViewModel> get provider =>
       _provider;
+  final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController numberController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
+  bool _passwordVisible = false;
 
   String? emailError;
   String? numberError;
+  String? passwordError;
   String? nameError;
+  bool get showPassword => _passwordVisible;
+
+  void togglePasswordVisibility() {
+    _passwordVisible = !_passwordVisible;
+    notifyListeners();
+  }
 
   void clearError() {
-    emailError = numberError = nameError = null;
+    emailError = numberError = nameError = passwordError = null;
     notifyListeners();
   }
 
@@ -45,12 +54,19 @@ class AddUserViewModel extends BaseViewModel {
     if (nameController.text.isEmpty) {
       nameError = "This field is required";
     }
+    if (passwordController.text.isEmpty ||
+        !passwordController.text.isValidPassword()) {
+      passwordError = "This field is required";
+    }
     if (numberController.text.isEmpty ||
         !numberController.text.isValidPhoneNumber()) {
       numberError = "Please enter a Valid 10 Digit Phone Number";
     }
 
-    return emailError == null && nameError == null && numberError == null;
+    return emailError == null &&
+        nameError == null &&
+        numberError == null &&
+        passwordError == null;
   }
 
   @override
@@ -58,6 +74,7 @@ class AddUserViewModel extends BaseViewModel {
     emailController.dispose();
     nameController.dispose();
     numberController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
@@ -106,13 +123,13 @@ class AddUserViewModel extends BaseViewModel {
             phoneNumber: int.parse(numberController.text),
             createdBy: _authProvider.state.user!.id,
           ),
-          password: "12345678",
+          password: passwordController.text,
         );
       }
       // Sent a email to registerd email ID with default Password.
 
       // TODO ask for other details and add them also
-      result.fold((l) async {
+      return result.fold((l) async {
         Messenger.showSnackbar(l.message);
         toggleLoadingOn(false);
         return null;
@@ -126,7 +143,6 @@ class AddUserViewModel extends BaseViewModel {
 
         return r;
       });
-      toggleLoadingOn(false);
     }
   }
 }

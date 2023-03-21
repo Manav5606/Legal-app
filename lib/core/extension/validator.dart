@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 extension Validator on String {
   bool isValidPhoneNumber() {
     return (int.tryParse(this) is num) && length == 10;

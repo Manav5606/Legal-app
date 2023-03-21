@@ -11,6 +11,7 @@ import 'package:admin/presentation/pages/home/home_page.dart';
 import 'package:admin/presentation/pages/landing/landing_page.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/pages/widgets/custom_textfield.dart';
+import 'package:admin/presentation/pages/widgets/password_criteria_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -131,23 +132,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                               icon: Icon(_viewModel.showPassword
                                   ? Icons.visibility_off
                                   : Icons.visibility)),
-                          Tooltip(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 24, vertical: 8),
-                            decoration: BoxDecoration(
-                                color: AppColors.yellowColor,
-                                borderRadius: BorderRadius.circular(12)),
-                            textStyle: FontStyles.font12Regular
-                                .copyWith(color: AppColors.whiteColor),
-                            message:
-                                "Should be of 8 digit\nFour alphabets are must\nFour numbers are must\nNo special characters allowed",
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Icon(Icons.info,
-                                  color: AppColors.yellowColor),
-                            ),
-                          ),
+                          const PasswordCriteriaDialog(),
                         ],
                       ),
                     ),

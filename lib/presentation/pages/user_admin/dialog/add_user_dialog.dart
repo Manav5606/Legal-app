@@ -4,6 +4,7 @@ import 'package:admin/data/models/models.dart';
 import 'package:admin/presentation/pages/user_admin/dialog/add_user_view_model.dart';
 import 'package:admin/presentation/pages/user_admin/user_view_model.dart';
 import 'package:admin/presentation/pages/widgets/dialog_textfield.dart';
+import 'package:admin/presentation/pages/widgets/password_criteria_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -48,20 +49,50 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
                 style: FontStyles.font12Regular
                     .copyWith(color: AppColors.blueColor)),
             DialogTextField(
-              hintText: "Full Name / Company Name",
-              controller: _viewModel.nameController,
+              width: 600 * 0.8,
               errorText: _viewModel.nameError,
+              label: "Full Name / Company Name",
+              hintText: "Name",
+              controller: _viewModel.nameController,
             ),
+            const SizedBox(height: 12),
             DialogTextField(
-              hintText: "Phone Number",
-              errorText: _viewModel.numberError,
-              controller: _viewModel.numberController,
-            ),
+                width: 600 * 0.8,
+                errorText: _viewModel.numberError,
+                hintText: "9999999999",
+                label: "Phone Number",
+                controller: _viewModel.numberController),
+            const SizedBox(height: 12),
             DialogTextField(
-              hintText: "Email ID",
-              controller: _viewModel.emailController,
-              errorText: _viewModel.emailError,
+                width: 600 * 0.8,
+                hintText: "xyz@abc.com",
+                errorText: _viewModel.emailError,
+                label: "Email ID",
+                controller: _viewModel.emailController),
+            const SizedBox(height: 12),
+            Visibility(
+              visible: widget.userUser == null,
+              child: DialogTextField(
+                  width: 600 * 0.8,
+                  hintText: "Password",
+                  errorText: _viewModel.passwordError,
+                  obscureText: !_viewModel.showPassword,
+                  label: "Password",
+                  suffixIcon: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                          onPressed: _viewModel.togglePasswordVisibility,
+                          icon: Icon(_viewModel.showPassword
+                              ? Icons.visibility_off
+                              : Icons.visibility)),
+                      const PasswordCriteriaDialog(),
+                    ],
+                  ),
+                  controller: _viewModel.passwordController),
             ),
+            const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -95,8 +126,14 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
                       : () async {
                           await _viewModel
                               .createUser(widget.userUser)
-                              .then((value) => Navigator.pop(context));
-                          await ref.read(UserViewModel.provider).fetchUsers();
+                              .then((value) async {
+                            if (value != null) {
+                              Navigator.pop(context);
+                              await ref
+                                  .read(UserViewModel.provider)
+                                  .fetchUsers();
+                            }
+                          });
                         },
                   child: _viewModel.isLoading
                       ? const CircularProgressIndicator.adaptive()

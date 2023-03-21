@@ -1,5 +1,6 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
+import 'package:admin/core/extension/date.dart';
 import 'package:admin/presentation/pages/user_admin/dialog/add_user_dialog.dart';
 import 'package:admin/presentation/pages/user_admin/user_view_model.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
@@ -81,6 +82,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                                   onSort: _viewModel.sortUsers,
                                 ),
                                 DataColumn(
+                                  numeric: true,
                                   label: const Text("Date"),
                                   onSort: _viewModel.sortUsers,
                                 ),
@@ -89,6 +91,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                                   onSort: _viewModel.sortUsers,
                                 ),
                                 DataColumn(
+                                  numeric: true,
                                   label: const Text("Contact"),
                                   onSort: _viewModel.sortUsers,
                                 ),
@@ -107,7 +110,8 @@ class _UserPageState extends ConsumerState<UserPage> {
                                         : null,
                                     cells: [
                                       DataCell(Text(data.id.toString())),
-                                      DataCell(Text(data.createdAt.toString())),
+                                      DataCell(
+                                          Text(data.createdAt!.formatToDate())),
                                       DataCell(Text(data.name.toString())),
                                       DataCell(
                                           Text(data.phoneNumber.toString())),
