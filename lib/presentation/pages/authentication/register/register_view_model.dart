@@ -24,6 +24,7 @@ class RegisterViewModel extends BaseViewModel {
   final TextEditingController password1Controller = TextEditingController();
 
   bool _passwordVisible = false;
+  bool _password1Visible = false;
 
   String? usernameError;
   String? numberError;
@@ -32,9 +33,15 @@ class RegisterViewModel extends BaseViewModel {
   String? passwordError;
 
   bool get showPassword => _passwordVisible;
+  bool get showPassword1 => _password1Visible;
 
   void togglePasswordVisibility() {
     _passwordVisible = !_passwordVisible;
+    notifyListeners();
+  }
+
+  void togglePassword1Visibility() {
+    _password1Visible = !_password1Visible;
     notifyListeners();
   }
 

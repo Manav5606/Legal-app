@@ -8,7 +8,6 @@ import 'package:admin/core/enum/role.dart';
 import 'package:admin/core/provider.dart';
 import 'package:admin/data/models/models.dart';
 import 'package:admin/presentation/pages/authentication/index.dart';
-import 'package:admin/presentation/pages/client_admin/client_page.dart';
 import 'package:admin/presentation/pages/home/home_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -71,17 +70,23 @@ class _HeaderState extends ConsumerState<Header> {
           ),
           const Spacer(),
           Container(
-              width: 180,
               padding: const EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
                   color: AppColors.yellowColor,
                   borderRadius: BorderRadius.circular(50)),
-              child: TextFormField(
-                  decoration: const InputDecoration(
-                      isDense: true,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 150,
+                    child: TextFormField(
+                        decoration: const InputDecoration(
                       hintText: "Search...",
                       border: InputBorder.none,
-                      suffixIcon: Icon(Icons.search)))),
+                    )),
+                  ),
+                  Icon(Icons.search, color: AppColors.blueColor),
+                ],
+              )),
           const SizedBox(
             width: 30,
           ),

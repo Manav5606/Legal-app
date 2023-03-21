@@ -60,8 +60,9 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     );
   }
 
-  Container registerAuth() {
+  Widget registerAuth() {
     return Container(
+      height: double.infinity,
       decoration: BoxDecoration(
         color: AppColors.darkBlueColor,
         borderRadius: const BorderRadius.only(
@@ -69,123 +70,153 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           bottomLeft: Radius.circular(24),
         ),
       ),
-      padding: EdgeInsets.symmetric(horizontal: Sizes.s100.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          const SizedBox.shrink(),
-          Column(
-            children: [
-              SvgPicture.asset(Assets.iconsTwentyseven, height: 160),
-              const SizedBox(height: 24),
-              Text("Sign Up",
-                  style: FontStyles.font20Semibold
-                      .copyWith(color: AppColors.whiteColor)),
-            ],
+      child: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: Sizes.s100.w),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                const SizedBox(height: 12),
+                Column(
+                  children: [
+                    SvgPicture.asset(Assets.iconsTwentyseven, height: 160),
+                    const SizedBox(height: 24),
+                    Text("Sign Up",
+                        style: FontStyles.font20Semibold
+                            .copyWith(color: AppColors.whiteColor)),
+                  ],
+                ),
+                Column(
+                  children: [
+                    CustomTextField(
+                      label: "USERNAME",
+                      hintText: "Username",
+                      controller: _viewModel.usernameController,
+                      readOnly: _viewModel.isLoading,
+                      errorText: _viewModel.usernameError,
+                    ),
+                    const SizedBox(height: 18),
+                    CustomTextField(
+                      label: "MOBILE NUMBER",
+                      hintText: "999999999",
+                      controller: _viewModel.numberController,
+                      readOnly: _viewModel.isLoading,
+                      errorText: _viewModel.numberError,
+                    ),
+                    const SizedBox(height: 18),
+                    CustomTextField(
+                      label: "EMAIL",
+                      hintText: "xyz@abc.com",
+                      controller: _viewModel.emailController,
+                      readOnly: _viewModel.isLoading,
+                      errorText: _viewModel.emailError,
+                    ),
+                    const SizedBox(height: 18),
+                    CustomTextField(
+                      label: "SET NEW PASSWORD",
+                      hintText: "Password",
+                      controller: _viewModel.passwordController,
+                      readOnly: _viewModel.isLoading,
+                      obscureText: !_viewModel.showPassword,
+                      errorText: _viewModel.passwordError,
+                      suffixIcon: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                              onPressed: _viewModel.togglePasswordVisibility,
+                              icon: Icon(_viewModel.showPassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility)),
+                          Tooltip(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 8),
+                            decoration: BoxDecoration(
+                                color: AppColors.yellowColor,
+                                borderRadius: BorderRadius.circular(12)),
+                            textStyle: FontStyles.font12Regular
+                                .copyWith(color: AppColors.whiteColor),
+                            message:
+                                "Should be of 8 digit\nFour alphabets are must\nFour numbers are must\nNo special characters allowed",
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Icon(Icons.info,
+                                  color: AppColors.yellowColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    CustomTextField(
+                      label: "RE-ENTER PASSWORD",
+                      hintText: "Confirm Password",
+                      controller: _viewModel.password1Controller,
+                      readOnly: _viewModel.isLoading,
+                      obscureText: !_viewModel.showPassword1,
+                      errorText: _viewModel.password1Error,
+                      suffixIcon: IconButton(
+                          onPressed: _viewModel.togglePassword1Visibility,
+                          icon: Icon(_viewModel.showPassword1
+                              ? Icons.visibility_off
+                              : Icons.visibility)),
+                    ),
+                    const SizedBox(height: 24),
+                    CTAButton(
+                        title: "Sign Up",
+                        loading: _viewModel.isLoading,
+                        onTap: _viewModel.isLoading
+                            ? null
+                            : () async {
+                                final user = await _viewModel.register();
+                                if (user != null) {
+                                  switch (user.userType) {
+                                    case UserType.user:
+                                      Routemaster.of(context)
+                                          .replace(LandingPage.routeName);
+                                      break;
+                                    case UserType.admin:
+                                      Routemaster.of(context)
+                                          .replace(HomePage.routeName);
+                                      break;
+                                    case UserType.client:
+                                      Routemaster.of(context)
+                                          .replace(LandingPage.routeName);
+                                      break;
+                                    default:
+                                      Routemaster.of(context)
+                                          .replace(LandingPage.routeName);
+                                  }
+                                }
+                              }),
+                    const SizedBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Already have an account?",
+                            style: FontStyles.font12Regular
+                                .copyWith(color: AppColors.whiteColor)),
+                        const SizedBox(width: 4),
+                        InkWell(
+                          onTap: () =>
+                              Routemaster.of(context).push(LoginPage.routeName),
+                          child: Text("Login",
+                              style: FontStyles.font14Bold
+                                  .copyWith(color: AppColors.yellowColor)),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+              ],
+            ),
           ),
-          Column(
-            children: [
-              CustomTextField(
-                label: "USERNAME",
-                hintText: "Username",
-                controller: _viewModel.usernameController,
-                readOnly: _viewModel.isLoading,
-                errorText: _viewModel.usernameError,
-              ),
-              const SizedBox(height: 18),
-              CustomTextField(
-                label: "MOBILE NUMBER",
-                hintText: "999999999",
-                controller: _viewModel.numberController,
-                readOnly: _viewModel.isLoading,
-                errorText: _viewModel.numberError,
-              ),
-              const SizedBox(height: 18),
-              CustomTextField(
-                label: "EMAIL",
-                hintText: "xyz@abc.com",
-                controller: _viewModel.emailController,
-                readOnly: _viewModel.isLoading,
-                errorText: _viewModel.emailError,
-              ),
-              const SizedBox(height: 18),
-              CustomTextField(
-                label: "SET NEW PASSWORD",
-                hintText: "Password",
-                controller: _viewModel.passwordController,
-                readOnly: _viewModel.isLoading,
-                obscureText: _viewModel.showPassword,
-                errorText: _viewModel.passwordError,
-                suffixIcon: IconButton(
-                    onPressed: _viewModel.togglePasswordVisibility,
-                    icon: Icon(_viewModel.showPassword
-                        ? Icons.visibility_off
-                        : Icons.visibility)),
-              ),
-              const SizedBox(height: 18),
-              CustomTextField(
-                label: "RE-ENTER PASSWORD",
-                hintText: "Confirm Password",
-                controller: _viewModel.password1Controller,
-                readOnly: _viewModel.isLoading,
-                obscureText: _viewModel.showPassword,
-                errorText: _viewModel.password1Error,
-                suffixIcon: IconButton(
-                    onPressed: _viewModel.togglePasswordVisibility,
-                    icon: Icon(_viewModel.showPassword
-                        ? Icons.visibility_off
-                        : Icons.visibility)),
-              ),
-              const SizedBox(height: 24),
-              CTAButton(
-                  title: "Sign Up",
-                  loading: _viewModel.isLoading,
-                  onTap: _viewModel.isLoading
-                      ? null
-                      : () async {
-                          final user = await _viewModel.register();
-                          if (user != null) {
-                            switch (user.userType) {
-                              case UserType.user:
-                                Routemaster.of(context)
-                                    .replace(LandingPage.routeName);
-                                break;
-                              case UserType.admin:
-                                Routemaster.of(context)
-                                    .replace(HomePage.routeName);
-                                break;
-                              case UserType.client:
-                                Routemaster.of(context)
-                                    .replace(LandingPage.routeName);
-                                break;
-                              default:
-                                Routemaster.of(context)
-                                    .replace(LandingPage.routeName);
-                            }
-                          }
-                        }),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Already have an account?",
-                      style: FontStyles.font12Regular
-                          .copyWith(color: AppColors.whiteColor)),
-                  const SizedBox(width: 4),
-                  InkWell(
-                    onTap: () =>
-                        Routemaster.of(context).push(LoginPage.routeName),
-                    child: Text("Login",
-                        style: FontStyles.font14Bold
-                            .copyWith(color: AppColors.yellowColor)),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox.shrink(),
-        ],
+        ),
       ),
     );
   }
