@@ -8,10 +8,12 @@ class CTAButton extends StatelessWidget {
   final bool fullWidth;
   final double? radius;
   final bool loading;
+  final bool mobile;
 
   const CTAButton({
     super.key,
     this.onTap,
+    this.mobile = false,
     required this.title,
     this.fullWidth = false,
     this.radius,
@@ -23,7 +25,8 @@ class CTAButton extends StatelessWidget {
     return GestureDetector(
         onTap: loading ? null : onTap,
         child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 14),
+            padding: EdgeInsets.symmetric(
+                horizontal: mobile ? 12 : 42, vertical: mobile ? 4 : 14),
             width: fullWidth ? MediaQuery.of(context).size.width : null,
             decoration: BoxDecoration(
                 color: AppColors.yellowColor,

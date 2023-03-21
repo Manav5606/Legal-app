@@ -16,7 +16,8 @@ import 'package:routemaster/routemaster.dart';
 
 // TODO make all displayed text dynamic
 class Header extends ConsumerStatefulWidget {
-  const Header({super.key});
+  final bool mobile;
+  const Header({super.key, required this.mobile});
 
   @override
   ConsumerState<Header> createState() => _HeaderState();
@@ -69,24 +70,26 @@ class _HeaderState extends ConsumerState<Header> {
             height: 51,
           ),
           const Spacer(),
-          Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              decoration: BoxDecoration(
-                  color: AppColors.yellowColor,
-                  borderRadius: BorderRadius.circular(50)),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 150,
-                    child: TextFormField(
-                        decoration: const InputDecoration(
-                      hintText: "Search...",
-                      border: InputBorder.none,
-                    )),
-                  ),
-                  Icon(Icons.search, color: AppColors.blueColor),
-                ],
-              )),
+          widget.mobile
+              ? IconButton(onPressed: () {}, icon: const Icon(Icons.menu))
+              : Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(
+                      color: AppColors.yellowColor,
+                      borderRadius: BorderRadius.circular(50)),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 150,
+                        child: TextFormField(
+                            decoration: const InputDecoration(
+                          hintText: "Search...",
+                          border: InputBorder.none,
+                        )),
+                      ),
+                      Icon(Icons.search, color: AppColors.blueColor),
+                    ],
+                  )),
           const SizedBox(
             width: 30,
           ),
@@ -115,6 +118,7 @@ class _HeaderState extends ConsumerState<Header> {
           const SizedBox(
             width: 11.22,
           ),
+          Visibility(visible: widget.mobile, child: const Spacer()),
           SvgPicture.asset(Assets.ASSETS_ICONS_VECTORMAIL_SVG),
           const SizedBox(
             width: 9.68,
@@ -123,73 +127,79 @@ class _HeaderState extends ConsumerState<Header> {
             "contact@247legal.in",
             style: FontStyles.font12Regular,
           ),
-          const Spacer(),
-          isAuthenticated
-              ? Row(children: [
-                  user?.userType == UserType.admin
-                      ? PopupMenuButton(
-                          child: Row(
-                            children: [
-                              Text(
-                                "${user?.name}",
-                                style: FontStyles.font12Regular
-                                    .copyWith(color: AppColors.yellowColor),
+          Visibility(visible: !widget.mobile, child: const Spacer()),
+          Visibility(
+              visible: !widget.mobile,
+              child: isAuthenticated
+                  ? Row(children: [
+                      user?.userType == UserType.admin
+                          ? PopupMenuButton(
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "${user?.name}",
+                                    style: FontStyles.font12Regular
+                                        .copyWith(color: AppColors.yellowColor),
+                                  ),
+                                  Icon(Icons.arrow_drop_down,
+                                      color: AppColors.yellowColor)
+                                ],
                               ),
-                              Icon(Icons.arrow_drop_down,
-                                  color: AppColors.yellowColor)
-                            ],
-                          ),
-                          itemBuilder: (_) => AdminMenu.values
-                              .map((menu) => PopupMenuItem(
-                                    child: Text(menu.title),
-                                    onTap: () => ref
-                                        .read(HomeViewModel.provider)
-                                        .loadOtherView(menu.view),
-                                  ))
+                              itemBuilder: (_) => AdminMenu.values
+                                  .map((menu) => PopupMenuItem(
+                                        child: Text(menu.title),
+                                        onTap: () => ref
+                                            .read(HomeViewModel.provider)
+                                            .loadOtherView(menu.view),
+                                      ))
+                                  .toList(),
+                            )
+                          : Text(
+                              "${user?.name}",
+                              style: FontStyles.font12Regular,
+                            ),
+                      const SizedBox(
+                        width: 11.22,
+                      ),
+                      Divider(color: AppColors.yellowColor, thickness: 3),
+                      const SizedBox(
+                        width: 20,
+                        child: CircleAvatar(),
+                      ),
+                      DropdownMenu(
+                          dropdownMenuEntries: [
+                            "Profile",
+                            "History",
+                            "Sign out"
+                          ]
+                              .map((e) => DropdownMenuEntry(value: e, label: e))
                               .toList(),
-                        )
-                      : Text(
-                          "${user?.name}",
-                          style: FontStyles.font12Regular,
+                          onSelected: (value) {
+                            log(value.toString());
+                          })
+                    ])
+                  : Row(
+                      children: [
+                        TextButton.icon(
+                            onPressed: () => Routemaster.of(context)
+                                .push(LoginPage.routeName),
+                            icon: Icon(Icons.login_rounded,
+                                color: AppColors.yellowColor),
+                            label: Text("Login",
+                                style: FontStyles.font12Regular
+                                    .copyWith(color: AppColors.yellowColor))),
+                        const SizedBox(
+                          width: 11.22,
                         ),
-                  const SizedBox(
-                    width: 11.22,
-                  ),
-                  Divider(color: AppColors.yellowColor, thickness: 3),
-                  const SizedBox(
-                    width: 20,
-                    child: CircleAvatar(),
-                  ),
-                  DropdownMenu(
-                      dropdownMenuEntries: ["Profile", "History", "Sign out"]
-                          .map((e) => DropdownMenuEntry(value: e, label: e))
-                          .toList(),
-                      onSelected: (value) {
-                        log(value.toString());
-                      })
-                ])
-              : Row(
-                  children: [
-                    TextButton.icon(
-                        onPressed: () =>
-                            Routemaster.of(context).push(LoginPage.routeName),
-                        icon: Icon(Icons.login_rounded,
-                            color: AppColors.yellowColor),
-                        label: Text("Login",
-                            style: FontStyles.font12Regular
-                                .copyWith(color: AppColors.yellowColor))),
-                    const SizedBox(
-                      width: 11.22,
-                    ),
-                    TextButton(
-                        onPressed: () => Routemaster.of(context)
-                            .push(RegisterPage.routeName),
-                        child: Text("New User?",
-                            style: FontStyles.font12Regular.copyWith(
-                                color: AppColors.whiteColor,
-                                decoration: TextDecoration.underline))),
-                  ],
-                ),
+                        TextButton(
+                            onPressed: () => Routemaster.of(context)
+                                .push(RegisterPage.routeName),
+                            child: Text("New User?",
+                                style: FontStyles.font12Regular.copyWith(
+                                    color: AppColors.whiteColor,
+                                    decoration: TextDecoration.underline))),
+                      ],
+                    )),
           const SizedBox(
             width: 11.22,
           ),

@@ -25,6 +25,7 @@ dependencies:
   flutter_svg: ^2.0.3
   google_fonts: ^4.0.3
   logging: ^1.1.1
+  responsive_builder: ^0.6.4
   routemaster: ^1.0.1
 
 dev_dependencies:

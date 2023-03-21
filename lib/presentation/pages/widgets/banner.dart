@@ -7,11 +7,15 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 class BannerSlides extends StatefulWidget {
+  final bool mobile;
   final double height;
   final List<BannerDetail> bannerDetails;
 
   const BannerSlides(
-      {super.key, required this.bannerDetails, required this.height});
+      {super.key,
+      required this.mobile,
+      required this.bannerDetails,
+      required this.height});
 
   @override
   State<BannerSlides> createState() => _BannerSlidesState();
@@ -43,19 +47,23 @@ class _BannerSlidesState extends State<BannerSlides> {
                             height: widget.height * 0.85)),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(right: widget.height * 0.6),
+                    padding:
+                        EdgeInsets.only(right: widget.height * 0.6, left: 8),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(widget.bannerDetails[i].title,
-                            style: FontStyles.font48bold),
+                            style: FontStyles.font48bold
+                                .copyWith(fontSize: widget.mobile ? 14 : 48)),
                         const SizedBox(height: 4),
                         Text(widget.bannerDetails[i].description,
-                            style: FontStyles.font14Semibold
-                                .copyWith(color: AppColors.blackLightColor)),
+                            style: FontStyles.font14Semibold.copyWith(
+                                color: AppColors.blackLightColor,
+                                fontSize: widget.mobile ? 9 : 14)),
                         const SizedBox(height: 18),
                         CTAButton(
+                            mobile: widget.mobile,
                             title: widget.bannerDetails[i].btnText,
                             onTap: () {},
                             radius: 100),

@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:admin/data/models/models.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 class LandingPage extends ConsumerStatefulWidget {
   static const String routeName = "/landing";
@@ -186,23 +187,45 @@ class _LandingPageState extends ConsumerState<LandingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      body: ListView(
-        children: [
-          const Header(),
-          BannerSlides(
-            height: 700,
-            bannerDetails: _bannerList,
-          ),
-          _services(700),
-          _frequentlyUsedServices(350),
-          // _newsAndUpdates(800),
-          Center(child: _generalStats(300)),
-          CustomerReviewSlides(
-              customerReviews: _customerReviewData, height: 700),
-          _contactUs(250),
-          _contactUsCard(200),
-          const Footer(),
-        ],
+      body: ScreenTypeLayout.builder(
+        mobile: (context) => ListView(
+          children: [
+            const Header(mobile: true),
+            BannerSlides(
+              mobile: true,
+              height: 250,
+              bannerDetails: _bannerList,
+            ),
+            _services(700),
+            _frequentlyUsedServices(350),
+            // _newsAndUpdates(800),
+            Center(child: _generalStats(300)),
+            CustomerReviewSlides(
+                customerReviews: _customerReviewData, height: 700),
+            _contactUs(250),
+            _contactUsCard(200),
+            const Footer(),
+          ],
+        ),
+        desktop: (context) => ListView(
+          children: [
+            const Header(mobile: false),
+            BannerSlides(
+              mobile: false,
+              height: 700,
+              bannerDetails: _bannerList,
+            ),
+            _services(700),
+            _frequentlyUsedServices(350),
+            // _newsAndUpdates(800),
+            Center(child: _generalStats(300)),
+            CustomerReviewSlides(
+                customerReviews: _customerReviewData, height: 700),
+            _contactUs(250),
+            _contactUsCard(200),
+            const Footer(),
+          ],
+        ),
       ),
     );
   }
@@ -318,7 +341,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
   }
 
   Widget _services(double height) {
-    return SizedBox(
+    return  SizedBox(
       height: height,
       child: Stack(
         children: [

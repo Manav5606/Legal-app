@@ -37,7 +37,7 @@ class _HomePageState extends ConsumerState<HomePage>
         backgroundColor: AppColors.whiteColor,
         body: ListView(
           children: [
-            const Header(),
+            const Header(mobile: false),
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
