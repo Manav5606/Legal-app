@@ -34,54 +34,54 @@ class _HomePageState extends ConsumerState<HomePage>
   Widget build(BuildContext context) {
     ref.watch(HomeViewModel.provider);
     return Scaffold(
+        backgroundColor: AppColors.whiteColor,
         body: ListView(
-      children: [
-        const Header(),
-        Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: AppColors.lightBlueColor,
-          ),
-          child: Row(
-            children: [
-              const Expanded(flex: 1, child: SizedBox()),
-              Expanded(
-                flex: 3,
-                child: TabBar(
-                    controller: _tabController,
-                    indicatorColor: AppColors.blueColor,
-                    onTap: (value) {
-                      _viewModel.updateTabView(true);
-                      _tabController.animateTo(value);
-                    },
-                    tabs: ["Dashboard", "Inbox", "Notification"]
-                        .map((e) => Text(e,
-                            style: FontStyles.font24Semibold
-                                .copyWith(color: AppColors.blueColor)))
-                        .toList()),
+          children: [
+            const Header(),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: AppColors.lightBlueColor,
               ),
-              const Expanded(flex: 1, child: SizedBox()),
-            ],
-          ),
-        ),
-        Container(
-          color: AppColors.whiteColor,
-          height: MediaQuery.of(context).size.height * 0.7,
-          child: Expanded(
-            child: _viewModel.showTabView
-                ? TabBarView(
-                    controller: _tabController,
-                    children: const [
-                      DashboardTab(),
-                      InboxTab(),
-                      NotificationTab(),
-                    ],
-                  )
-                : _viewModel.otherView,
-          ),
-        ),
-        const Footer(),
-      ],
-    ));
+              child: Row(
+                children: [
+                  const Expanded(flex: 1, child: SizedBox()),
+                  Expanded(
+                    flex: 3,
+                    child: TabBar(
+                        controller: _tabController,
+                        indicatorColor: AppColors.blueColor,
+                        onTap: (value) {
+                          _viewModel.updateTabView(true);
+                          _tabController.animateTo(value);
+                        },
+                        tabs: ["Dashboard", "Inbox", "Notification"]
+                            .map((e) => Text(e,
+                                style: FontStyles.font24Semibold
+                                    .copyWith(color: AppColors.blueColor)))
+                            .toList()),
+                  ),
+                  const Expanded(flex: 1, child: SizedBox()),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.9,
+              child: Expanded(
+                child: _viewModel.showTabView
+                    ? TabBarView(
+                        controller: _tabController,
+                        children: const [
+                          DashboardTab(),
+                          InboxTab(),
+                          NotificationTab(),
+                        ],
+                      )
+                    : _viewModel.otherView,
+              ),
+            ),
+            const Footer(),
+          ],
+        ));
   }
 }

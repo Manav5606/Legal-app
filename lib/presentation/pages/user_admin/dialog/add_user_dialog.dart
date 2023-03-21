@@ -121,6 +121,8 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
                         style: FontStyles.font12Regular
                             .copyWith(color: AppColors.blueColor))),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.darkGreenColor),
                   onPressed: _viewModel.isLoading
                       ? null
                       : () async {

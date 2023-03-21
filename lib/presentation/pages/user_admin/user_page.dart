@@ -63,9 +63,9 @@ class _UserPageState extends ConsumerState<UserPage> {
                               BoxConstraints(minWidth: constraints.minWidth),
                           child: DataTable(
                               clipBehavior: Clip.antiAlias,
-                              border: TableBorder.all(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: AppColors.greyColor),
+                              border: TableBorder.symmetric(
+                                  outside:
+                                      BorderSide(color: AppColors.greyColor)),
                               sortAscending: !_viewModel.sortAscending,
                               sortColumnIndex: _viewModel.sortIndex,
                               dataRowColor: MaterialStateProperty.all(

@@ -23,11 +23,11 @@ class _FooterState extends ConsumerState<Footer> {
   @override
   Widget build(BuildContext context) {
     ref.watch(AppState.auth).isAuthenticated;
-    return Container(
-      color: AppColors.blueColor,
-      height: 300,
-      child: Visibility(
-        visible: !isAuthenticated,
+    return Visibility(
+      visible: !isAuthenticated,
+      child: Container(
+        color: AppColors.blueColor,
+        height: 300,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
