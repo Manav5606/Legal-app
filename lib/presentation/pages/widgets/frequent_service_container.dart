@@ -1,9 +1,7 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
-import 'package:admin/core/constant/resource.dart';
 import 'package:admin/presentation/pages/widgets/circular_arrow.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class FrequentServiceContainer extends StatelessWidget {
   final String serviceName;

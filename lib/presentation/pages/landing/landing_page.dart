@@ -1,11 +1,15 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
+import 'package:admin/data/models/customer_review.dart';
+import 'package:admin/data/models/general_stat.dart';
 import 'package:admin/data/models/news.dart';
 import 'package:admin/presentation/pages/widgets/banner.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
+import 'package:admin/presentation/pages/widgets/customer_review_slider.dart';
 import 'package:admin/presentation/pages/widgets/footer.dart';
 import 'package:admin/presentation/pages/widgets/frequent_service_container.dart';
+import 'package:admin/presentation/pages/widgets/general_stat_container.dart';
 import 'package:admin/presentation/pages/widgets/header.dart';
 import 'package:admin/presentation/pages/widgets/news_tile.dart';
 import 'package:admin/presentation/pages/widgets/service_container.dart';
@@ -24,6 +28,36 @@ class LandingPage extends ConsumerStatefulWidget {
 }
 
 class _LandingPageState extends ConsumerState<LandingPage> {
+  final _customerReviewData = [
+    CustomerReview(
+      title:
+          "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year.",
+      review:
+          "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year. Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year.",
+      name: "Abhinav Kushwaha",
+      designation: "CEO, QUBEx",
+      customerProfilePic: "https://randomuser.me/api/portraits/men/51.jpg",
+    ),
+    CustomerReview(
+      title:
+          "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year.",
+      review:
+          "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year. Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year.",
+      name: "Abhinav Kushwaha",
+      designation: "CEO, QUBEx",
+      customerProfilePic: "https://randomuser.me/api/portraits/men/51.jpg",
+    ),
+    CustomerReview(
+      title:
+          "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year.",
+      review:
+          "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year. Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year.",
+      name: "Abhinav Kushwaha",
+      designation: "CEO, QUBEx",
+      customerProfilePic: "https://randomuser.me/api/portraits/men/51.jpg",
+    ),
+  ];
+
   final _news = [
     News(
         headline:
@@ -38,6 +72,14 @@ class _LandingPageState extends ConsumerState<LandingPage> {
             "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year ended on 31.03.2021 under the Companies Act, 2013",
         createdAt: DateTime.now().millisecondsSinceEpoch),
   ];
+
+  final _generalStatsData = [
+    GeneralStat(value: "1500", title: "Orders"),
+    GeneralStat(value: "86%", title: "Successful Orders"),
+    GeneralStat(value: "15", title: "Lorem Ipsum"),
+    GeneralStat(value: "567", title: "Users"),
+  ];
+
   final _bannerList = [
     BannerDetail(
         title: "Lorem Ipsum Lorem Ipsum Lorem Ipsum",
@@ -114,6 +156,32 @@ class _LandingPageState extends ConsumerState<LandingPage> {
       addedBy: "",
     ),
   ];
+  final _contactDetails = [
+    Category(
+      id: "b",
+      name: "Phone",
+      iconUrl: "",
+      description: "Lorem Ipsum",
+      addedAt: DateTime.now().millisecondsSinceEpoch,
+      addedBy: "",
+    ),
+    Category(
+      id: "f",
+      name: "Office",
+      iconUrl: "",
+      description: "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
+      addedAt: DateTime.now().millisecondsSinceEpoch,
+      addedBy: "",
+    ),
+    Category(
+      id: "l",
+      name: "Working hours",
+      iconUrl: "",
+      description: "Lorem Ipsum",
+      addedAt: DateTime.now().millisecondsSinceEpoch,
+      addedBy: "",
+    ),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,12 +196,84 @@ class _LandingPageState extends ConsumerState<LandingPage> {
           _services(700),
           _frequentlyUsedServices(350),
           // _newsAndUpdates(800),
-          Stack(
-            children: [
-              // TODO add contacts us
-              const Footer(),
-            ],
+          Center(child: _generalStats(300)),
+          CustomerReviewSlides(
+              customerReviews: _customerReviewData, height: 700),
+          _contactUs(250),
+          _contactUsCard(200),
+          const Footer(),
+        ],
+      ),
+    );
+  }
+
+  Widget _contactUsCard(double height) {
+    return SizedBox(
+      height: height,
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: height * 0.40,
+              width: double.infinity,
+              color: AppColors.blueColor,
+            ),
           ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: _contactDetails
+                  .map((contact) => ServiceContainer(
+                      category: contact,
+                      width: MediaQuery.of(context).size.width))
+                  .toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _contactUs(double height) {
+    return SizedBox(
+      height: height,
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("Contact us regarding any query",
+                    style: FontStyles.font24Semibold
+                        .copyWith(color: AppColors.blackColor)),
+                const SizedBox(height: 4),
+                Text(
+                    "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7",
+                    style: FontStyles.font12Regular
+                        .copyWith(color: AppColors.blueColor)),
+                const SizedBox(height: 12),
+                CTAButton(title: "Contact Us", onTap: () {}, radius: 50),
+              ],
+            ),
+          ),
+          Positioned(
+              bottom: 20,
+              right: 20,
+              child:
+                  SvgPicture.asset(Assets.iconsVectorblueSquare, width: 120)),
+          Positioned(
+              top: 15,
+              right: 80,
+              child:
+                  SvgPicture.asset(Assets.iconsVectoryellowSquare, width: 30)),
+          Positioned(
+              top: 30,
+              child: SvgPicture.asset(Assets.ASSETS_ICONS_VECTOROVERLAYLEFT_SVG,
+                  width: 110)),
         ],
       ),
     );
@@ -224,6 +364,23 @@ class _LandingPageState extends ConsumerState<LandingPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _generalStats(double height) {
+    return SizedBox(
+      height: height,
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        alignment: WrapAlignment.start,
+        children: _generalStatsData
+            .map((e) => GeneralStatContainer(
+                stat: e,
+                width: height * 4,
+                b: _generalStatsData.indexOf(e) % 2 == 0))
+            .toList(),
       ),
     );
   }
