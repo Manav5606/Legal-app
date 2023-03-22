@@ -32,6 +32,11 @@ class AuthProvider extends StateNotifier<AuthState> {
         "{AUTH_PROVIDER} USER SET: ${user.email}, ${user.userType.name}");
   }
 
+  Future<void> logout() async {
+    await _authRepositoryImpl.logoutUser();
+    state = const AuthState.unauthenticated();
+  }
+
   Future<void> startStreamingUserData() async {
     _authRepositoryImpl.getUser().listen((result) {
       if (mounted) {

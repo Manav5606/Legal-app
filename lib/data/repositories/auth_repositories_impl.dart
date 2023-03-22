@@ -54,9 +54,8 @@ class AuthRepositoryImpl extends AuthRepository with RepositoryExceptionMixin {
   }
 
   @override
-  Future<void> logoutUser() {
-    // TODO: implement logoutUser
-    throw UnimplementedError();
+  Future<void> logoutUser() async {
+    await _firebaseAuth.signOut();
   }
 
   @override

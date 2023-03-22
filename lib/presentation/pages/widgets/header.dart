@@ -137,51 +137,67 @@ class _TopBarState extends ConsumerState<TopBar> {
               visible: !widget.mobile,
               child: isAuthenticated
                   ? Row(children: [
-                      user?.userType == UserType.admin
-                          ? PopupMenuButton(
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "${user?.name}",
-                                    style: FontStyles.font12Regular
-                                        .copyWith(color: AppColors.yellowColor),
-                                  ),
-                                  Icon(Icons.arrow_drop_down,
-                                      color: AppColors.yellowColor)
-                                ],
+                      Visibility(
+                        visible: user?.userType == UserType.admin,
+                        child: PopupMenuButton(
+                          child: Row(
+                            children: [
+                              Text(
+                                "Admin",
+                                style: FontStyles.font12Regular
+                                    .copyWith(color: AppColors.yellowColor),
                               ),
-                              itemBuilder: (_) => AdminMenu.values
-                                  .map((menu) => PopupMenuItem(
-                                        child: Text(menu.title),
-                                        onTap: () => ref
-                                            .read(HomeViewModel.provider)
-                                            .loadOtherView(menu.view),
-                                      ))
-                                  .toList(),
-                            )
-                          : Text(
-                              "${user?.name}",
-                              style: FontStyles.font12Regular,
-                            ),
+                              Icon(Icons.arrow_drop_down,
+                                  color: AppColors.yellowColor)
+                            ],
+                          ),
+                          itemBuilder: (_) => AdminMenu.values
+                              .map((menu) => PopupMenuItem(
+                                    child: Text(menu.title),
+                                    onTap: () => ref
+                                        .read(HomeViewModel.provider)
+                                        .loadOtherView(menu.view),
+                                  ))
+                              .toList(),
+                        ),
+                      ),
                       const SizedBox(
                         width: 11.22,
                       ),
-                      Divider(color: AppColors.yellowColor, thickness: 3),
-                      const SizedBox(
-                        width: 20,
-                        child: CircleAvatar(),
+                      Text(
+                        "${user?.name}",
+                        style: FontStyles.font12Regular,
                       ),
-                      DropdownMenu(
-                          dropdownMenuEntries: [
-                            "Profile",
-                            "History",
-                            "Sign out"
-                          ]
-                              .map((e) => DropdownMenuEntry(value: e, label: e))
-                              .toList(),
-                          onSelected: (value) {
-                            log(value.toString());
-                          })
+                      const SizedBox(
+                        width: 11.22,
+                      ),
+                      VerticalDivider(
+                          color: AppColors.yellowColor, thickness: 3),
+                      PopupMenuButton(
+                        child: Row(
+                          children: [
+                            const SizedBox(
+                              width: 28,
+                              child: CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                    "https://randomuser.me/api/portraits/men/51.jpg"),
+                              ),
+                            ),
+                            Icon(Icons.arrow_drop_down,
+                                color: AppColors.yellowColor)
+                          ],
+                        ),
+                        itemBuilder: (_) => ["Profile", "History", "Sign out"]
+                            .map((menu) => PopupMenuItem(
+                                  child: Text(menu),
+                                  onTap: () {
+                                    if (menu == "Sign out") {
+                                      ref.read(AppState.auth.notifier).logout();
+                                    }
+                                  },
+                                ))
+                            .toList(),
+                      ),
                     ])
                   : Row(
                       children: [
