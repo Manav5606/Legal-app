@@ -9,11 +9,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 class CustomerReviewSlides extends StatefulWidget {
   final double height;
   final List<CustomerReview> customerReviews;
+  final bool mobile;
 
   const CustomerReviewSlides({
     super.key,
     required this.customerReviews,
     required this.height,
+    this.mobile = false,
   });
 
   @override
@@ -35,7 +37,20 @@ class _CustomerReviewSlidesState extends State<CustomerReviewSlides> {
                 image: DecorationImage(
                     image: AssetImage(Assets.servicesBGDesign),
                     fit: BoxFit.cover)),
-            padding: const EdgeInsets.symmetric(vertical: 25),
+          ),
+          Positioned(
+              bottom: widget.mobile ? 4 : 20,
+              left: widget.mobile ? 4 : 20,
+              child: SvgPicture.asset(Assets.iconsVectoryellowSquare,
+                  width: widget.mobile ? 40 : 80)),
+          Positioned(
+              top: widget.mobile ? 4 : 50,
+              right: widget.mobile ? 8 : 80,
+              child: SvgPicture.asset(Assets.iconsVectorblueSquare,
+                  width: widget.mobile ? 20 : 40)),
+          Container(
+            padding: EdgeInsets.symmetric(
+                vertical: 25, horizontal: widget.mobile ? 25 : 0),
             child: Stack(
               children: [
                 CarouselSlider.builder(
@@ -53,24 +68,31 @@ class _CustomerReviewSlidesState extends State<CustomerReviewSlides> {
                         Text("What our customers has to say",
                             textAlign: TextAlign.center,
                             style: FontStyles.font48bold.copyWith(
-                                color: AppColors.yellowColor, fontSize: 34)),
+                                color: AppColors.yellowColor,
+                                fontSize: widget.mobile ? 16 : 34)),
                         Column(
                           children: [
-                            Text(widget.customerReviews[i].title,
-                                textAlign: TextAlign.center,
-                                style: FontStyles.font12Regular.copyWith(
-                                    color: AppColors.whiteColor, fontSize: 16)),
-                            const SizedBox(height: 4),
+                            Visibility(
+                              visible: !widget.mobile,
+                              child: Text(widget.customerReviews[i].title,
+                                  textAlign: TextAlign.center,
+                                  style: FontStyles.font12Regular.copyWith(
+                                      color: AppColors.whiteColor,
+                                      fontSize: 16)),
+                            ),
+                            Visibility(
+                                visible: !widget.mobile,
+                                child: const SizedBox(height: 4)),
                             CircleAvatar(
-                                radius: 60,
-                                child: Image.network(widget
+                                radius: widget.mobile ? 30 : 60,
+                                backgroundImage: NetworkImage(widget
                                     .customerReviews[i].customerProfilePic)),
                             const SizedBox(height: 4),
                             Text(widget.customerReviews[i].review,
                                 textAlign: TextAlign.center,
                                 style: FontStyles.font12Regular.copyWith(
                                     color: AppColors.yellowColor,
-                                    fontSize: 18)),
+                                    fontSize: widget.mobile ? 9 : 18)),
                             const SizedBox(height: 8),
                           ],
                         ),
@@ -79,12 +101,14 @@ class _CustomerReviewSlidesState extends State<CustomerReviewSlides> {
                             Text(widget.customerReviews[i].name,
                                 textAlign: TextAlign.center,
                                 style: FontStyles.font14Bold.copyWith(
-                                    color: AppColors.whiteColor, fontSize: 20)),
+                                    color: AppColors.whiteColor,
+                                    fontSize: widget.mobile ? 12 : 20)),
                             const SizedBox(height: 2),
                             Text(widget.customerReviews[i].designation,
                                 textAlign: TextAlign.center,
                                 style: FontStyles.font14Bold.copyWith(
-                                    color: AppColors.whiteColor, fontSize: 20)),
+                                    color: AppColors.whiteColor,
+                                    fontSize: widget.mobile ? 12 : 20)),
                           ],
                         ),
                       ],
@@ -127,15 +151,6 @@ class _CustomerReviewSlidesState extends State<CustomerReviewSlides> {
               ],
             ),
           ),
-          Positioned(
-              bottom: 20,
-              left: 20,
-              child:
-                  SvgPicture.asset(Assets.iconsVectoryellowSquare, width: 80)),
-          Positioned(
-              top: 50,
-              right: 80,
-              child: SvgPicture.asset(Assets.iconsVectorblueSquare, width: 40)),
         ],
       ),
     );

@@ -103,7 +103,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       hintText: "Password",
                       controller: _viewModel.passwordController,
                       readOnly: _viewModel.isLoading,
-                      obscureText: _viewModel.showPassword,
+                      obscureText: !_viewModel.showPassword,
                       errorText: _viewModel.passwordError,
                       suffixIcon: IconButton(
                           onPressed: _viewModel.togglePasswordVisibility,

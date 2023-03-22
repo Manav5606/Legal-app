@@ -44,6 +44,7 @@ class GeneralStatContainer extends StatelessWidget {
                               b ? AppColors.blueColor : AppColors.yellowColor,
                           fontSize: 24)),
                   Text(stat.title,
+                      textAlign: TextAlign.center,
                       style: FontStyles.font12Medium.copyWith(
                           color:
                               b ? AppColors.blueColor : AppColors.yellowColor,

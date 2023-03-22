@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
@@ -15,32 +14,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:routemaster/routemaster.dart';
 
 // TODO make all displayed text dynamic
-class Header extends ConsumerStatefulWidget {
+class Header extends StatelessWidget {
   final bool mobile;
   const Header({super.key, required this.mobile});
 
   @override
-  ConsumerState<Header> createState() => _HeaderState();
-}
-
-class _HeaderState extends ConsumerState<Header> {
-  late bool isAuthenticated;
-  late User? user;
-
-  @override
-  void initState() {
-    super.initState();
-    isAuthenticated = ref.read(AppState.auth).isAuthenticated;
-    user = ref.read(AppState.auth).user;
-  }
-
-  @override
   Widget build(BuildContext context) {
-    ref.watch(AppState.auth).isAuthenticated;
-    ref.watch(AppState.auth).user;
     return Column(
       children: [
-        topBar(),
+        TopBar(mobile: mobile),
         bottomBar(),
       ],
     );
@@ -70,7 +52,7 @@ class _HeaderState extends ConsumerState<Header> {
             height: 51,
           ),
           const Spacer(),
-          widget.mobile
+          mobile
               ? IconButton(onPressed: () {}, icon: const Icon(Icons.menu))
               : Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -97,8 +79,31 @@ class _HeaderState extends ConsumerState<Header> {
       ),
     );
   }
+}
 
-  Widget topBar() {
+class TopBar extends ConsumerStatefulWidget {
+  final bool mobile;
+  const TopBar({super.key, required this.mobile});
+
+  @override
+  ConsumerState<TopBar> createState() => _TopBarState();
+}
+
+class _TopBarState extends ConsumerState<TopBar> {
+  late bool isAuthenticated;
+  late User? user;
+
+  @override
+  void initState() {
+    super.initState();
+    isAuthenticated = ref.read(AppState.auth).isAuthenticated;
+    user = ref.read(AppState.auth).user;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.watch(AppState.auth).isAuthenticated;
+    ref.watch(AppState.auth).user;
     return Container(
       height: 26,
       color: AppColors.blueColor,

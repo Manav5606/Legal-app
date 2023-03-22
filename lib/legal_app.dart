@@ -1,8 +1,11 @@
+import 'package:admin/core/enum/role.dart';
 import 'package:admin/core/navigation/routes.dart';
 import 'package:admin/core/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
+
+import 'data/models/models.dart';
 
 final _isAuthenticateProvider =
     Provider<bool>((ref) => ref.watch(AppState.auth).isAuthenticated);
@@ -31,7 +34,13 @@ class _LegalAppState extends ConsumerState<LegalApp> {
       routeInformationParser: const RoutemasterParser(),
       routerDelegate: RoutemasterDelegate(routesBuilder: (context) {
         final isAuthenticated = ref.watch(_isAuthenticateProvider);
-        return isAuthenticated ? routeLoggedIn : routeLoggedOut;
+        final User? user = ref.read(AppState.auth).user;
+
+        return isAuthenticated
+            ? (user?.userType ?? UserType.user) == UserType.admin
+                ? routeAdminLoggedIn
+                : routeLoggedIn
+            : routeLoggedOut;
       }),
     );
   }

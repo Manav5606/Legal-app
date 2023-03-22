@@ -25,3 +25,9 @@ final routeLoggedIn = RouteMap(
     HomePage.routeName: (_) => const MaterialPage(child: HomePage()),
   },
 );
+final routeAdminLoggedIn = RouteMap(
+  onUnknownRoute: (_) => const Redirect(HomePage.routeName),
+  routes: {
+    HomePage.routeName: (_) => const MaterialPage(child: HomePage()),
+  },
+);

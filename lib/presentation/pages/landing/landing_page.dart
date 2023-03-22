@@ -1,9 +1,11 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
+import 'package:admin/core/provider.dart';
 import 'package:admin/data/models/customer_review.dart';
 import 'package:admin/data/models/general_stat.dart';
 import 'package:admin/data/models/news.dart';
+import 'package:admin/presentation/pages/landing/widgets/services.dart';
 import 'package:admin/presentation/pages/widgets/banner.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/pages/widgets/customer_review_slider.dart';
@@ -119,44 +121,6 @@ class _LandingPageState extends ConsumerState<LandingPage> {
     "Lorem Ipsum",
   ];
 
-  final _category = [
-    Category(
-      id: "b",
-      name: "Business",
-      iconUrl: "",
-      description:
-          "I have used multiple offline & online CAs/ Lawyers. LegalRaasta clearly provided the best service and fast. Their team helped me protect my brand with trademark registration.",
-      addedAt: DateTime.now().millisecondsSinceEpoch,
-      addedBy: "",
-    ),
-    Category(
-      id: "f",
-      name: "finance",
-      iconUrl: "",
-      description:
-          "I have used multiple offline & online CAs/ Lawyers. LegalRaasta clearly provided the best service and fast. Their team helped me protect my brand with trademark registration.",
-      addedAt: DateTime.now().millisecondsSinceEpoch,
-      addedBy: "",
-    ),
-    Category(
-      id: "l",
-      name: "legal",
-      iconUrl: "",
-      description:
-          "I have used multiple offline & online CAs/ Lawyers. LegalRaasta clearly provided the best service and fast. Their team helped me protect my brand with trademark registration.",
-      addedAt: DateTime.now().millisecondsSinceEpoch,
-      addedBy: "",
-    ),
-    Category(
-      id: "a",
-      name: "Advertisment",
-      iconUrl: "",
-      description:
-          "I have used multiple offline & online CAs/ Lawyers. LegalRaasta clearly provided the best service and fast. Their team helped me protect my brand with trademark registration.",
-      addedAt: DateTime.now().millisecondsSinceEpoch,
-      addedBy: "",
-    ),
-  ];
   final _contactDetails = [
     Category(
       id: "b",
@@ -185,6 +149,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
   ];
   @override
   Widget build(BuildContext context) {
+    ref.watch(AppState.auth).isAuthenticated;
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       body: ScreenTypeLayout.builder(
@@ -196,14 +161,16 @@ class _LandingPageState extends ConsumerState<LandingPage> {
               height: 250,
               bannerDetails: _bannerList,
             ),
-            _services(700),
-            _frequentlyUsedServices(350),
+            Services(height: 0),
+            _frequentlyUsedServices(300, mobile: true),
             // _newsAndUpdates(800),
-            Center(child: _generalStats(300)),
+            Center(child: _generalStats(300, mobile: true)),
             CustomerReviewSlides(
-                customerReviews: _customerReviewData, height: 700),
-            _contactUs(250),
-            _contactUsCard(200),
+                customerReviews: _customerReviewData,
+                height: MediaQuery.of(context).size.width,
+                mobile: true),
+            _contactUs(250, mobile: true),
+            // _contactUsCard(200),
             const Footer(),
           ],
         ),
@@ -215,7 +182,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
               height: 700,
               bannerDetails: _bannerList,
             ),
-            _services(700),
+            Services(height: 700),
             _frequentlyUsedServices(350),
             // _newsAndUpdates(800),
             Center(child: _generalStats(300)),
@@ -259,35 +226,16 @@ class _LandingPageState extends ConsumerState<LandingPage> {
     );
   }
 
-  Widget _contactUs(double height) {
+  Widget _contactUs(double height, {bool mobile = false}) {
     return SizedBox(
       height: height,
       child: Stack(
         children: [
-          Align(
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text("Contact us regarding any query",
-                    style: FontStyles.font24Semibold
-                        .copyWith(color: AppColors.blackColor)),
-                const SizedBox(height: 4),
-                Text(
-                    "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7",
-                    style: FontStyles.font12Regular
-                        .copyWith(color: AppColors.blueColor)),
-                const SizedBox(height: 12),
-                CTAButton(title: "Contact Us", onTap: () {}, radius: 50),
-              ],
-            ),
-          ),
           Positioned(
               bottom: 20,
               right: 20,
-              child:
-                  SvgPicture.asset(Assets.iconsVectorblueSquare, width: 120)),
+              child: SvgPicture.asset(Assets.iconsVectorblueSquare,
+                  width: mobile ? 60 : 120)),
           Positioned(
               top: 15,
               right: 80,
@@ -297,12 +245,37 @@ class _LandingPageState extends ConsumerState<LandingPage> {
               top: 30,
               child: SvgPicture.asset(Assets.ASSETS_ICONS_VECTOROVERLAYLEFT_SVG,
                   width: 110)),
+          Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: EdgeInsets.all(mobile ? 12.0 : 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Contact us regarding any query",
+                      style: FontStyles.font24Semibold.copyWith(
+                          color: AppColors.blackColor,
+                          fontSize: mobile ? 18 : null)),
+                  const SizedBox(height: 4),
+                  Text(
+                      "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7",
+                      textAlign: TextAlign.center,
+                      style: FontStyles.font12Regular.copyWith(
+                          color: AppColors.blueColor,
+                          fontSize: mobile ? 12 : null)),
+                  const SizedBox(height: 12),
+                  CTAButton(title: "Contact Us", onTap: () {}, radius: 50),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _frequentlyUsedServices(double height) {
+  Widget _frequentlyUsedServices(double height, {bool mobile = false}) {
     return SizedBox(
       height: height,
       child: Stack(
@@ -316,19 +289,23 @@ class _LandingPageState extends ConsumerState<LandingPage> {
             child: SizedBox(
               width: height * 3,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: mobile
+                    ? MainAxisAlignment.start
+                    : MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Visibility(visible: mobile, child: const SizedBox(height: 8)),
                   Text("Frequently used services",
                       style: FontStyles.font24Semibold
                           .copyWith(color: AppColors.yellowColor)),
+                  Visibility(visible: mobile, child: const SizedBox(height: 8)),
                   Wrap(
-                    spacing: 8,
+                    spacing: mobile ? 20 : 8,
                     alignment: WrapAlignment.start,
-                    runSpacing: 8,
+                    runSpacing: mobile ? 14 : 8,
                     children: _frequentlyUsedServicesList
                         .map((e) => FrequentServiceContainer(
-                            serviceName: e, width: height * 3))
+                            serviceName: e, width: height * 3, mobile: mobile))
                         .toList(),
                   ),
                 ],
@@ -340,70 +317,22 @@ class _LandingPageState extends ConsumerState<LandingPage> {
     );
   }
 
-  Widget _services(double height) {
-    return  SizedBox(
-      height: height,
-      child: Stack(
-        children: [
-          SizedBox(
-            height: height * 0.55,
-            width: double.infinity,
-            child: Image.asset(
-              Assets.servicesBGDesign,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: SizedBox(
-              width: height * 1.6,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text("Get the best services\nwe offer",
-                          textAlign: TextAlign.left,
-                          style: FontStyles.font24Semibold.copyWith(
-                              color: AppColors.blackColor, fontSize: 32)),
-                      const Spacer(),
-                      Text(
-                          "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem \nIpsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-                          textAlign: TextAlign.left,
-                          style: FontStyles.font14Semibold
-                              .copyWith(color: AppColors.blackLightColor)),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: _category
-                        .map((category) => ServiceContainer(
-                            category: category, width: height * 1.6))
-                        .toList(),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _generalStats(double height) {
+  Widget _generalStats(double height, {bool mobile = false}) {
     return SizedBox(
       height: height,
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        alignment: WrapAlignment.start,
-        children: _generalStatsData
-            .map((e) => GeneralStatContainer(
-                stat: e,
-                width: height * 4,
-                b: _generalStatsData.indexOf(e) % 2 == 0))
-            .toList(),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: mobile ? 8 : 0),
+        child: Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          alignment: WrapAlignment.start,
+          children: _generalStatsData
+              .map((e) => GeneralStatContainer(
+                  stat: e,
+                  width: mobile ? height * 3 : height * 4,
+                  b: _generalStatsData.indexOf(e) % 2 == 0))
+              .toList(),
+        ),
       ),
     );
   }
