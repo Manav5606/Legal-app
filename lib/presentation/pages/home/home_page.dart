@@ -67,18 +67,16 @@ class _HomePageState extends ConsumerState<HomePage>
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.9,
-              child: Expanded(
-                child: _viewModel.showTabView
-                    ? TabBarView(
-                        controller: _tabController,
-                        children: const [
-                          DashboardTab(),
-                          InboxTab(),
-                          NotificationTab(),
-                        ],
-                      )
-                    : _viewModel.otherView,
-              ),
+              child: _viewModel.showTabView
+                  ? TabBarView(
+                      controller: _tabController,
+                      children: const [
+                        DashboardTab(),
+                        InboxTab(),
+                        NotificationTab(),
+                      ],
+                    )
+                  : _viewModel.otherView,
             ),
             const Footer(),
           ],

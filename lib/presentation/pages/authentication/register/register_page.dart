@@ -94,7 +94,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   children: [
                     CustomTextField(
                       label: "USERNAME",
-                      hintText: "Username",
+                      hintText: "Enter Username",
                       controller: _viewModel.usernameController,
                       readOnly: _viewModel.isLoading,
                       errorText: _viewModel.usernameError,
@@ -102,7 +102,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                     const SizedBox(height: 18),
                     CustomTextField(
                       label: "MOBILE NUMBER",
-                      hintText: "999999999",
+                      hintText: "Enter Mobile Number",
                       controller: _viewModel.numberController,
                       readOnly: _viewModel.isLoading,
                       errorText: _viewModel.numberError,
@@ -110,7 +110,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                     const SizedBox(height: 18),
                     CustomTextField(
                       label: "EMAIL",
-                      hintText: "xyz@abc.com",
+                      hintText: "Enter your Mail Address",
                       controller: _viewModel.emailController,
                       readOnly: _viewModel.isLoading,
                       errorText: _viewModel.emailError,
@@ -118,7 +118,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                     const SizedBox(height: 18),
                     CustomTextField(
                       label: "SET NEW PASSWORD",
-                      hintText: "Password",
+                      hintText: "Enter Password",
                       controller: _viewModel.passwordController,
                       readOnly: _viewModel.isLoading,
                       obscureText: !_viewModel.showPassword,
@@ -139,7 +139,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                     const SizedBox(height: 18),
                     CustomTextField(
                       label: "RE-ENTER PASSWORD",
-                      hintText: "Confirm Password",
+                      hintText: "Enter Confirm Password",
                       controller: _viewModel.password1Controller,
                       readOnly: _viewModel.isLoading,
                       obscureText: !_viewModel.showPassword1,

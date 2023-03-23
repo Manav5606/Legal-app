@@ -63,8 +63,9 @@ class RegisterViewModel extends BaseViewModel {
         !numberController.text.isValidPhoneNumber()) {
       numberError = "Please enter a valid 10 digit phone number";
     }
-    if (passwordController.text.isEmpty ||
-        !passwordController.text.isValidPassword()) {
+    if (passwordController.text.isEmpty) {
+      passwordError = "Password can't be empty.";
+    } else if (!passwordController.text.isValidPassword()) {
       passwordError = "Please enter a valid password.";
     } else {
       if (password1Controller.text != passwordController.text) {

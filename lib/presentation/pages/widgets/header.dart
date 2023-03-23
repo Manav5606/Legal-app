@@ -178,13 +178,16 @@ class _TopBarState extends ConsumerState<TopBar> {
                           children: [
                             const SizedBox(
                               width: 28,
-                              child: CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                    "https://randomuser.me/api/portraits/men/51.jpg"),
+                              child: Padding(
+                                padding: EdgeInsets.all(4.0),
+                                child: CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      "https://randomuser.me/api/portraits/men/51.jpg"),
+                                ),
                               ),
                             ),
                             Icon(Icons.arrow_drop_down,
-                                color: AppColors.yellowColor)
+                                size: 12, color: AppColors.yellowColor)
                           ],
                         ),
                         itemBuilder: (_) => ["Profile", "History", "Sign out"]
