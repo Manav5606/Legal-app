@@ -50,7 +50,7 @@ class Category {
 
   Map<String, dynamic> toJson() => {
         "name": name,
-        "iconUrl": iconUrl,
+        "icon_url": iconUrl,
         "description": description,
         "added_at": addedAt ?? DateTime.now().millisecondsSinceEpoch,
         "added_by": addedBy,

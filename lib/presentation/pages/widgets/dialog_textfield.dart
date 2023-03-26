@@ -9,7 +9,8 @@ class DialogTextField extends FormField<String> {
   final String? label;
   final String hintText;
   final bool readOnly;
-  final int maxLines;
+  final int? maxLines;
+  final int? maxLength;
   final TextEditingController controller;
   final TextInputType keyboardType;
   final bool obscureText;
@@ -24,6 +25,7 @@ class DialogTextField extends FormField<String> {
   DialogTextField({
     Key? key,
     this.label,
+    this.maxLength,
     required this.width,
     required this.hintText,
     required this.controller,
@@ -76,6 +78,7 @@ class DialogTextField extends FormField<String> {
                       ),
                       textAlignVertical: TextAlignVertical.center,
                       maxLines: maxLines,
+                      maxLength: maxLength,
                       onTap: onTap,
                       controller: controller,
                       keyboardType: keyboardType,

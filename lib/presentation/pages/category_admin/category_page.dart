@@ -83,20 +83,17 @@ class _CategoryPageState extends ConsumerState<CategoryPage> {
                                   onSort: _viewModel.sortCategories,
                                 ),
                                 DataColumn(
-                                  numeric: true,
                                   label: const Text("Name"),
                                   onSort: _viewModel.sortCategories,
                                 ),
                                 const DataColumn(
                                   label: Text("Icon"),
-                                  // onSort: _viewModel.sortCategories,
                                 ),
                                 const DataColumn(
-                                  numeric: true,
                                   label: Text("Description"),
-                                  // onSort: _viewModel.sortCategories,
                                 ),
                                 DataColumn(
+                                  numeric: true,
                                   label: const Text("Added at"),
                                   onSort: _viewModel.sortCategories,
                                 ),
@@ -109,6 +106,10 @@ class _CategoryPageState extends ConsumerState<CategoryPage> {
                               rows: _viewModel.getCategories.map(
                                 (data) {
                                   return DataRow(
+                                    color: data.isDeactivated
+                                        ? MaterialStateProperty.all(
+                                            AppColors.lightRedColor)
+                                        : null,
                                     cells: [
                                       DataCell(Text(data.id.toString())),
                                       DataCell(Text(data.name.toString())),
@@ -116,12 +117,14 @@ class _CategoryPageState extends ConsumerState<CategoryPage> {
                                           imageUrl: data.iconUrl,
                                           height: 30,
                                           width: 30)),
-                                      DataCell(Text(data.description.toString(),
-                                          maxLines: 5,
-                                          overflow: TextOverflow.ellipsis)),
+                                      DataCell(SizedBox(
+                                        width: 200,
+                                        child: Text(data.description.toString(),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis),
+                                      )),
                                       DataCell(
                                           Text(data.addedAt!.formatToDate())),
-                                      DataCell(Text(data.name.toString())),
                                       DataCell(Text(data.addedBy.toString())),
                                       DataCell(TextButton(
                                           child: const Text("Edit"),
