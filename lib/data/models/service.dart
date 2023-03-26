@@ -1,28 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 class Service {
-  final String id;
+  final String? id;
   final String shortDescription;
   final String aboutDescription;
-  final double marketPrice;
-  final double ourPrice;
+  final double? marketPrice;
+  final double? ourPrice;
   final String? parentServiceID;
   final List<String> childServices;
   final String categoryID;
-  final int createdAt;
+  final int? createdAt;
   final String createdBy;
 
   Service({
-    required this.id,
+    this.id,
     required this.shortDescription,
     required this.aboutDescription,
-    required this.marketPrice,
-    required this.ourPrice,
-    required this.parentServiceID,
+    this.marketPrice,
+    this.ourPrice,
+    this.parentServiceID,
     required this.childServices,
     required this.categoryID,
-    required this.createdAt,
+    this.createdAt,
     required this.createdBy,
   });
 
@@ -41,4 +40,38 @@ class Service {
       createdBy: data['created_by'],
     );
   }
+
+  Service copyWith({
+    String? shortDescription,
+    String? aboutDescription,
+    double? marketPrice,
+    double? ourPrice,
+    String? parentServiceID,
+    List<String>? childServices,
+    String? categoryID,
+  }) =>
+      Service(
+        shortDescription: shortDescription ?? this.shortDescription,
+        aboutDescription: aboutDescription ?? this.aboutDescription,
+        childServices: childServices ?? this.childServices,
+        categoryID: categoryID ?? this.categoryID,
+        id: id,
+        createdBy: createdBy,
+        createdAt: createdAt,
+        marketPrice: marketPrice,
+        ourPrice: ourPrice,
+        parentServiceID: parentServiceID,
+      );
+
+  Map<String, dynamic> toJson() => {
+        "short_description": shortDescription,
+        "about_description": aboutDescription,
+        "market_price": marketPrice,
+        "our_price": ourPrice,
+        "parent_service_id": parentServiceID,
+        "child_services": childServices,
+        "category_id": categoryID,
+        "created_at": createdAt,
+        "created_by": createdBy,
+      };
 }
