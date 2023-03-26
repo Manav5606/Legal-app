@@ -1,5 +1,6 @@
 import 'package:admin/core/constant/firebase_config.dart';
 import 'package:admin/core/enum/role.dart';
+import 'package:admin/data/models/category.dart';
 import 'package:admin/data/models/client.dart';
 import 'package:admin/data/models/app_error.dart';
 import 'package:admin/data/models/user.dart';
@@ -84,6 +85,59 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           .collection(FirebaseConfig.userCollection)
           .doc(dUser.id)
           .update(dUser.toJson());
+      return const Right(true);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<AppError, List<Category>>> fetchCategories() async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.categoryCollection)
+          .get();
+
+      return Right(
+          response.docs.map((doc) => Category.fromSnapshot(doc)).toList());
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<AppError, Category>> createCategory(
+      {required Category category}) {
+    // TODO: implement createCategory
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<AppError, Category>> updateCategory(
+      {required Category category}) {
+    // TODO: implement updateCategory
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<AppError, bool>> deactivateCategory(
+      {required Category category}) async {
+    try {
+      final dCategory = category.copyWith(isDeactivated: true);
+      await _firebaseFirestore
+          .collection(FirebaseConfig.userCollection)
+          .doc(dCategory.id)
+          .update(dCategory.toJson());
       return const Right(true);
     } on FirebaseException catch (fae) {
       logger.severe(fae);

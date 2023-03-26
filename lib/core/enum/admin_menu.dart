@@ -1,3 +1,4 @@
+import 'package:admin/presentation/pages/category_admin/category_page.dart';
 import 'package:admin/presentation/pages/client_admin/client_page.dart';
 import 'package:admin/presentation/pages/user_admin/user_page.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,7 @@ enum AdminMenu {
   client("Client", ClientPage()),
   users("Users", UserPage()),
   services("Services", ClientPage()),
-  category("Category", ClientPage()),
+  category("Category", CategoryPage()),
   addNotification("Add Notification", ClientPage()),
   editLandingPage("Edit Landing Page", ClientPage());
 
