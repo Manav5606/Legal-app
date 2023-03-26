@@ -117,16 +117,39 @@ class DatabaseRepositoryImpl extends DatabaseRepository
 
   @override
   Future<Either<AppError, Category>> createCategory(
-      {required Category category}) {
-    // TODO: implement createCategory
-    throw UnimplementedError();
+      {required Category category}) async {
+    try {
+      final result = await _firebaseFirestore
+          .collection(FirebaseConfig.categoryCollection)
+          .add(category.toJson());
+      return Right(Category.fromSnapshot((await result.get())));
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
   }
 
   @override
   Future<Either<AppError, Category>> updateCategory(
-      {required Category category}) {
-    // TODO: implement updateCategory
-    throw UnimplementedError();
+      {required Category category}) async {
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseConfig.categoryCollection)
+          .doc(category.id)
+          .update(category.toJson());
+      return Right(category);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
   }
 
   @override
@@ -135,7 +158,7 @@ class DatabaseRepositoryImpl extends DatabaseRepository
     try {
       final dCategory = category.copyWith(isDeactivated: true);
       await _firebaseFirestore
-          .collection(FirebaseConfig.userCollection)
+          .collection(FirebaseConfig.categoryCollection)
           .doc(dCategory.id)
           .update(dCategory.toJson());
       return const Right(true);
