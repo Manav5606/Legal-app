@@ -11,6 +11,7 @@ class Service {
   final String categoryID;
   final int? createdAt;
   final String createdBy;
+  final bool isDeactivated;
 
   Service({
     this.id,
@@ -22,6 +23,7 @@ class Service {
     required this.childServices,
     required this.categoryID,
     this.createdAt,
+    this.isDeactivated = false,
     required this.createdBy,
   });
 
@@ -38,6 +40,7 @@ class Service {
       categoryID: data['category_id'],
       createdAt: data['created_at'],
       createdBy: data['created_by'],
+      isDeactivated: data['is_deactivated'],
     );
   }
 
@@ -49,8 +52,10 @@ class Service {
     String? parentServiceID,
     List<String>? childServices,
     String? categoryID,
+    bool? isDeactivated,
   }) =>
       Service(
+        isDeactivated: isDeactivated ?? this.isDeactivated,
         shortDescription: shortDescription ?? this.shortDescription,
         aboutDescription: aboutDescription ?? this.aboutDescription,
         childServices: childServices ?? this.childServices,
@@ -64,6 +69,7 @@ class Service {
       );
 
   Map<String, dynamic> toJson() => {
+        "is_deactivated": isDeactivated,
         "short_description": shortDescription,
         "about_description": aboutDescription,
         "market_price": marketPrice,

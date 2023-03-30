@@ -3,6 +3,7 @@ import 'package:admin/core/enum/role.dart';
 import 'package:admin/data/models/category.dart';
 import 'package:admin/data/models/client.dart';
 import 'package:admin/data/models/app_error.dart';
+import 'package:admin/data/models/service.dart';
 import 'package:admin/data/models/user.dart';
 import 'package:admin/data/repositories/index.dart';
 import 'package:admin/domain/repositories/index.dart';
@@ -162,6 +163,38 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           .doc(dCategory.id)
           .update(dCategory.toJson());
       return const Right(true);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<AppError, bool>> activateCategory(
+      {required Category category}) {
+    // TODO: implement activateCategory
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<AppError, bool>> activateUser({required User user}) {
+    // TODO: implement activateUser
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<AppError, List<Service>>> fetchServices() async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.serviceCollection)
+          .get();
+
+      return Right(
+          response.docs.map((doc) => Service.fromSnapshot(doc)).toList());
     } on FirebaseException catch (fae) {
       logger.severe(fae);
       return Left(
