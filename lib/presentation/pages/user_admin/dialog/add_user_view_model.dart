@@ -45,7 +45,7 @@ class AddUserViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  bool _validateValues() {
+  bool _validateValues(bool create) {
     clearError();
 
     if (emailController.text.isEmpty || !emailController.text.isValidEmail()) {
@@ -54,9 +54,11 @@ class AddUserViewModel extends BaseViewModel {
     if (nameController.text.isEmpty) {
       nameError = "This field is required";
     }
-    if (passwordController.text.isEmpty ||
-        !passwordController.text.isValidPassword()) {
-      passwordError = "This field is required";
+    if (create) {
+      if (passwordController.text.isEmpty ||
+          !passwordController.text.isValidPassword()) {
+        passwordError = "This field is required";
+      }
     }
     if (numberController.text.isEmpty ||
         !numberController.text.isValidPhoneNumber()) {
@@ -104,7 +106,7 @@ class AddUserViewModel extends BaseViewModel {
   }
 
   Future createUser(model.User? existingUser) async {
-    if (_validateValues()) {
+    if (_validateValues(existingUser == null)) {
       toggleLoadingOn(true);
       late final Either<AppError, User> result;
       if (existingUser != null) {
