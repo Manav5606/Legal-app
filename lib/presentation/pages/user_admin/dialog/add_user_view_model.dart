@@ -106,7 +106,7 @@ class AddUserViewModel extends BaseViewModel {
   }
 
   Future createUser(model.User? existingUser) async {
-    if (_validateValues(existingUser == null)) {
+    if (_validateValues(existingUser == null ? true : false)) {
       toggleLoadingOn(true);
       late final Either<AppError, User> result;
       if (existingUser != null) {

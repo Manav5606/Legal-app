@@ -62,10 +62,14 @@ class DatabaseRepositoryImpl extends DatabaseRepository
   @override
   Future<Either<AppError, User>> updateUser({required User user}) async {
     try {
+      print("Updating user");
+
+      print(user.toJson());
       await _firebaseFirestore
           .collection(FirebaseConfig.userCollection)
           .doc(user.id)
           .update(user.toJson());
+      print("Updated user");
       return Right(user);
     } on FirebaseException catch (fae) {
       logger.severe(fae);

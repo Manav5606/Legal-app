@@ -106,7 +106,7 @@ class AddClientViewModel extends BaseViewModel {
   }
 
   Future createClient(model.User? existingClient) async {
-    if (_validateValues(existingClient == null)) {
+    if (_validateValues(existingClient == null ? true : false)) {
       toggleLoadingOn(true);
       late final Either<AppError, User> result;
       if (existingClient != null) {
@@ -128,6 +128,8 @@ class AddClientViewModel extends BaseViewModel {
           password: passwordController.text,
         );
       }
+
+      print("Result:: ${result.fold((l) => l.toString(), (r) => r.toJson())}");
 
       // TODO ask for other details and add them also
       return result.fold((l) async {
