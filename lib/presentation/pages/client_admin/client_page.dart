@@ -18,17 +18,17 @@ class ClientPage extends ConsumerStatefulWidget {
 }
 
 class _ClientPageState extends ConsumerState<ClientPage> {
-  late final UserViewModel _viewModel;
+  late final ClientViewModel _viewModel;
 
   @override
   void initState() {
-    _viewModel = ref.read(UserViewModel.provider);
+    _viewModel = ref.read(ClientViewModel.provider);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(UserViewModel.provider);
+    ref.watch(ClientViewModel.provider);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
       decoration: const BoxDecoration(),
@@ -101,7 +101,7 @@ class _ClientPageState extends ConsumerState<ClientPage> {
                                 ),
                                 const DataColumn(label: Text("Action")),
                               ],
-                              rows: _viewModel.getUsers.map(
+                              rows: _viewModel.getClients.map(
                                 (data) {
                                   return DataRow(
                                     color: data.isDeactivated
