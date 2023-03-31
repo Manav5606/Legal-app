@@ -1,7 +1,7 @@
 import 'package:admin/core/constant/firebase_config.dart';
 import 'package:admin/core/enum/role.dart';
 import 'package:admin/data/models/category.dart';
-import 'package:admin/data/models/client.dart';
+import 'package:admin/data/models/vendor.dart';
 import 'package:admin/data/models/app_error.dart';
 import 'package:admin/data/models/user.dart';
 import 'package:admin/data/repositories/index.dart';
@@ -23,11 +23,11 @@ class DatabaseRepositoryImpl extends DatabaseRepository
   DatabaseRepositoryImpl(this._firebaseFirestore);
 
   @override
-  Future<Either<AppError, bool>> createClient({required Client client}) async {
+  Future<Either<AppError, bool>> createVendor({required Vendor vendor}) async {
     try {
       final result = await _firebaseFirestore
           .collection(FirebaseConfig.userCollection)
-          .add(client.toJson());
+          .add(vendor.toJson());
       // TODO create client model from result
       return const Right(true);
     } on FirebaseException catch (fae) {

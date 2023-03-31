@@ -12,16 +12,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _provider = ChangeNotifierProvider.autoDispose((ref) =>
-    AddClientViewModel(ref.read(AppState.auth.notifier),
+    AddVendorViewModel(ref.read(AppState.auth.notifier),
         ref.read(DatabaseRepositoryImpl.provider)));
 
-class AddClientViewModel extends BaseViewModel {
+class AddVendorViewModel extends BaseViewModel {
   final AuthProvider _authProvider;
   final DatabaseRepositoryImpl _databaseRepositoryImpl;
 
-  AddClientViewModel(this._authProvider, this._databaseRepositoryImpl);
+  AddVendorViewModel(this._authProvider, this._databaseRepositoryImpl);
 
-  static AutoDisposeChangeNotifierProvider<AddClientViewModel> get provider =>
+  static AutoDisposeChangeNotifierProvider<AddVendorViewModel> get provider =>
       _provider;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -80,7 +80,7 @@ class AddClientViewModel extends BaseViewModel {
     super.dispose();
   }
 
-  void initClientUser(model.User? clientUser) {
+  void initVendorUser(model.User? clientUser) {
     if (clientUser != null) {
       emailController.text = clientUser.email;
       numberController.text = clientUser.phoneNumber.toString();
@@ -89,7 +89,7 @@ class AddClientViewModel extends BaseViewModel {
     }
   }
 
-  Future deactivateClient(model.User user) async {
+  Future deactivateVendor(model.User user) async {
     toggleLoadingOn(true);
     final result = await _databaseRepositoryImpl.deactivateUser(user: user);
     result.fold((l) async {
@@ -97,7 +97,7 @@ class AddClientViewModel extends BaseViewModel {
       toggleLoadingOn(false);
       return null;
     }, (r) {
-      Messenger.showSnackbar("Client Deactivated");
+      Messenger.showSnackbar("Vendor Deactivated");
       toggleLoadingOn(false);
 
       return r;
@@ -105,12 +105,12 @@ class AddClientViewModel extends BaseViewModel {
     toggleLoadingOn(false);
   }
 
-  Future createClient(model.User? existingClient) async {
-    if (_validateValues(existingClient == null ? true : false)) {
+  Future createVendor(model.User? existingVendor) async {
+    if (_validateValues(existingVendor == null ? true : false)) {
       toggleLoadingOn(true);
       late final Either<AppError, User> result;
-      if (existingClient != null) {
-        final _user = existingClient.copyWith(
+      if (existingVendor != null) {
+        final _user = existingVendor.copyWith(
           name: nameController.text,
           email: emailController.text,
           phoneNumber: int.parse(numberController.text),
@@ -137,10 +137,10 @@ class AddClientViewModel extends BaseViewModel {
         toggleLoadingOn(false);
         return null;
       }, (r) {
-        if (existingClient == null) {
-          Messenger.showSnackbar("Client Created ✅ with Default Password");
+        if (existingVendor == null) {
+          Messenger.showSnackbar("Vendor Created ✅ with Default Password");
         } else {
-          Messenger.showSnackbar("Updated Client");
+          Messenger.showSnackbar("Updated Vendor");
         }
         toggleLoadingOn(false);
         return r;

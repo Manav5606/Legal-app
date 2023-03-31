@@ -1,6 +1,6 @@
 import 'package:admin/data/models/qualification.dart';
 
-class Client {
+class Vendor {
   String? id;
   final String userID;
   final String companyName;
@@ -12,7 +12,7 @@ class Client {
   final String bankAccountName;
   final List<Qualification> qualification;
 
-  Client({
+  Vendor({
     this.id,
     required this.userID,
     required this.companyName,

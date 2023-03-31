@@ -1,33 +1,33 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/data/models/models.dart';
-import 'package:admin/presentation/pages/client_admin/client_view_model.dart';
-import 'package:admin/presentation/pages/client_admin/dialog/add_client_view_model.dart';
+import 'package:admin/presentation/pages/vendor_admin/vendor_view_model.dart';
+import 'package:admin/presentation/pages/vendor_admin/dialog/add_vendor_view_model.dart';
 import 'package:admin/presentation/pages/widgets/dialog_textfield.dart';
 import 'package:admin/presentation/pages/widgets/password_criteria_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddClientDialog extends ConsumerStatefulWidget {
-  final User? clientUser;
-  const AddClientDialog({super.key, this.clientUser});
+class AddVendorDialog extends ConsumerStatefulWidget {
+  final User? vendorUser;
+  const AddVendorDialog({super.key, this.vendorUser});
 
   @override
-  ConsumerState<AddClientDialog> createState() => _AddClientDialogState();
+  ConsumerState<AddVendorDialog> createState() => _AddVendorDialogState();
 }
 
-class _AddClientDialogState extends ConsumerState<AddClientDialog> {
-  late final AddClientViewModel _viewModel;
+class _AddVendorDialogState extends ConsumerState<AddVendorDialog> {
+  late final AddVendorViewModel _viewModel;
   @override
   void initState() {
     super.initState();
-    _viewModel = ref.read(AddClientViewModel.provider);
-    _viewModel.initClientUser(widget.clientUser);
+    _viewModel = ref.read(AddVendorViewModel.provider);
+    _viewModel.initVendorUser(widget.vendorUser);
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(AddClientViewModel.provider);
+    ref.watch(AddVendorViewModel.provider);
     return Padding(
       padding: const EdgeInsets.all(24),
       child: SizedBox(
@@ -37,15 +37,15 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-                widget.clientUser == null
-                    ? "Add New Client"
-                    : "Update Existing Client",
+                widget.vendorUser == null
+                    ? "Add New Vendor"
+                    : "Update Existing Vendor",
                 style: FontStyles.font24Semibold
                     .copyWith(color: AppColors.blueColor)),
             Text(
-                widget.clientUser == null
-                    ? "Add your new client here"
-                    : "Update your existing client here",
+                widget.vendorUser == null
+                    ? "Add your new vendor here"
+                    : "Update your existing vendor here",
                 style: FontStyles.font12Regular
                     .copyWith(color: AppColors.blueColor)),
             const SizedBox(height: 12),
@@ -72,7 +72,7 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
                 controller: _viewModel.emailController),
             const SizedBox(height: 12),
             Visibility(
-              visible: widget.clientUser == null,
+              visible: widget.vendorUser == null,
               child: DialogTextField(
                   width: 600 * 0.8,
                   hintText: "Password",
@@ -98,19 +98,19 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Visibility(
-                  visible: widget.clientUser != null,
+                  visible: widget.vendorUser != null,
                   child: TextButton(
                       onPressed: _viewModel.isLoading
                           ? null
                           : () async {
                               await _viewModel
-                                  .deactivateClient(widget.clientUser!)
+                                  .deactivateVendor(widget.vendorUser!)
                                   .then((value) => Navigator.pop(context));
                               await ref
-                                  .read(ClientViewModel.provider)
-                                  .fetchClients();
+                                  .read(VendorViewModel.provider)
+                                  .fetchVendors();
                             },
-                      child: Text("Deactivate Client",
+                      child: Text("Deactivate Vendor",
                           style: FontStyles.font12Regular
                               .copyWith(color: AppColors.redColor))),
                 ),
@@ -126,22 +126,22 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
                       ? null
                       : () async {
                           await _viewModel
-                              .createClient(widget.clientUser)
+                              .createVendor(widget.vendorUser)
                               .then((value) async {
                             if (value != null) {
                               Navigator.pop(context);
                               await ref
-                                  .read(ClientViewModel.provider)
-                                  .fetchClients();
+                                  .read(VendorViewModel.provider)
+                                  .fetchVendors();
                             }
                           });
                         },
                   child: _viewModel.isLoading
                       ? const CircularProgressIndicator.adaptive()
                       : Text(
-                          widget.clientUser == null
-                              ? "Add Client"
-                              : "Update Client",
+                          widget.vendorUser == null
+                              ? "Add Vendor"
+                              : "Update Vendor",
                           style: FontStyles.font12Regular
                               .copyWith(color: AppColors.whiteColor),
                         ),

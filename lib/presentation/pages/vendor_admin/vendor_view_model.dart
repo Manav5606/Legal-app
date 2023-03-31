@@ -7,33 +7,33 @@ import 'package:admin/presentation/base_view_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _provider = ChangeNotifierProvider.autoDispose(
-    (ref) => ClientViewModel(ref.read(Repository.database)));
+    (ref) => VendorViewModel(ref.read(Repository.database)));
 
-class ClientViewModel extends BaseViewModel {
+class VendorViewModel extends BaseViewModel {
   final DatabaseRepositoryImpl _databaseRepositoryImpl;
 
   bool sortAscending = false;
   int sortIndex = 0;
 
-  ClientViewModel(this._databaseRepositoryImpl) {
-    fetchClients();
+  VendorViewModel(this._databaseRepositoryImpl) {
+    fetchVendors();
   }
 
-  static AutoDisposeChangeNotifierProvider<ClientViewModel> get provider =>
+  static AutoDisposeChangeNotifierProvider<VendorViewModel> get provider =>
       _provider;
 
   String? error;
 
-  List<User> _clients = [];
+  List<User> _vendors = [];
 
-  List<User> get getClients => _clients;
+  List<User> get getVendors => _vendors;
 
   void clearErrors() {
     error = null;
     notifyListeners();
   }
 
-  Future<void> fetchClients() async {
+  Future<void> fetchVendors() async {
     toggleLoadingOn(true);
     final res = await _databaseRepositoryImpl.fetchUsersByType(UserType.client);
     res.fold((l) {
@@ -42,35 +42,35 @@ class ClientViewModel extends BaseViewModel {
       toggleLoadingOn(false);
     }, (r) {
       clearErrors();
-      _clients = r;
+      _vendors = r;
       toggleLoadingOn(false);
     });
   }
 
-  void sortClients(int index, bool ascending) {
+  void sortVendors(int index, bool ascending) {
     switch (index) {
       case 0:
-        _clients.sort((a, b) =>
+        _vendors.sort((a, b) =>
             ascending ? a.id!.compareTo(b.id!) : b.id!.compareTo(a.id!));
         break;
       case 1:
-        _clients.sort((a, b) => ascending
+        _vendors.sort((a, b) => ascending
             ? DateTime.fromMillisecondsSinceEpoch(a.createdAt!)
                 .compareTo(DateTime.fromMillisecondsSinceEpoch(b.createdAt!))
             : DateTime.fromMillisecondsSinceEpoch(b.createdAt!)
                 .compareTo(DateTime.fromMillisecondsSinceEpoch(a.createdAt!)));
         break;
       case 2:
-        _clients.sort((a, b) =>
+        _vendors.sort((a, b) =>
             ascending ? a.name.compareTo(b.name) : b.name.compareTo(a.name));
         break;
       case 3:
-        _clients.sort((a, b) => ascending
+        _vendors.sort((a, b) => ascending
             ? a.phoneNumber.compareTo(b.phoneNumber)
             : b.phoneNumber.compareTo(a.phoneNumber));
         break;
       case 4:
-        _clients.sort((a, b) => ascending
+        _vendors.sort((a, b) => ascending
             ? a.email.compareTo(b.email)
             : b.email.compareTo(a.email));
         break;

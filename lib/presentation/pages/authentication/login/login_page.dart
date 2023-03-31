@@ -140,7 +140,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                       Routemaster.of(context)
                                           .replace(HomePage.routeName);
                                       break;
-                                    case UserType.client:
+                                    case UserType.vendor:
                                       Routemaster.of(context)
                                           .replace(LandingPage.routeName);
                                       break;
