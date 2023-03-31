@@ -105,6 +105,22 @@ class AddVendorViewModel extends BaseViewModel {
     toggleLoadingOn(false);
   }
 
+  Future activateVendor(model.User user) async {
+    toggleLoadingOn(true);
+    final result = await _databaseRepositoryImpl.activateUser(user: user);
+    result.fold((l) async {
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+      return null;
+    }, (r) {
+      Messenger.showSnackbar("Vendor Activated");
+      toggleLoadingOn(false);
+
+      return r;
+    });
+    toggleLoadingOn(false);
+  }
+
   Future createVendor(model.User? existingVendor) async {
     if (_validateValues(existingVendor == null ? true : false)) {
       toggleLoadingOn(true);

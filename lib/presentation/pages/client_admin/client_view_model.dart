@@ -7,24 +7,24 @@ import 'package:admin/presentation/base_view_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _provider = ChangeNotifierProvider.autoDispose(
-    (ref) => UserViewModel(ref.read(Repository.database)));
+    (ref) => ClientViewModel(ref.read(Repository.database)));
 
-class UserViewModel extends BaseViewModel {
+class ClientViewModel extends BaseViewModel {
   final DatabaseRepositoryImpl _databaseRepositoryImpl;
   bool sortAscending = false;
   int sortIndex = 0;
-  UserViewModel(this._databaseRepositoryImpl) {
-    fetchUsers();
+  ClientViewModel(this._databaseRepositoryImpl) {
+    fetchClients();
   }
 
-  static AutoDisposeChangeNotifierProvider<UserViewModel> get provider =>
+  static AutoDisposeChangeNotifierProvider<ClientViewModel> get provider =>
       _provider;
 
   String? error;
 
-  List<User> _users = [];
+  List<User> _clients = [];
 
-  List<User> get getUsers => _users;
+  List<User> get getClients => _clients;
 
   void clearErrors() {
     error = null;
@@ -34,27 +34,27 @@ class UserViewModel extends BaseViewModel {
   void sortUsers(int index, bool ascending) {
     switch (index) {
       case 0:
-        _users.sort((a, b) =>
+        _clients.sort((a, b) =>
             ascending ? a.id!.compareTo(b.id!) : b.id!.compareTo(a.id!));
         break;
       case 1:
-        _users.sort((a, b) => ascending
+        _clients.sort((a, b) => ascending
             ? DateTime.fromMillisecondsSinceEpoch(a.createdAt!)
                 .compareTo(DateTime.fromMillisecondsSinceEpoch(b.createdAt!))
             : DateTime.fromMillisecondsSinceEpoch(b.createdAt!)
                 .compareTo(DateTime.fromMillisecondsSinceEpoch(a.createdAt!)));
         break;
       case 2:
-        _users.sort((a, b) =>
+        _clients.sort((a, b) =>
             ascending ? a.name.compareTo(b.name) : b.name.compareTo(a.name));
         break;
       case 3:
-        _users.sort((a, b) => ascending
+        _clients.sort((a, b) => ascending
             ? a.phoneNumber.compareTo(b.phoneNumber)
             : b.phoneNumber.compareTo(a.phoneNumber));
         break;
       case 4:
-        _users.sort((a, b) => ascending
+        _clients.sort((a, b) => ascending
             ? a.email.compareTo(b.email)
             : b.email.compareTo(a.email));
         break;
@@ -64,7 +64,7 @@ class UserViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> fetchUsers() async {
+  Future<void> fetchClients() async {
     toggleLoadingOn(true);
     final res = await _databaseRepositoryImpl.fetchUsersByType(UserType.client);
     res.fold((l) {
@@ -73,7 +73,7 @@ class UserViewModel extends BaseViewModel {
       toggleLoadingOn(false);
     }, (r) {
       clearErrors();
-      _users = r;
+      _clients = r;
       toggleLoadingOn(false);
     });
   }

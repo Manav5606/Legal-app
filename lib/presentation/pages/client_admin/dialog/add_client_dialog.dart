@@ -102,16 +102,27 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
                       onPressed: _viewModel.isLoading
                           ? null
                           : () async {
-                              await _viewModel
-                                  .deactivateUser(widget.clientUser!)
-                                  .then((value) => Navigator.pop(context));
+                              if (widget.clientUser?.isDeactivated ?? false) {
+                                await _viewModel
+                                    .activateClient(widget.clientUser!)
+                                    .then((value) => Navigator.pop(context));
+                              } else {
+                                await _viewModel
+                                    .deactivateClient(widget.clientUser!)
+                                    .then((value) => Navigator.pop(context));
+                              }
                               await ref
-                                  .read(UserViewModel.provider)
-                                  .fetchUsers();
+                                  .read(ClientViewModel.provider)
+                                  .fetchClients();
                             },
-                      child: Text("Deactivate Client",
-                          style: FontStyles.font12Regular
-                              .copyWith(color: AppColors.redColor))),
+                      child: Text(
+                          widget.clientUser?.isDeactivated ?? false
+                              ? "Activate Client"
+                              : "Deactivate Client",
+                          style: FontStyles.font12Regular.copyWith(
+                              color: widget.clientUser?.isDeactivated ?? false
+                                  ? AppColors.greenColor
+                                  : AppColors.redColor))),
                 ),
                 TextButton(
                     onPressed: _viewModel.isLoading
@@ -132,8 +143,8 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
                             if (value != null) {
                               Navigator.pop(context);
                               await ref
-                                  .read(UserViewModel.provider)
-                                  .fetchUsers();
+                                  .read(ClientViewModel.provider)
+                                  .fetchClients();
                             }
                           });
                         },

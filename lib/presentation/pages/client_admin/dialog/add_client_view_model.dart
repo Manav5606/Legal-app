@@ -89,7 +89,7 @@ class AddClientViewModel extends BaseViewModel {
     }
   }
 
-  Future deactivateUser(model.User client) async {
+  Future deactivateClient(model.User client) async {
     toggleLoadingOn(true);
     final result = await _databaseRepositoryImpl.deactivateUser(user: client);
     result.fold((l) async {
@@ -98,6 +98,22 @@ class AddClientViewModel extends BaseViewModel {
       return null;
     }, (r) {
       Messenger.showSnackbar("Client Deactivated");
+      toggleLoadingOn(false);
+
+      return r;
+    });
+    toggleLoadingOn(false);
+  }
+
+  Future activateClient(model.User client) async {
+    toggleLoadingOn(true);
+    final result = await _databaseRepositoryImpl.activateUser(user: client);
+    result.fold((l) async {
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+      return null;
+    }, (r) {
+      Messenger.showSnackbar("Client Activated");
       toggleLoadingOn(false);
 
       return r;
@@ -120,7 +136,7 @@ class AddClientViewModel extends BaseViewModel {
         result = await _authProvider.register(
           user: model.User(
             name: nameController.text,
-            userType: UserType.user,
+            userType: UserType.client,
             email: emailController.text,
             phoneNumber: int.parse(numberController.text),
             createdBy: _authProvider.state.user!.id,

@@ -103,16 +103,27 @@ class _AddVendorDialogState extends ConsumerState<AddVendorDialog> {
                       onPressed: _viewModel.isLoading
                           ? null
                           : () async {
-                              await _viewModel
-                                  .deactivateVendor(widget.vendorUser!)
-                                  .then((value) => Navigator.pop(context));
+                              if (widget.vendorUser?.isDeactivated ?? false) {
+                                await _viewModel
+                                    .activateVendor(widget.vendorUser!)
+                                    .then((value) => Navigator.pop(context));
+                              } else {
+                                await _viewModel
+                                    .deactivateVendor(widget.vendorUser!)
+                                    .then((value) => Navigator.pop(context));
+                              }
                               await ref
                                   .read(VendorViewModel.provider)
                                   .fetchVendors();
                             },
-                      child: Text("Deactivate Vendor",
-                          style: FontStyles.font12Regular
-                              .copyWith(color: AppColors.redColor))),
+                      child: Text(
+                          widget.vendorUser?.isDeactivated ?? false
+                              ? "Activate Client"
+                              : "Deactivate Client",
+                          style: FontStyles.font12Regular.copyWith(
+                              color: widget.vendorUser?.isDeactivated ?? false
+                                  ? AppColors.greenColor
+                                  : AppColors.redColor))),
                 ),
                 TextButton(
                     onPressed: _viewModel.isLoading
