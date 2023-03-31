@@ -54,62 +54,62 @@ class AddServiceViewModel extends BaseViewModel {
 
   void initService(model.Service? serviceDetail) {
     if (serviceDetail != null) {
-      nameController.text = serviceDetail.name;
-      descriptionController.text = serviceDetail.description;
+      // nameController.text = serviceDetail.name;
+      // descriptionController.text = serviceDetail.description;
       notifyListeners();
     }
   }
 
   Future deactivateService(model.Service service) async {
     toggleLoadingOn(true);
-    final result =
-        await _databaseRepositoryImpl.deactivateService(service: service);
-    result.fold((l) async {
-      Messenger.showSnackbar(l.message);
-      toggleLoadingOn(false);
-      return null;
-    }, (r) {
-      Messenger.showSnackbar("Service Deactivated");
-      toggleLoadingOn(false);
+    // final result =
+    //     await _databaseRepositoryImpl.deactivateService(service: service);
+    // result.fold((l) async {
+    //   Messenger.showSnackbar(l.message);
+    //   toggleLoadingOn(false);
+    //   return null;
+    // }, (r) {
+    //   Messenger.showSnackbar("Service Deactivated");
+    //   toggleLoadingOn(false);
 
-      return r;
-    });
+    //   return r;
+    // });
     toggleLoadingOn(false);
   }
 
   Future createService(model.Service? existingService) async {
-    if (_validateValues()) {
-      toggleLoadingOn(true);
-      late final Either<AppError, Service> result;
-      if (existingService != null) {
-        final service = existingService.copyWith(
-          name: nameController.text,
-          description: descriptionController.text,
-        );
-        result = await _databaseRepositoryImpl.updateService(service: service);
-      } else {
-        final service = Service(
-          name: nameController.text,
-          iconUrl: "",
-          description: descriptionController.text,
-          addedBy: _authProvider.state.user!.id!,
-        );
-        result = await _databaseRepositoryImpl.createService(service: service);
-      }
+    // if (_validateValues()) {
+    //   toggleLoadingOn(true);
+    //   late final Either<AppError, Service> result;
+    //   if (existingService != null) {
+    //     final service = existingService.copyWith(
+    //       name: nameController.text,
+    //       description: descriptionController.text,
+    //     );
+    //     result = await _databaseRepositoryImpl.updateService(service: service);
+    //   } else {
+    //     final service = Service(
+    //       name: nameController.text,
+    //       iconUrl: "",
+    //       description: descriptionController.text,
+    //       addedBy: _authProvider.state.user!.id!,
+    //     );
+    //     result = await _databaseRepositoryImpl.createService(service: service);
+    //   }
 
-      return result.fold((l) async {
-        Messenger.showSnackbar(l.message);
-        toggleLoadingOn(false);
-        return null;
-      }, (r) {
-        if (existingService == null) {
-          Messenger.showSnackbar("Service Created ✅");
-        } else {
-          Messenger.showSnackbar("Updated Service");
-        }
-        toggleLoadingOn(false);
-        return r;
-      });
-    }
+    //   return result.fold((l) async {
+    //     Messenger.showSnackbar(l.message);
+    //     toggleLoadingOn(false);
+    //     return null;
+    //   }, (r) {
+    //     if (existingService == null) {
+    //       Messenger.showSnackbar("Service Created ✅");
+    //     } else {
+    //       Messenger.showSnackbar("Updated Service");
+    //     }
+    //     toggleLoadingOn(false);
+    //     return r;
+    //   });
+    // }
   }
 }

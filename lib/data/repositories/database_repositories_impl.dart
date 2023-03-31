@@ -204,12 +204,6 @@ class DatabaseRepositoryImpl extends DatabaseRepository
   }
 
   @override
-  Future<Either<AppError, bool>> activateUser({required User user}) {
-    // TODO: implement activateUser
-    throw UnimplementedError();
-  }
-
-  @override
   Future<Either<AppError, List<Service>>> fetchServices() async {
     try {
       final response = await _firebaseFirestore
