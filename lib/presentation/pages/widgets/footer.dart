@@ -1,10 +1,12 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/provider.dart';
+import 'package:admin/presentation/pages/authentication/index.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:routemaster/routemaster.dart';
 
 class Footer extends ConsumerStatefulWidget {
   const Footer({super.key});
@@ -78,7 +80,11 @@ class _FooterState extends ConsumerState<Footer> {
                       .copyWith(color: AppColors.yellowColor, fontSize: 28),
                 ),
               ),
-              CTAButton(title: "Log In / SignUp", onTap: () {})
+              CTAButton(
+                  title: "Log In / SignUp",
+                  onTap: () {
+                    Routemaster.of(context).push(RegisterPage.routeName);
+                  })
             ],
           ),
         ),

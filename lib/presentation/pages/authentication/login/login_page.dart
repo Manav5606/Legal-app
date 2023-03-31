@@ -14,6 +14,7 @@ import 'package:admin/presentation/pages/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:routemaster/routemaster.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -38,14 +39,21 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     ref.watch(LoginViewModel.provider);
 
     return Scaffold(
-      body: Row(
-        children: [
-          Expanded(flex: 1, child: imageView()),
-          Expanded(
-            flex: 1,
-            child: loginAuth(),
-          ),
-        ],
+      body: SafeArea(
+        child: ScreenTypeLayout.builder(
+          desktop: (context) {
+            return Row(
+              children: [
+                Expanded(flex: 1, child: imageView()),
+                Expanded(
+                  flex: 1,
+                  child: loginAuth(false),
+                ),
+              ],
+            );
+          },
+          mobile: (context) => loginAuth(true),
+        ),
       ),
     );
   }
@@ -60,20 +68,23 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  Container loginAuth() {
+  Container loginAuth(bool mobile) {
     return Container(
       height: double.infinity,
       decoration: BoxDecoration(
         color: AppColors.darkBlueColor,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          bottomLeft: Radius.circular(24),
-        ),
+        borderRadius: mobile
+            ? null
+            : const BorderRadius.only(
+                topLeft: Radius.circular(24),
+                bottomLeft: Radius.circular(24),
+              ),
       ),
       child: Center(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: Sizes.s100.w),
+            padding: EdgeInsets.symmetric(
+                horizontal: mobile ? Sizes.s20.w : Sizes.s100.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
