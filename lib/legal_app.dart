@@ -37,7 +37,7 @@ class _LegalAppState extends ConsumerState<LegalApp> {
         final User? user = ref.read(AppState.auth).user;
 
         return isAuthenticated
-            ? (user?.userType ?? UserType.user) == UserType.admin
+            ? (user?.userType ?? UserType.client) == UserType.admin
                 ? routeAdminLoggedIn
                 : routeLoggedIn
             : routeLoggedOut;

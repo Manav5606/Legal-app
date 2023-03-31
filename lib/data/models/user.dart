@@ -34,7 +34,7 @@ class User {
       createdBy: data['created_by'],
       userType: UserType.values.firstWhere(
           (element) => element.name == data['user_type'],
-          orElse: () => UserType.user),
+          orElse: () => UserType.client),
       email: data['email'],
       phoneNumber: data['phone_number'],
       isDeactivated: data['is_deactivated'] ?? false,

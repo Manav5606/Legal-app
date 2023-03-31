@@ -1,33 +1,33 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/data/models/models.dart';
-import 'package:admin/presentation/pages/user_admin/dialog/add_user_view_model.dart';
-import 'package:admin/presentation/pages/user_admin/user_view_model.dart';
+import 'package:admin/presentation/pages/client_admin/dialog/add_client_view_model.dart';
+import 'package:admin/presentation/pages/client_admin/client_view_model.dart';
 import 'package:admin/presentation/pages/widgets/dialog_textfield.dart';
 import 'package:admin/presentation/pages/widgets/password_criteria_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddUserDialog extends ConsumerStatefulWidget {
-  final User? userUser;
-  const AddUserDialog({super.key, this.userUser});
+class AddClientDialog extends ConsumerStatefulWidget {
+  final User? clientUser;
+  const AddClientDialog({super.key, this.clientUser});
 
   @override
-  ConsumerState<AddUserDialog> createState() => _AddUserDialogState();
+  ConsumerState<AddClientDialog> createState() => _AddClientDialogState();
 }
 
-class _AddUserDialogState extends ConsumerState<AddUserDialog> {
-  late final AddUserViewModel _viewModel;
+class _AddClientDialogState extends ConsumerState<AddClientDialog> {
+  late final AddClientViewModel _viewModel;
   @override
   void initState() {
     super.initState();
-    _viewModel = ref.read(AddUserViewModel.provider);
-    _viewModel.initUserUser(widget.userUser);
+    _viewModel = ref.read(AddClientViewModel.provider);
+    _viewModel.initUserUser(widget.clientUser);
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(AddUserViewModel.provider);
+    ref.watch(AddClientViewModel.provider);
     return Padding(
       padding: const EdgeInsets.all(24),
       child: SizedBox(
@@ -37,15 +37,15 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-                widget.userUser == null
-                    ? "Add New User"
-                    : "Update Existing User",
+                widget.clientUser == null
+                    ? "Add New Client"
+                    : "Update Existing Client",
                 style: FontStyles.font24Semibold
                     .copyWith(color: AppColors.blueColor)),
             Text(
-                widget.userUser == null
-                    ? "Add your new user here"
-                    : "Update your existing user here",
+                widget.clientUser == null
+                    ? "Add your new client here"
+                    : "Update your existing client here",
                 style: FontStyles.font12Regular
                     .copyWith(color: AppColors.blueColor)),
             DialogTextField(
@@ -71,7 +71,7 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
                 controller: _viewModel.emailController),
             const SizedBox(height: 12),
             Visibility(
-              visible: widget.userUser == null,
+              visible: widget.clientUser == null,
               child: DialogTextField(
                   width: 600 * 0.8,
                   hintText: "Password",
@@ -97,19 +97,19 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Visibility(
-                  visible: widget.userUser != null,
+                  visible: widget.clientUser != null,
                   child: TextButton(
                       onPressed: _viewModel.isLoading
                           ? null
                           : () async {
                               await _viewModel
-                                  .deactivateUser(widget.userUser!)
+                                  .deactivateUser(widget.clientUser!)
                                   .then((value) => Navigator.pop(context));
                               await ref
                                   .read(UserViewModel.provider)
                                   .fetchUsers();
                             },
-                      child: Text("Deactivate User",
+                      child: Text("Deactivate Client",
                           style: FontStyles.font12Regular
                               .copyWith(color: AppColors.redColor))),
                 ),
@@ -127,7 +127,7 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
                       ? null
                       : () async {
                           await _viewModel
-                              .createUser(widget.userUser)
+                              .createUser(widget.clientUser)
                               .then((value) async {
                             if (value != null) {
                               Navigator.pop(context);
@@ -140,7 +140,9 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
                   child: _viewModel.isLoading
                       ? const CircularProgressIndicator.adaptive()
                       : Text(
-                          widget.userUser == null ? "Add User" : "Update User",
+                          widget.clientUser == null
+                              ? "Add Client"
+                              : "Update Client",
                           style: FontStyles.font12Regular
                               .copyWith(color: AppColors.whiteColor),
                         ),

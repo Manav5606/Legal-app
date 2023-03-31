@@ -11,17 +11,17 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _provider = ChangeNotifierProvider.autoDispose((ref) => AddUserViewModel(
-    ref.read(AppState.auth.notifier),
-    ref.read(DatabaseRepositoryImpl.provider)));
+final _provider = ChangeNotifierProvider.autoDispose((ref) =>
+    AddClientViewModel(ref.read(AppState.auth.notifier),
+        ref.read(DatabaseRepositoryImpl.provider)));
 
-class AddUserViewModel extends BaseViewModel {
+class AddClientViewModel extends BaseViewModel {
   final AuthProvider _authProvider;
   final DatabaseRepositoryImpl _databaseRepositoryImpl;
 
-  AddUserViewModel(this._authProvider, this._databaseRepositoryImpl);
+  AddClientViewModel(this._authProvider, this._databaseRepositoryImpl);
 
-  static AutoDisposeChangeNotifierProvider<AddUserViewModel> get provider =>
+  static AutoDisposeChangeNotifierProvider<AddClientViewModel> get provider =>
       _provider;
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -80,24 +80,24 @@ class AddUserViewModel extends BaseViewModel {
     super.dispose();
   }
 
-  void initUserUser(model.User? userUser) {
-    if (userUser != null) {
-      emailController.text = userUser.email;
-      numberController.text = userUser.phoneNumber.toString();
-      nameController.text = userUser.name;
+  void initUserUser(model.User? userClient) {
+    if (userClient != null) {
+      emailController.text = userClient.email;
+      numberController.text = userClient.phoneNumber.toString();
+      nameController.text = userClient.name;
       notifyListeners();
     }
   }
 
-  Future deactivateUser(model.User user) async {
+  Future deactivateUser(model.User client) async {
     toggleLoadingOn(true);
-    final result = await _databaseRepositoryImpl.deactivateUser(user: user);
+    final result = await _databaseRepositoryImpl.deactivateUser(user: client);
     result.fold((l) async {
       Messenger.showSnackbar(l.message);
       toggleLoadingOn(false);
       return null;
     }, (r) {
-      Messenger.showSnackbar("User Deactivated");
+      Messenger.showSnackbar("Client Deactivated");
       toggleLoadingOn(false);
 
       return r;
@@ -137,9 +137,9 @@ class AddUserViewModel extends BaseViewModel {
         return null;
       }, (r) {
         if (existingUser == null) {
-          Messenger.showSnackbar("User Created ✅ with Default Password");
+          Messenger.showSnackbar("Client Created ✅");
         } else {
-          Messenger.showSnackbar("Updated User");
+          Messenger.showSnackbar("Updated Client");
         }
         toggleLoadingOn(false);
 

@@ -1,6 +1,6 @@
 enum UserType {
   admin("Admin"),
-  user("User"),
+  client("Client"),
   vendor("Vendor");
 
   final String name;

@@ -132,7 +132,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 final user = await _viewModel.login();
                                 if (user != null) {
                                   switch (user.userType) {
-                                    case UserType.user:
+                                    case UserType.client:
                                       Routemaster.of(context)
                                           .replace(LandingPage.routeName);
                                       break;

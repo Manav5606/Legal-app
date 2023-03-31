@@ -171,7 +171,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                                 final user = await _viewModel.register();
                                 if (user != null) {
                                   switch (user.userType) {
-                                    case UserType.user:
+                                    case UserType.client:
                                       Routemaster.of(context)
                                           .replace(LandingPage.routeName);
                                       break;

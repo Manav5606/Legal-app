@@ -1,23 +1,23 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/extension/date.dart';
-import 'package:admin/presentation/pages/user_admin/dialog/add_user_dialog.dart';
-import 'package:admin/presentation/pages/user_admin/user_view_model.dart';
+import 'package:admin/presentation/pages/client_admin/dialog/add_client_dialog.dart';
+import 'package:admin/presentation/pages/client_admin/client_view_model.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/utils/web_scroll.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class UserPage extends ConsumerStatefulWidget {
-  static const String routeName = "/user";
+class ClientPage extends ConsumerStatefulWidget {
+  static const String routeName = "/client";
 
-  const UserPage({super.key});
+  const ClientPage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _UserPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ClientPageState();
 }
 
-class _UserPageState extends ConsumerState<UserPage> {
+class _ClientPageState extends ConsumerState<ClientPage> {
   late final UserViewModel _viewModel;
 
   @override
@@ -125,8 +125,8 @@ class _UserPageState extends ConsumerState<UserPage> {
                                               builder: (_) => Dialog(
                                                 insetPadding:
                                                     const EdgeInsets.all(24),
-                                                child: AddUserDialog(
-                                                    userUser: data),
+                                                child: AddClientDialog(
+                                                    clientUser: data),
                                               ),
                                             );
                                           })),
@@ -149,19 +149,20 @@ class _UserPageState extends ConsumerState<UserPage> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("User", style: FontStyles.font24Semibold),
-            Text("Your list of user is here", style: FontStyles.font14Semibold),
+            Text("Client", style: FontStyles.font24Semibold),
+            Text("Your list of client is here",
+                style: FontStyles.font14Semibold),
           ],
         ),
         CTAButton(
-            title: "Add User",
+            title: "Add Client",
             onTap: () {
               showDialog(
                 context: context,
                 barrierDismissible: false,
                 builder: (_) => const Dialog(
                   insetPadding: EdgeInsets.all(24),
-                  child: AddUserDialog(),
+                  child: AddClientDialog(),
                 ),
               );
             }),

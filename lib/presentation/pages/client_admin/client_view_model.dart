@@ -66,7 +66,7 @@ class UserViewModel extends BaseViewModel {
 
   Future<void> fetchUsers() async {
     toggleLoadingOn(true);
-    final res = await _databaseRepositoryImpl.fetchUsersByType(UserType.user);
+    final res = await _databaseRepositoryImpl.fetchUsersByType(UserType.client);
     res.fold((l) {
       error = l.message;
       Messenger.showSnackbar(l.message);
