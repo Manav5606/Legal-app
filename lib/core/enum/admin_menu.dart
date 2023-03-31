@@ -1,15 +1,15 @@
 import 'package:admin/presentation/pages/category_admin/category_page.dart';
+import 'package:admin/presentation/pages/vendor_admin/vendor_page.dart';
 import 'package:admin/presentation/pages/client_admin/client_page.dart';
-import 'package:admin/presentation/pages/user_admin/user_page.dart';
 import 'package:flutter/material.dart';
 
 enum AdminMenu {
-  client("Client", ClientPage()),
-  users("Users", UserPage()),
-  services("Services", ClientPage()),
+  vendors("Vendors", VendorPage()),
+  clients("Clients", ClientPage()),
+  services("Services", VendorPage()),
   category("Category", CategoryPage()),
-  addNotification("Add Notification", ClientPage()),
-  editLandingPage("Edit Landing Page", ClientPage());
+  addNotification("Add Notification", VendorPage()),
+  editLandingPage("Edit Landing Page", VendorPage());
 
   final String title;
   final Widget view;

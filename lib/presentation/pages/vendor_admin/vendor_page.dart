@@ -1,34 +1,34 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/extension/date.dart';
-import 'package:admin/presentation/pages/user_admin/dialog/add_user_dialog.dart';
-import 'package:admin/presentation/pages/user_admin/user_view_model.dart';
+import 'package:admin/presentation/pages/vendor_admin/vendor_view_model.dart';
+import 'package:admin/presentation/pages/vendor_admin/dialog/add_vendor_dialog.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/utils/web_scroll.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class UserPage extends ConsumerStatefulWidget {
-  static const String routeName = "/user";
+class VendorPage extends ConsumerStatefulWidget {
+  static const String routeName = "/vendor";
 
-  const UserPage({super.key});
+  const VendorPage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _UserPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _VendorPageState();
 }
 
-class _UserPageState extends ConsumerState<UserPage> {
-  late final UserViewModel _viewModel;
+class _VendorPageState extends ConsumerState<VendorPage> {
+  late final VendorViewModel _viewModel;
 
   @override
   void initState() {
-    _viewModel = ref.read(UserViewModel.provider);
+    _viewModel = ref.read(VendorViewModel.provider);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(UserViewModel.provider);
+    ref.watch(VendorViewModel.provider);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
       decoration: const BoxDecoration(),
@@ -78,30 +78,30 @@ class _UserPageState extends ConsumerState<UserPage> {
                                   .copyWith(color: AppColors.blackColor),
                               columns: [
                                 DataColumn(
-                                  label: const Text("User ID"),
-                                  onSort: _viewModel.sortUsers,
+                                  label: const Text("Vendor ID"),
+                                  onSort: _viewModel.sortVendors,
                                 ),
                                 DataColumn(
                                   numeric: true,
                                   label: const Text("Date"),
-                                  onSort: _viewModel.sortUsers,
+                                  onSort: _viewModel.sortVendors,
                                 ),
                                 DataColumn(
                                   label: const Text("Username"),
-                                  onSort: _viewModel.sortUsers,
+                                  onSort: _viewModel.sortVendors,
                                 ),
                                 DataColumn(
                                   numeric: true,
                                   label: const Text("Contact"),
-                                  onSort: _viewModel.sortUsers,
+                                  onSort: _viewModel.sortVendors,
                                 ),
                                 DataColumn(
                                   label: const Text("Email"),
-                                  onSort: _viewModel.sortUsers,
+                                  onSort: _viewModel.sortVendors,
                                 ),
                                 const DataColumn(label: Text("Action")),
                               ],
-                              rows: _viewModel.getUsers.map(
+                              rows: _viewModel.getVendors.map(
                                 (data) {
                                   return DataRow(
                                     color: data.isDeactivated
@@ -125,8 +125,8 @@ class _UserPageState extends ConsumerState<UserPage> {
                                               builder: (_) => Dialog(
                                                 insetPadding:
                                                     const EdgeInsets.all(24),
-                                                child: AddUserDialog(
-                                                    userUser: data),
+                                                child: AddVendorDialog(
+                                                    vendorUser: data),
                                               ),
                                             );
                                           })),
@@ -149,19 +149,20 @@ class _UserPageState extends ConsumerState<UserPage> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("User", style: FontStyles.font24Semibold),
-            Text("Your list of user is here", style: FontStyles.font14Semibold),
+            Text("Vendor", style: FontStyles.font24Semibold),
+            Text("Your list of client is here",
+                style: FontStyles.font14Semibold),
           ],
         ),
         CTAButton(
-            title: "Add User",
+            title: "Add Vendor",
             onTap: () {
               showDialog(
                 context: context,
                 barrierDismissible: false,
                 builder: (_) => const Dialog(
                   insetPadding: EdgeInsets.all(24),
-                  child: AddUserDialog(),
+                  child: AddVendorDialog(),
                 ),
               );
             }),

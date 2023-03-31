@@ -1,5 +1,5 @@
 import 'package:admin/core/enum/role.dart';
-import 'package:admin/data/models/client.dart';
+import 'package:admin/data/models/vendor.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class User {
@@ -11,7 +11,7 @@ class User {
   final String email;
   final int phoneNumber;
   bool isDeactivated;
-  Client? client;
+  Vendor? vendor;
 
   User({
     this.id,
@@ -22,7 +22,7 @@ class User {
     this.createdBy,
     required this.email,
     required this.phoneNumber,
-    this.client,
+    this.vendor,
   });
 
   factory User.fromSnapshot(DocumentSnapshot snapshot) {
@@ -34,7 +34,7 @@ class User {
       createdBy: data['created_by'],
       userType: UserType.values.firstWhere(
           (element) => element.name == data['user_type'],
-          orElse: () => UserType.user),
+          orElse: () => UserType.client),
       email: data['email'],
       phoneNumber: data['phone_number'],
       isDeactivated: data['is_deactivated'] ?? false,
@@ -42,7 +42,7 @@ class User {
   }
 
   User copyWith({
-    Client? client,
+    Vendor? vendor,
     String? name,
     UserType? userType,
     String? email,
@@ -54,7 +54,7 @@ class User {
           userType: userType ?? this.userType,
           email: email ?? this.email,
           phoneNumber: phoneNumber ?? this.phoneNumber,
-          client: client ?? this.client,
+          vendor: vendor ?? this.vendor,
           isDeactivated: isDeactivated ?? this.isDeactivated,
           createdAt: createdAt,
           createdBy: createdBy,

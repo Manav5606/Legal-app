@@ -1,8 +1,8 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/data/models/models.dart';
-import 'package:admin/presentation/pages/client_admin/client_view_model.dart';
 import 'package:admin/presentation/pages/client_admin/dialog/add_client_view_model.dart';
+import 'package:admin/presentation/pages/client_admin/client_view_model.dart';
 import 'package:admin/presentation/pages/widgets/dialog_textfield.dart';
 import 'package:admin/presentation/pages/widgets/password_criteria_dialog.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +22,7 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
   void initState() {
     super.initState();
     _viewModel = ref.read(AddClientViewModel.provider);
-    _viewModel.initClientUser(widget.clientUser);
+    _viewModel.initUserUser(widget.clientUser);
   }
 
   @override
@@ -48,7 +48,6 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
                     : "Update your existing client here",
                 style: FontStyles.font12Regular
                     .copyWith(color: AppColors.blueColor)),
-            const SizedBox(height: 12),
             DialogTextField(
               width: 600 * 0.8,
               errorText: _viewModel.nameError,
@@ -103,16 +102,27 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
                       onPressed: _viewModel.isLoading
                           ? null
                           : () async {
-                              await _viewModel
-                                  .deactivateClient(widget.clientUser!)
-                                  .then((value) => Navigator.pop(context));
+                              if (widget.clientUser?.isDeactivated ?? false) {
+                                await _viewModel
+                                    .activateClient(widget.clientUser!)
+                                    .then((value) => Navigator.pop(context));
+                              } else {
+                                await _viewModel
+                                    .deactivateClient(widget.clientUser!)
+                                    .then((value) => Navigator.pop(context));
+                              }
                               await ref
                                   .read(ClientViewModel.provider)
                                   .fetchClients();
                             },
-                      child: Text("Deactivate Client",
-                          style: FontStyles.font12Regular
-                              .copyWith(color: AppColors.redColor))),
+                      child: Text(
+                          widget.clientUser?.isDeactivated ?? false
+                              ? "Activate Client"
+                              : "Deactivate Client",
+                          style: FontStyles.font12Regular.copyWith(
+                              color: widget.clientUser?.isDeactivated ?? false
+                                  ? AppColors.greenColor
+                                  : AppColors.redColor))),
                 ),
                 TextButton(
                     onPressed: _viewModel.isLoading
@@ -122,11 +132,13 @@ class _AddClientDialogState extends ConsumerState<AddClientDialog> {
                         style: FontStyles.font12Regular
                             .copyWith(color: AppColors.blueColor))),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.darkGreenColor),
                   onPressed: _viewModel.isLoading
                       ? null
                       : () async {
                           await _viewModel
-                              .createClient(widget.clientUser)
+                              .createUser(widget.clientUser)
                               .then((value) async {
                             if (value != null) {
                               Navigator.pop(context);

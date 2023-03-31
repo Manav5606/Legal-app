@@ -15,6 +15,7 @@ import 'package:admin/presentation/pages/widgets/password_criteria_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:routemaster/routemaster.dart';
 
 class RegisterPage extends ConsumerStatefulWidget {
@@ -39,14 +40,21 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     ref.watch(RegisterViewModel.provider);
 
     return Scaffold(
-      body: Row(
-        children: [
-          Expanded(flex: 1, child: imageView()),
-          Expanded(
-            flex: 1,
-            child: registerAuth(),
-          ),
-        ],
+      body: SafeArea(
+        child: ScreenTypeLayout.builder(
+          desktop: (context) {
+            return Row(
+              children: [
+                Expanded(flex: 1, child: imageView()),
+                Expanded(
+                  flex: 1,
+                  child: registerAuth(false),
+                ),
+              ],
+            );
+          },
+          mobile: (context) => registerAuth(true),
+        ),
       ),
     );
   }
@@ -61,20 +69,23 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     );
   }
 
-  Widget registerAuth() {
+  Widget registerAuth(bool mobile) {
     return Container(
       height: double.infinity,
       decoration: BoxDecoration(
         color: AppColors.darkBlueColor,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          bottomLeft: Radius.circular(24),
-        ),
+        borderRadius: mobile
+            ? null
+            : const BorderRadius.only(
+                topLeft: Radius.circular(24),
+                bottomLeft: Radius.circular(24),
+              ),
       ),
       child: Center(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: Sizes.s100.w),
+            padding: EdgeInsets.symmetric(
+                horizontal: mobile ? Sizes.s20.w : Sizes.s100.w),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -160,7 +171,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                                 final user = await _viewModel.register();
                                 if (user != null) {
                                   switch (user.userType) {
-                                    case UserType.user:
+                                    case UserType.client:
                                       Routemaster.of(context)
                                           .replace(LandingPage.routeName);
                                       break;
@@ -168,7 +179,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                                       Routemaster.of(context)
                                           .replace(HomePage.routeName);
                                       break;
-                                    case UserType.client:
+                                    case UserType.vendor:
                                       Routemaster.of(context)
                                           .replace(LandingPage.routeName);
                                       break;

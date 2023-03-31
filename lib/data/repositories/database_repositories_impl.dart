@@ -1,7 +1,7 @@
 import 'package:admin/core/constant/firebase_config.dart';
 import 'package:admin/core/enum/role.dart';
 import 'package:admin/data/models/category.dart';
-import 'package:admin/data/models/client.dart';
+import 'package:admin/data/models/vendor.dart';
 import 'package:admin/data/models/app_error.dart';
 import 'package:admin/data/models/service.dart';
 import 'package:admin/data/models/user.dart';
@@ -24,11 +24,11 @@ class DatabaseRepositoryImpl extends DatabaseRepository
   DatabaseRepositoryImpl(this._firebaseFirestore);
 
   @override
-  Future<Either<AppError, bool>> createClient({required Client client}) async {
+  Future<Either<AppError, bool>> createVendor({required Vendor vendor}) async {
     try {
       final result = await _firebaseFirestore
           .collection(FirebaseConfig.userCollection)
-          .add(client.toJson());
+          .add(vendor.toJson());
       // TODO create client model from result
       return const Right(true);
     } on FirebaseException catch (fae) {
@@ -63,10 +63,14 @@ class DatabaseRepositoryImpl extends DatabaseRepository
   @override
   Future<Either<AppError, User>> updateUser({required User user}) async {
     try {
+      print("Updating user");
+
+      print(user.toJson());
       await _firebaseFirestore
           .collection(FirebaseConfig.userCollection)
           .doc(user.id)
           .update(user.toJson());
+      print("Updated user");
       return Right(user);
     } on FirebaseException catch (fae) {
       logger.severe(fae);
@@ -82,6 +86,25 @@ class DatabaseRepositoryImpl extends DatabaseRepository
   Future<Either<AppError, bool>> deactivateUser({required User user}) async {
     try {
       final dUser = user.copyWith(isDeactivated: true);
+      await _firebaseFirestore
+          .collection(FirebaseConfig.userCollection)
+          .doc(dUser.id)
+          .update(dUser.toJson());
+      return const Right(true);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<AppError, bool>> activateUser({required User user}) async {
+    try {
+      final dUser = user.copyWith(isDeactivated: false);
       await _firebaseFirestore
           .collection(FirebaseConfig.userCollection)
           .doc(dUser.id)

@@ -1,33 +1,33 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/data/models/models.dart';
-import 'package:admin/presentation/pages/user_admin/dialog/add_user_view_model.dart';
-import 'package:admin/presentation/pages/user_admin/user_view_model.dart';
+import 'package:admin/presentation/pages/vendor_admin/vendor_view_model.dart';
+import 'package:admin/presentation/pages/vendor_admin/dialog/add_vendor_view_model.dart';
 import 'package:admin/presentation/pages/widgets/dialog_textfield.dart';
 import 'package:admin/presentation/pages/widgets/password_criteria_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddUserDialog extends ConsumerStatefulWidget {
-  final User? userUser;
-  const AddUserDialog({super.key, this.userUser});
+class AddVendorDialog extends ConsumerStatefulWidget {
+  final User? vendorUser;
+  const AddVendorDialog({super.key, this.vendorUser});
 
   @override
-  ConsumerState<AddUserDialog> createState() => _AddUserDialogState();
+  ConsumerState<AddVendorDialog> createState() => _AddVendorDialogState();
 }
 
-class _AddUserDialogState extends ConsumerState<AddUserDialog> {
-  late final AddUserViewModel _viewModel;
+class _AddVendorDialogState extends ConsumerState<AddVendorDialog> {
+  late final AddVendorViewModel _viewModel;
   @override
   void initState() {
     super.initState();
-    _viewModel = ref.read(AddUserViewModel.provider);
-    _viewModel.initUserUser(widget.userUser);
+    _viewModel = ref.read(AddVendorViewModel.provider);
+    _viewModel.initVendorUser(widget.vendorUser);
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(AddUserViewModel.provider);
+    ref.watch(AddVendorViewModel.provider);
     return Padding(
       padding: const EdgeInsets.all(24),
       child: SizedBox(
@@ -37,17 +37,18 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-                widget.userUser == null
-                    ? "Add New User"
-                    : "Update Existing User",
+                widget.vendorUser == null
+                    ? "Add New Vendor"
+                    : "Update Existing Vendor",
                 style: FontStyles.font24Semibold
                     .copyWith(color: AppColors.blueColor)),
             Text(
-                widget.userUser == null
-                    ? "Add your new user here"
-                    : "Update your existing user here",
+                widget.vendorUser == null
+                    ? "Add your new vendor here"
+                    : "Update your existing vendor here",
                 style: FontStyles.font12Regular
                     .copyWith(color: AppColors.blueColor)),
+            const SizedBox(height: 12),
             DialogTextField(
               width: 600 * 0.8,
               errorText: _viewModel.nameError,
@@ -71,7 +72,7 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
                 controller: _viewModel.emailController),
             const SizedBox(height: 12),
             Visibility(
-              visible: widget.userUser == null,
+              visible: widget.vendorUser == null,
               child: DialogTextField(
                   width: 600 * 0.8,
                   hintText: "Password",
@@ -97,21 +98,32 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Visibility(
-                  visible: widget.userUser != null,
+                  visible: widget.vendorUser != null,
                   child: TextButton(
                       onPressed: _viewModel.isLoading
                           ? null
                           : () async {
-                              await _viewModel
-                                  .deactivateUser(widget.userUser!)
-                                  .then((value) => Navigator.pop(context));
+                              if (widget.vendorUser?.isDeactivated ?? false) {
+                                await _viewModel
+                                    .activateVendor(widget.vendorUser!)
+                                    .then((value) => Navigator.pop(context));
+                              } else {
+                                await _viewModel
+                                    .deactivateVendor(widget.vendorUser!)
+                                    .then((value) => Navigator.pop(context));
+                              }
                               await ref
-                                  .read(UserViewModel.provider)
-                                  .fetchUsers();
+                                  .read(VendorViewModel.provider)
+                                  .fetchVendors();
                             },
-                      child: Text("Deactivate User",
-                          style: FontStyles.font12Regular
-                              .copyWith(color: AppColors.redColor))),
+                      child: Text(
+                          widget.vendorUser?.isDeactivated ?? false
+                              ? "Activate Client"
+                              : "Deactivate Client",
+                          style: FontStyles.font12Regular.copyWith(
+                              color: widget.vendorUser?.isDeactivated ?? false
+                                  ? AppColors.greenColor
+                                  : AppColors.redColor))),
                 ),
                 TextButton(
                     onPressed: _viewModel.isLoading
@@ -121,26 +133,26 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
                         style: FontStyles.font12Regular
                             .copyWith(color: AppColors.blueColor))),
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.darkGreenColor),
                   onPressed: _viewModel.isLoading
                       ? null
                       : () async {
                           await _viewModel
-                              .createUser(widget.userUser)
+                              .createVendor(widget.vendorUser)
                               .then((value) async {
                             if (value != null) {
                               Navigator.pop(context);
                               await ref
-                                  .read(UserViewModel.provider)
-                                  .fetchUsers();
+                                  .read(VendorViewModel.provider)
+                                  .fetchVendors();
                             }
                           });
                         },
                   child: _viewModel.isLoading
                       ? const CircularProgressIndicator.adaptive()
                       : Text(
-                          widget.userUser == null ? "Add User" : "Update User",
+                          widget.vendorUser == null
+                              ? "Add Vendor"
+                              : "Update Vendor",
                           style: FontStyles.font12Regular
                               .copyWith(color: AppColors.whiteColor),
                         ),

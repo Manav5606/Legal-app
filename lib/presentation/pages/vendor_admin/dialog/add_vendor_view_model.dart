@@ -11,20 +11,20 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _provider = ChangeNotifierProvider.autoDispose((ref) => AddUserViewModel(
-    ref.read(AppState.auth.notifier),
-    ref.read(DatabaseRepositoryImpl.provider)));
+final _provider = ChangeNotifierProvider.autoDispose((ref) =>
+    AddVendorViewModel(ref.read(AppState.auth.notifier),
+        ref.read(DatabaseRepositoryImpl.provider)));
 
-class AddUserViewModel extends BaseViewModel {
+class AddVendorViewModel extends BaseViewModel {
   final AuthProvider _authProvider;
   final DatabaseRepositoryImpl _databaseRepositoryImpl;
 
-  AddUserViewModel(this._authProvider, this._databaseRepositoryImpl);
+  AddVendorViewModel(this._authProvider, this._databaseRepositoryImpl);
 
-  static AutoDisposeChangeNotifierProvider<AddUserViewModel> get provider =>
+  static AutoDisposeChangeNotifierProvider<AddVendorViewModel> get provider =>
       _provider;
-  final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   final TextEditingController numberController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   bool _passwordVisible = false;
@@ -45,7 +45,7 @@ class AddUserViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  bool _validateValues() {
+  bool _validateValues(bool create) {
     clearError();
 
     if (emailController.text.isEmpty || !emailController.text.isValidEmail()) {
@@ -54,9 +54,11 @@ class AddUserViewModel extends BaseViewModel {
     if (nameController.text.isEmpty) {
       nameError = "This field is required";
     }
-    if (passwordController.text.isEmpty ||
-        !passwordController.text.isValidPassword()) {
-      passwordError = "This field is required";
+    if (create) {
+      if (passwordController.text.isEmpty ||
+          !passwordController.text.isValidPassword()) {
+        passwordError = "This field is required";
+      }
     }
     if (numberController.text.isEmpty ||
         !numberController.text.isValidPhoneNumber()) {
@@ -78,16 +80,16 @@ class AddUserViewModel extends BaseViewModel {
     super.dispose();
   }
 
-  void initUserUser(model.User? userUser) {
-    if (userUser != null) {
-      emailController.text = userUser.email;
-      numberController.text = userUser.phoneNumber.toString();
-      nameController.text = userUser.name;
+  void initVendorUser(model.User? clientUser) {
+    if (clientUser != null) {
+      emailController.text = clientUser.email;
+      numberController.text = clientUser.phoneNumber.toString();
+      nameController.text = clientUser.name;
       notifyListeners();
     }
   }
 
-  Future deactivateUser(model.User user) async {
+  Future deactivateVendor(model.User user) async {
     toggleLoadingOn(true);
     final result = await _databaseRepositoryImpl.deactivateUser(user: user);
     result.fold((l) async {
@@ -95,7 +97,7 @@ class AddUserViewModel extends BaseViewModel {
       toggleLoadingOn(false);
       return null;
     }, (r) {
-      Messenger.showSnackbar("User Deactivated");
+      Messenger.showSnackbar("Vendor Deactivated");
       toggleLoadingOn(false);
 
       return r;
@@ -103,12 +105,28 @@ class AddUserViewModel extends BaseViewModel {
     toggleLoadingOn(false);
   }
 
-  Future createUser(model.User? existingUser) async {
-    if (_validateValues()) {
+  Future activateVendor(model.User user) async {
+    toggleLoadingOn(true);
+    final result = await _databaseRepositoryImpl.activateUser(user: user);
+    result.fold((l) async {
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+      return null;
+    }, (r) {
+      Messenger.showSnackbar("Vendor Activated");
+      toggleLoadingOn(false);
+
+      return r;
+    });
+    toggleLoadingOn(false);
+  }
+
+  Future createVendor(model.User? existingVendor) async {
+    if (_validateValues(existingVendor == null ? true : false)) {
       toggleLoadingOn(true);
       late final Either<AppError, User> result;
-      if (existingUser != null) {
-        final _user = existingUser.copyWith(
+      if (existingVendor != null) {
+        final _user = existingVendor.copyWith(
           name: nameController.text,
           email: emailController.text,
           phoneNumber: int.parse(numberController.text),
@@ -118,7 +136,7 @@ class AddUserViewModel extends BaseViewModel {
         result = await _authProvider.register(
           user: model.User(
             name: nameController.text,
-            userType: UserType.user,
+            userType: UserType.client,
             email: emailController.text,
             phoneNumber: int.parse(numberController.text),
             createdBy: _authProvider.state.user!.id,
@@ -126,7 +144,8 @@ class AddUserViewModel extends BaseViewModel {
           password: passwordController.text,
         );
       }
-      // Sent a email to registerd email ID with default Password.
+
+      print("Result:: ${result.fold((l) => l.toString(), (r) => r.toJson())}");
 
       // TODO ask for other details and add them also
       return result.fold((l) async {
@@ -134,13 +153,12 @@ class AddUserViewModel extends BaseViewModel {
         toggleLoadingOn(false);
         return null;
       }, (r) {
-        if (existingUser == null) {
-          Messenger.showSnackbar("User Created ✅ with Default Password");
+        if (existingVendor == null) {
+          Messenger.showSnackbar("Vendor Created ✅ with Default Password");
         } else {
-          Messenger.showSnackbar("Updated User");
+          Messenger.showSnackbar("Updated Vendor");
         }
         toggleLoadingOn(false);
-
         return r;
       });
     }
