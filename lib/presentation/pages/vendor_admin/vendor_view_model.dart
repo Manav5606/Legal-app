@@ -35,7 +35,7 @@ class VendorViewModel extends BaseViewModel {
 
   Future<void> fetchVendors() async {
     toggleLoadingOn(true);
-    final res = await _databaseRepositoryImpl.fetchUsersByType(UserType.client);
+    final res = await _databaseRepositoryImpl.fetchUsersByType(UserType.vendor);
     res.fold((l) {
       error = l.message;
       Messenger.showSnackbar(l.message);
