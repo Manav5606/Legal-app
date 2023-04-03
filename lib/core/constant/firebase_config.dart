@@ -1,4 +1,5 @@
 class FirebaseConfig {
   static String userCollection = "user";
+  static String vendorCollection = "vendor";
   static String categoryCollection = "category";
 }

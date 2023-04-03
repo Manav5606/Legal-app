@@ -60,6 +60,44 @@ class DatabaseRepositoryImpl extends DatabaseRepository
   }
 
   @override
+  Future<Either<AppError, User>> fetchUsersByID(String uid) async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.userCollection)
+          .doc(uid)
+          .get();
+
+      return Right(User.fromSnapshot(response));
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<AppError, Vendor>> fetchVendorByID(String uid) async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.vendorCollection)
+          .doc(uid)
+          .get();
+
+      return Right(Vendor.fromSnapshot(response));
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
   Future<Either<AppError, User>> updateUser({required User user}) async {
     try {
       print("Updating user");
