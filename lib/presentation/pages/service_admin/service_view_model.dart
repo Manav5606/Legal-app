@@ -14,9 +14,7 @@ class ServiceViewModel extends BaseViewModel {
   bool sortAscending = false;
   int sortIndex = 0;
 
-  ServiceViewModel(this._databaseRepositoryImpl) {
-    fetchServices();
-  }
+  ServiceViewModel(this._databaseRepositoryImpl);
 
   static AutoDisposeChangeNotifierProvider<ServiceViewModel> get provider =>
       _provider;
@@ -25,28 +23,39 @@ class ServiceViewModel extends BaseViewModel {
 
   List<Service> _services = [];
 
-  List<Service> get getServices => _services;
+  List<Service> get getServices =>
+      _services.where((e) => e.parentServiceID == null).toList();
+
+  Service getServiceByID(String id) {
+    return _services.firstWhere((element) => element.id == id,
+        orElse: () => Service(
+            shortDescription: "No Data Found",
+            aboutDescription: "No Data Found",
+            childServices: [],
+            categoryID: "No Data Found",
+            createdBy: "No Data Found"));
+  }
 
   void clearErrors() {
     error = null;
     notifyListeners();
   }
 
-  Future<void> fetchServices() async {
-    toggleLoadingOn(true);
-    final res = await _databaseRepositoryImpl.fetchServices();
-    res.fold((l) {
-      error = l.message;
-      Messenger.showSnackbar(l.message);
-      toggleLoadingOn(false);
-    }, (r) {
-      clearErrors();
-      _services = r;
-      toggleLoadingOn(false);
-    });
-  }
+  // Future<void> fetchServices() async {
+  //   toggleLoadingOn(true);
+  //   final res = await _databaseRepositoryImpl.fetchServices();
+  //   res.fold((l) {
+  //     error = l.message;
+  //     Messenger.showSnackbar(l.message);
+  //     toggleLoadingOn(false);
+  //   }, (r) {
+  //     clearErrors();
+  //     _services = r;
+  //     toggleLoadingOn(false);
+  //   });
+  // }
 
-  void sortCategories(int index, bool ascending) {
+  void sortServices(int index, bool ascending) {
     // switch (index) {
     //   case 0:
     //     _services.sort((a, b) =>
@@ -72,5 +81,20 @@ class ServiceViewModel extends BaseViewModel {
     sortAscending = !ascending;
     sortIndex = index;
     notifyListeners();
+  }
+
+  Future<void> initCategory(String categoryId) async {
+    toggleLoadingOn(true);
+    final res = await _databaseRepositoryImpl.getServicesbyCategory(
+        categoryID: categoryId);
+    res.fold((l) {
+      error = l.message;
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+    }, (r) {
+      clearErrors();
+      _services = r;
+      toggleLoadingOn(false);
+    });
   }
 }

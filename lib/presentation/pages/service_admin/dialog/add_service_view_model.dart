@@ -21,95 +21,127 @@ class AddServiceViewModel extends BaseViewModel {
 
   static AutoDisposeChangeNotifierProvider<AddServiceViewModel> get provider =>
       _provider;
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController shortDescController = TextEditingController();
+  final TextEditingController aboutDescController = TextEditingController();
+  final TextEditingController marketPriceController = TextEditingController();
+  final TextEditingController ourPriceController = TextEditingController();
 
-  String? descriptionError;
-  String? nameError;
+  String? shortDescError;
+  String? aboutDescError;
+  String? marketPriceError;
+  String? ourPriceError;
 
   void clearError() {
-    nameError = descriptionError = null;
+    shortDescError = aboutDescError = marketPriceError = ourPriceError = null;
     notifyListeners();
   }
 
   bool _validateValues() {
     clearError();
 
-    if (nameController.text.isEmpty) {
-      nameError = "Service name can't be empty.";
+    if (shortDescController.text.isEmpty) {
+      shortDescError = "Service description can't be empty.";
     }
-    if (descriptionController.text.isEmpty) {
-      descriptionError = "Service Description can't be empty.";
+    if (aboutDescController.text.isEmpty) {
+      aboutDescError = "Service About can't be empty.";
+    }
+    if (marketPriceController.text.isNotEmpty &&
+        double.tryParse(marketPriceController.text) == null) {
+      marketPriceError = "Please enter a valid Price.";
+    }
+    if (ourPriceController.text.isNotEmpty &&
+        double.tryParse(marketPriceController.text) == null) {
+      ourPriceError = "Please enter a valid Price.";
     }
 
-    return nameError == null && descriptionError == null;
+    return shortDescError == null &&
+        aboutDescError == null &&
+        marketPriceError == null &&
+        ourPriceError == null;
   }
 
   @override
   void dispose() {
-    nameController.dispose();
-    descriptionController.dispose();
+    shortDescController.dispose();
+    aboutDescController.dispose();
+    marketPriceController.dispose();
+    ourPriceController.dispose();
     super.dispose();
   }
 
   void initService(model.Service? serviceDetail) {
     if (serviceDetail != null) {
-      // nameController.text = serviceDetail.name;
-      // descriptionController.text = serviceDetail.description;
+      shortDescController.text = serviceDetail.shortDescription;
+      aboutDescController.text = serviceDetail.aboutDescription;
+      marketPriceController.text = (serviceDetail.marketPrice ?? 0).toString();
+      ourPriceController.text = (serviceDetail.ourPrice ?? 0).toString();
       notifyListeners();
     }
   }
 
   Future deactivateService(model.Service service) async {
     toggleLoadingOn(true);
-    // final result =
-    //     await _databaseRepositoryImpl.deactivateService(service: service);
-    // result.fold((l) async {
-    //   Messenger.showSnackbar(l.message);
-    //   toggleLoadingOn(false);
-    //   return null;
-    // }, (r) {
-    //   Messenger.showSnackbar("Service Deactivated");
-    //   toggleLoadingOn(false);
+    final result =
+        await _databaseRepositoryImpl.deactivateService(service: service);
+    result.fold((l) async {
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+      return null;
+    }, (r) {
+      Messenger.showSnackbar("Service Deactivated");
+      toggleLoadingOn(false);
 
-    //   return r;
-    // });
+      return r;
+    });
     toggleLoadingOn(false);
   }
 
-  Future createService(model.Service? existingService) async {
-    // if (_validateValues()) {
-    //   toggleLoadingOn(true);
-    //   late final Either<AppError, Service> result;
-    //   if (existingService != null) {
-    //     final service = existingService.copyWith(
-    //       name: nameController.text,
-    //       description: descriptionController.text,
-    //     );
-    //     result = await _databaseRepositoryImpl.updateService(service: service);
-    //   } else {
-    //     final service = Service(
-    //       name: nameController.text,
-    //       iconUrl: "",
-    //       description: descriptionController.text,
-    //       addedBy: _authProvider.state.user!.id!,
-    //     );
-    //     result = await _databaseRepositoryImpl.createService(service: service);
-    //   }
+  Future createService(
+      {model.Service? existingService,
+      model.Service? parentService,
+      required String categoryID}) async {
+    if (_validateValues()) {
+      toggleLoadingOn(true);
+      late final Either<AppError, Service> result;
+      if (existingService != null) {
+        final service = existingService.copyWith(
+          aboutDescription: aboutDescController.text,
+          categoryID: categoryID,
+          childServices: existingService.childServices,
+          marketPrice: double.tryParse(marketPriceController.text),
+          ourPrice: double.tryParse(ourPriceController.text),
+          parentServiceID: existingService.parentServiceID,
+          isDeactivated: existingService.isDeactivated,
+          shortDescription: shortDescController.text,
+        );
+        result = await _databaseRepositoryImpl.updateService(service: service);
+      } else {
+        final service = Service(
+          aboutDescription: aboutDescController.text,
+          categoryID: categoryID,
+          childServices: [],
+          createdBy: _authProvider.state.user!.id!,
+          shortDescription: shortDescController.text,
+          marketPrice: double.tryParse(marketPriceController.text),
+          ourPrice: double.tryParse(ourPriceController.text),
+          parentServiceID: parentService?.id,
+        );
+        result = await _databaseRepositoryImpl.createService(service: service);
+      }
 
-    //   return result.fold((l) async {
-    //     Messenger.showSnackbar(l.message);
-    //     toggleLoadingOn(false);
-    //     return null;
-    //   }, (r) {
-    //     if (existingService == null) {
-    //       Messenger.showSnackbar("Service Created ✅");
-    //     } else {
-    //       Messenger.showSnackbar("Updated Service");
-    //     }
-    //     toggleLoadingOn(false);
-    //     return r;
-    //   });
-    // }
+      return result.fold((l) async {
+        Messenger.showSnackbar(l.message);
+        toggleLoadingOn(false);
+        return null;
+      }, (r) {
+        if (existingService == null) {
+          Messenger.showSnackbar("Service Created ✅");
+        } else {
+          Messenger.showSnackbar("Updated Service");
+        }
+        toggleLoadingOn(false);
+        return r;
+      });
+    }
   }
 }

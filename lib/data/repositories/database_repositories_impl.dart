@@ -221,4 +221,82 @@ class DatabaseRepositoryImpl extends DatabaseRepository
       return Left(AppError(message: "Unkown Error, Plese try again later."));
     }
   }
+
+  @override
+  Future<Either<AppError, List<Service>>> getServicesbyCategory(
+      {required String categoryID}) async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.serviceCollection)
+          .where("category_id", isEqualTo: categoryID)
+          .get();
+
+      return Right(
+          response.docs.map((doc) => Service.fromSnapshot(doc)).toList());
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<AppError, bool>> deactivateService(
+      {required Service service}) async {
+    try {
+      final s = service.copyWith(isDeactivated: true);
+      await _firebaseFirestore
+          .collection(FirebaseConfig.serviceCollection)
+          .doc(s.id)
+          .update(s.toJson());
+      return const Right(true);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<AppError, Service>> createService(
+      {required Service service}) async {
+    try {
+      final result = await _firebaseFirestore
+          .collection(FirebaseConfig.serviceCollection)
+          .add(service.toJson());
+      return Right(Service.fromSnapshot((await result.get())));
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<AppError, Service>> updateService(
+      {required Service service}) async {
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseConfig.serviceCollection)
+          .doc(service.id)
+          .update(service.toJson());
+      return Right(service);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
 }

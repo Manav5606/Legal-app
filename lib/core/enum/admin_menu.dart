@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 enum AdminMenu {
   vendors("Vendors", VendorPage()),
   clients("Clients", ClientPage()),
-  services("Services", VendorPage()),
   category("Category", CategoryPage()),
+  // services("Services", VendorPage()),
   addNotification("Add Notification", VendorPage()),
   editLandingPage("Edit Landing Page", VendorPage());
 

@@ -18,4 +18,9 @@ abstract class DatabaseRepository {
   Future<Either<AppError, bool>> activateCategory({required Category category});
   Future<Either<AppError, List<Category>>> fetchCategories();
   Future<Either<AppError, List<Service>>> fetchServices();
+  Future<Either<AppError, bool>> deactivateService({required Service service});
+  Future<Either<AppError, List<Service>>> getServicesbyCategory(
+      {required String categoryID});
+  Future<Either<AppError, Service>> createService({required Service service});
+  Future<Either<AppError, Service>> updateService({required Service service});
 }

@@ -8,8 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddServiceDialog extends ConsumerStatefulWidget {
+  final String categoryID;
   final Service? serviceDetail;
-  const AddServiceDialog({super.key, this.serviceDetail});
+  final Service? parentServiceDetail;
+  const AddServiceDialog({
+    super.key,
+    required this.categoryID,
+    this.serviceDetail,
+    this.parentServiceDetail,
+  });
 
   @override
   ConsumerState<AddServiceDialog> createState() => _AddServiceDialogState();
@@ -36,35 +43,55 @@ class _AddServiceDialogState extends ConsumerState<AddServiceDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-                widget.serviceDetail == null
-                    ? "Add Service Service"
-                    : "Update Existing Service Service",
+                widget.serviceDetail == null ||
+                        widget.parentServiceDetail != null
+                    ? "Add Service"
+                    : "Update Existing Service",
                 style: FontStyles.font24Semibold
                     .copyWith(color: AppColors.blueColor)),
             Text(
-                widget.serviceDetail == null
-                    ? "Add service service"
-                    : "Update existing service service",
+                widget.serviceDetail == null ||
+                        widget.parentServiceDetail != null
+                    ? "Add service "
+                    : "Update existing service",
                 style: FontStyles.font12Regular
                     .copyWith(color: AppColors.blueColor)),
             const SizedBox(height: 12),
             DialogTextField(
               width: 600 * 0.8,
-              errorText: _viewModel.nameError,
-              label: "Service Name",
+              errorText: _viewModel.shortDescError,
+              label: "Short Description",
               hintText: "Type here",
-              controller: _viewModel.nameController,
+              maxLines: 3,
+              maxLength: null,
+              controller: _viewModel.shortDescController,
             ),
             const SizedBox(height: 12),
             DialogTextField(
               width: 600 * 0.8,
-              errorText: _viewModel.descriptionError,
-              label: "Service Description",
+              errorText: _viewModel.aboutDescError,
+              label: "About Description",
               hintText: "Type here",
-              controller: _viewModel.descriptionController,
-              maxLines: 6,
+              controller: _viewModel.aboutDescController,
+              maxLines: 3,
               maxLength: null,
               keyboardType: TextInputType.multiline,
+            ),
+            const SizedBox(height: 12),
+            DialogTextField(
+              width: 600 * 0.8,
+              errorText: _viewModel.marketPriceError,
+              label: "Market Price",
+              hintText: "Type here",
+              controller: _viewModel.marketPriceController,
+            ),
+            const SizedBox(height: 12),
+            DialogTextField(
+              width: 600 * 0.8,
+              errorText: _viewModel.ourPriceError,
+              label: "Our Price",
+              hintText: "Type here",
+              controller: _viewModel.ourPriceController,
             ),
             const SizedBox(height: 12),
             Row(
@@ -81,7 +108,7 @@ class _AddServiceDialogState extends ConsumerState<AddServiceDialog> {
                                   .then((value) => Navigator.pop(context));
                               await ref
                                   .read(ServiceViewModel.provider)
-                                  .fetchServices();
+                                  .initCategory(widget.categoryID);
                             },
                       child: Text("Deactivate Service",
                           style: FontStyles.font12Regular
@@ -99,20 +126,25 @@ class _AddServiceDialogState extends ConsumerState<AddServiceDialog> {
                       ? null
                       : () async {
                           await _viewModel
-                              .createService(widget.serviceDetail)
+                              .createService(
+                            existingService: widget.serviceDetail,
+                            parentService: widget.parentServiceDetail,
+                            categoryID: widget.categoryID,
+                          )
                               .then((value) async {
                             if (value != null) {
                               Navigator.pop(context);
                               await ref
                                   .read(ServiceViewModel.provider)
-                                  .fetchServices();
+                                  .initCategory(widget.categoryID);
                             }
                           });
                         },
                   child: _viewModel.isLoading
                       ? const CircularProgressIndicator.adaptive()
                       : Text(
-                          widget.serviceDetail == null
+                          widget.serviceDetail == null ||
+                                  widget.parentServiceDetail != null
                               ? "Add Service"
                               : "Update Service",
                           style: FontStyles.font12Regular
