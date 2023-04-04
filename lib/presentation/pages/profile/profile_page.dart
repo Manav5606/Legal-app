@@ -155,6 +155,174 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                     ],
                                   ),
                                 ),
+                                Visibility(
+                                  visible: _viewModel.getUser.userType ==
+                                      UserType.vendor,
+                                  child: Row(
+                                    children: [
+                                      const Text("End Working Hour"),
+                                      InkWell(
+                                        onTap: () async {
+                                          TimeOfDay? pickedTime =
+                                              await showTimePicker(
+                                            initialTime: TimeOfDay.now(),
+                                            context: context,
+                                          );
+                                          if (pickedTime != null) {
+                                            _viewModel.endingWorkHourController
+                                                    .text =
+                                                DateFormat.jm()
+                                                    .parse(
+                                                        pickedTime.toString())
+                                                    .toString();
+                                          }
+                                        },
+                                        child: AbsorbPointer(
+                                          child: CustomTextField(
+                                            hintText: "Your Ending Work Time",
+                                            controller: _viewModel
+                                                .endingWorkHourController,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: _viewModel.getUser.userType ==
+                                      UserType.vendor,
+                                  child: Row(
+                                    children: [
+                                      const Text("Bank Account Number"),
+                                      CustomTextField(
+                                        errorText:
+                                            _viewModel.accountNumberError,
+                                        hintText: "Your Bank account number",
+                                        controller:
+                                            _viewModel.accountNumberController,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: _viewModel.getUser.userType ==
+                                      UserType.vendor,
+                                  child: Row(
+                                    children: [
+                                      const Text("Bank IFSC code"),
+                                      CustomTextField(
+                                        hintText: "Your Bank IFSC code",
+                                        controller: _viewModel.ifscController,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // TODO qualification (degree and university) dropdown
+                                Visibility(
+                                  visible: _viewModel.getUser.userType ==
+                                      UserType.vendor,
+                                  child: Row(
+                                    children: [
+                                      const Text("Associate Name"),
+                                      CustomTextField(
+                                        hintText: "Your Associate name",
+                                        controller:
+                                            _viewModel.associateNameContoller,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: _viewModel.getUser.userType ==
+                                      UserType.vendor,
+                                  child: Row(
+                                    children: [
+                                      const Text("Associate Address"),
+                                      CustomTextField(
+                                        hintText: "Same as ",
+                                        controller: _viewModel
+                                            .associateAddressContoller,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: _viewModel.getUser.userType ==
+                                      UserType.vendor,
+                                  child: Row(
+                                    children: [
+                                      const Text("Associate Permanent Address"),
+                                      CustomTextField(
+                                        hintText:
+                                            "Your Associate permanet address",
+                                        controller: _viewModel
+                                            .associateAddressContoller,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: _viewModel.getUser.userType ==
+                                      UserType.vendor,
+                                  child: Row(
+                                    children: [
+                                      const Text("Qualified Year"),
+                                      CustomTextField(
+                                        errorText:
+                                            _viewModel.qualifiedYearError,
+                                        hintText: "Your qualified year",
+                                        controller:
+                                            _viewModel.qualifiedYearContoller,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: _viewModel.getUser.userType ==
+                                      UserType.vendor,
+                                  child: Row(
+                                    children: [
+                                      const Text("Practicing Experience"),
+                                      CustomTextField(
+                                        errorText: _viewModel
+                                            .practicingExperienceError,
+                                        hintText:
+                                            "Your practicing experience in months",
+                                        controller: _viewModel
+                                            .practicingExperienceContoller,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: _viewModel.getUser.userType ==
+                                      UserType.vendor,
+                                  child: Row(
+                                    children: [
+                                      const Text("Landline number"),
+                                      CustomTextField(
+                                        errorText: _viewModel.landlineError,
+                                        hintText: "Your landline number",
+                                        controller:
+                                            _viewModel.landlineContoller,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: _viewModel.getUser.userType ==
+                                      UserType.vendor,
+                                  child: Row(
+                                    children: [
+                                      const Text("Mobile"),
+                                      CustomTextField(
+                                        errorText: _viewModel.mobileError,
+                                        hintText: "Your mobile number",
+                                        controller: _viewModel.mobileContoller,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ],
