@@ -30,7 +30,8 @@ class DatabaseRepositoryImpl extends DatabaseRepository
   Future<String> uploadToFirestore(
       {required XFile file, required String userID}) async {
     final fileBytes = await file.readAsBytes();
-    final ref = _firebaseStorage.ref('documents/$userID');
+    final ref = _firebaseStorage.ref(
+        'documents/$userID/${DateTime.now().millisecondsSinceEpoch}_${file.name}');
     return await (await ref.putData(fileBytes)).ref.getDownloadURL();
   }
 

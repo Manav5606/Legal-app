@@ -11,7 +11,6 @@ import 'package:admin/data/repositories/index.dart';
 import 'package:admin/presentation/base_view_model.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -145,6 +144,14 @@ class ProfileViewModel extends BaseViewModel {
   String? error;
 
   bool panLoading = false;
+  bool aadharLoading = false;
+  bool agreementLoading = false;
+  bool googleMapLoading = false;
+  bool nameBoardLoading = false;
+  bool passPhotoLoading = false;
+  bool powerBillLoading = false;
+  bool practiceCertiLoading = false;
+  bool validityDateOfPracticeCertificateLoading = false;
 
   Future<void> uploadPan({required XFile file}) async {
     try {
@@ -156,6 +163,120 @@ class ProfileViewModel extends BaseViewModel {
     } catch (_) {
     } finally {
       panLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> uploadAadhar({required XFile file}) async {
+    try {
+      aadharLoading = true;
+      notifyListeners();
+      final downloadUrl = await _databaseRepositoryImpl.uploadToFirestore(
+          file: file, userID: _user!.id!);
+      _documents = _documents.copyWith(aadhar: downloadUrl);
+    } catch (_) {
+    } finally {
+      aadharLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> uploadAgreement({required XFile file}) async {
+    try {
+      agreementLoading = true;
+      notifyListeners();
+      final downloadUrl = await _databaseRepositoryImpl.uploadToFirestore(
+          file: file, userID: _user!.id!);
+      _documents = _documents.copyWith(agreement: downloadUrl);
+    } catch (_) {
+    } finally {
+      agreementLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> uploadGoogleMap({required XFile file}) async {
+    try {
+      googleMapLoading = true;
+      notifyListeners();
+      final downloadUrl = await _databaseRepositoryImpl.uploadToFirestore(
+          file: file, userID: _user!.id!);
+      _documents = _documents.copyWith(googleMap: downloadUrl);
+    } catch (_) {
+    } finally {
+      googleMapLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> uploadNameBoard({required XFile file}) async {
+    try {
+      nameBoardLoading = true;
+      notifyListeners();
+      final downloadUrl = await _databaseRepositoryImpl.uploadToFirestore(
+          file: file, userID: _user!.id!);
+      _documents = _documents.copyWith(nameBoard: downloadUrl);
+    } catch (_) {
+    } finally {
+      nameBoardLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> uploadPassPhoto({required XFile file}) async {
+    try {
+      passPhotoLoading = true;
+      notifyListeners();
+      final downloadUrl = await _databaseRepositoryImpl.uploadToFirestore(
+          file: file, userID: _user!.id!);
+      _documents = _documents.copyWith(passPhoto: downloadUrl);
+    } catch (_) {
+    } finally {
+      passPhotoLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> uploadPowerBill({required XFile file}) async {
+    try {
+      powerBillLoading = true;
+      notifyListeners();
+      final downloadUrl = await _databaseRepositoryImpl.uploadToFirestore(
+          file: file, userID: _user!.id!);
+      _documents = _documents.copyWith(powerBill: downloadUrl);
+    } catch (_) {
+    } finally {
+      powerBillLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> uploadPracticeCerti({required XFile file}) async {
+    try {
+      practiceCertiLoading = true;
+      notifyListeners();
+      final downloadUrl = await _databaseRepositoryImpl.uploadToFirestore(
+          file: file, userID: _user!.id!);
+      _documents = _documents.copyWith(practiceCerti: downloadUrl);
+    } catch (_) {
+    } finally {
+      practiceCertiLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> uploadValidityDateOfPracticeCertificate(
+      {required XFile file}) async {
+    try {
+      validityDateOfPracticeCertificateLoading = true;
+      notifyListeners();
+      final downloadUrl = await _databaseRepositoryImpl.uploadToFirestore(
+          file: file, userID: _user!.id!);
+      _documents =
+          _documents.copyWith(validityDateOfPracticeCertificate: downloadUrl);
+    } catch (_) {
+    } finally {
+      validityDateOfPracticeCertificateLoading = false;
       notifyListeners();
     }
   }
@@ -207,6 +328,7 @@ class ProfileViewModel extends BaseViewModel {
         expertServicesController.text = (_vendor?.expertServices ?? "");
         landlineController.text = (_vendor?.landline ?? "").toString();
         mobileController.text = (_vendor?.mobile ?? " ").toString();
+        _documents = _vendor?.documents ?? VendorDocuments();
       }
     } catch (_) {
     } finally {
@@ -217,7 +339,7 @@ class ProfileViewModel extends BaseViewModel {
   Future<void> fetchUser(String uid) async {
     toggleLoadingOn(true);
     final res = await _databaseRepositoryImpl.fetchUserByID(uid);
-    res.fold((l) {
+    await res.fold((l) {
       error = l.message;
       Messenger.showSnackbar(l.message);
       toggleLoadingOn(false);
@@ -229,12 +351,13 @@ class ProfileViewModel extends BaseViewModel {
         vendorRes.fold((l) {
           error = l.message;
           Messenger.showSnackbar(l.message);
+          toggleLoadingOn(false);
         }, (r) {
           _vendor = r;
         });
       }
-      toggleLoadingOn(false);
     });
+    toggleLoadingOn(false);
     preFillData();
   }
 
@@ -246,7 +369,7 @@ class ProfileViewModel extends BaseViewModel {
         phoneNumber: int.tryParse(phoneController.text),
       );
       await _databaseRepositoryImpl.updateUser(user: updatedUser);
-      // TODO add 3 more parameters.
+      // TODO add 2 more parameters.
       if (_user!.userType == UserType.vendor) {
         final updatedVendor = _vendor!.copyWith(
           companyName: companyNameController.text,
@@ -266,7 +389,7 @@ class ProfileViewModel extends BaseViewModel {
           landline: int.tryParse(landlineController.text),
           mobile: int.tryParse(mobileController.text),
           // workingHour: WorkingHour(),
-          documents: VendorDocuments(),
+          documents: _documents,
         );
         await _databaseRepositoryImpl.updateVendor(vendor: updatedVendor);
       }

@@ -11,6 +11,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:routemaster/routemaster.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   static const String routeName = "/profile";
@@ -425,36 +427,59 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                       ? [
                                                           IconButton(
                                                               onPressed: () {
-                                                                // TODO
+                                                                launchUrlString(
+                                                                    _viewModel
+                                                                        .documents
+                                                                        .pan!);
                                                               },
                                                               icon: const Icon(
                                                                   Icons
                                                                       .download)),
                                                           IconButton(
-                                                              onPressed: () {
-                                                                // TODO
-                                                              },
-                                                              icon: const Icon(
-                                                                  Icons.edit)),
+                                                              onPressed: _viewModel
+                                                                      .panLoading
+                                                                  ? null
+                                                                  : () async {
+                                                                      final file = await _viewModel.pickFile(await FilePicker
+                                                                          .platform
+                                                                          .pickFiles());
+                                                                      if (file !=
+                                                                          null) {
+                                                                        await _viewModel.uploadPan(
+                                                                            file:
+                                                                                file);
+                                                                      }
+                                                                    },
+                                                              icon: _viewModel
+                                                                      .panLoading
+                                                                  ? const CircularProgressIndicator
+                                                                      .adaptive()
+                                                                  : const Icon(
+                                                                      Icons
+                                                                          .edit)),
                                                         ]
                                                       : [
                                                           IconButton(
-                                                              onPressed:
-                                                                  () async {
-                                                                final file = await _viewModel.pickFile(
-                                                                    await FilePicker
-                                                                        .platform
-                                                                        .pickFiles());
-                                                                if (file !=
-                                                                    null) {
-                                                                  _viewModel
-                                                                      .uploadPan(
-                                                                          file:
-                                                                              file);
-                                                                }
-                                                              },
-                                                              icon: const Icon(Icons
-                                                                  .upload_file))
+                                                              onPressed: _viewModel
+                                                                      .panLoading
+                                                                  ? null
+                                                                  : () async {
+                                                                      final file = await _viewModel.pickFile(await FilePicker
+                                                                          .platform
+                                                                          .pickFiles());
+                                                                      if (file !=
+                                                                          null) {
+                                                                        await _viewModel.uploadPan(
+                                                                            file:
+                                                                                file);
+                                                                      }
+                                                                    },
+                                                              icon: _viewModel
+                                                                      .panLoading
+                                                                  ? const CircularProgressIndicator
+                                                                      .adaptive()
+                                                                  : const Icon(Icons
+                                                                      .upload_file))
                                                         ],
                                                   Text(
                                                     "(jpg, jpeg, png, pdf)*",
@@ -462,7 +487,697 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                         .font12Regular
                                                         .copyWith(
                                                             color: AppColors
-                                                                .lightBlueColor,
+                                                                .blueColor,
+                                                            fontStyle: FontStyle
+                                                                .italic),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              _viewModel.getUser!.userType ==
+                                                  UserType.vendor,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text("Aadhar Card"),
+                                              Row(
+                                                children: [
+                                                  ..._viewModel.documents
+                                                              .aadhar !=
+                                                          null
+                                                      ? [
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                launchUrlString(
+                                                                    _viewModel
+                                                                        .documents
+                                                                        .aadhar!);
+                                                              },
+                                                              icon: const Icon(
+                                                                  Icons
+                                                                      .download)),
+                                                          IconButton(
+                                                              onPressed: _viewModel
+                                                                      .aadharLoading
+                                                                  ? null
+                                                                  : () async {
+                                                                      final file = await _viewModel.pickFile(await FilePicker
+                                                                          .platform
+                                                                          .pickFiles());
+                                                                      if (file !=
+                                                                          null) {
+                                                                        await _viewModel.uploadAadhar(
+                                                                            file:
+                                                                                file);
+                                                                      }
+                                                                    },
+                                                              icon: _viewModel
+                                                                      .aadharLoading
+                                                                  ? const CircularProgressIndicator
+                                                                      .adaptive()
+                                                                  : const Icon(
+                                                                      Icons
+                                                                          .edit)),
+                                                        ]
+                                                      : [
+                                                          IconButton(
+                                                              onPressed: _viewModel
+                                                                      .panLoading
+                                                                  ? null
+                                                                  : () async {
+                                                                      final file = await _viewModel.pickFile(await FilePicker
+                                                                          .platform
+                                                                          .pickFiles());
+                                                                      if (file !=
+                                                                          null) {
+                                                                        await _viewModel.uploadAadhar(
+                                                                            file:
+                                                                                file);
+                                                                      }
+                                                                    },
+                                                              icon: _viewModel
+                                                                      .aadharLoading
+                                                                  ? const CircularProgressIndicator
+                                                                      .adaptive()
+                                                                  : const Icon(Icons
+                                                                      .upload_file))
+                                                        ],
+                                                  Text(
+                                                    "(jpg, jpeg, png, pdf)*",
+                                                    style: FontStyles
+                                                        .font12Regular
+                                                        .copyWith(
+                                                            color: AppColors
+                                                                .blueColor,
+                                                            fontStyle: FontStyle
+                                                                .italic),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              _viewModel.getUser!.userType ==
+                                                  UserType.vendor,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text("Agreement"),
+                                              Row(
+                                                children: [
+                                                  ..._viewModel.documents
+                                                              .agreement !=
+                                                          null
+                                                      ? [
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                launchUrlString(
+                                                                    _viewModel
+                                                                        .documents
+                                                                        .agreement!);
+                                                              },
+                                                              icon: const Icon(
+                                                                  Icons
+                                                                      .download)),
+                                                          IconButton(
+                                                              onPressed: _viewModel
+                                                                      .agreementLoading
+                                                                  ? null
+                                                                  : () async {
+                                                                      final file = await _viewModel.pickFile(await FilePicker
+                                                                          .platform
+                                                                          .pickFiles());
+                                                                      if (file !=
+                                                                          null) {
+                                                                        await _viewModel.uploadAgreement(
+                                                                            file:
+                                                                                file);
+                                                                      }
+                                                                    },
+                                                              icon: _viewModel
+                                                                      .agreementLoading
+                                                                  ? const CircularProgressIndicator
+                                                                      .adaptive()
+                                                                  : const Icon(
+                                                                      Icons
+                                                                          .edit)),
+                                                        ]
+                                                      : [
+                                                          IconButton(
+                                                              onPressed: _viewModel
+                                                                      .agreementLoading
+                                                                  ? null
+                                                                  : () async {
+                                                                      final file = await _viewModel.pickFile(await FilePicker
+                                                                          .platform
+                                                                          .pickFiles());
+                                                                      if (file !=
+                                                                          null) {
+                                                                        await _viewModel.uploadAgreement(
+                                                                            file:
+                                                                                file);
+                                                                      }
+                                                                    },
+                                                              icon: _viewModel
+                                                                      .agreementLoading
+                                                                  ? const CircularProgressIndicator
+                                                                      .adaptive()
+                                                                  : const Icon(Icons
+                                                                      .upload_file))
+                                                        ],
+                                                  Text(
+                                                    "(jpg, jpeg, png, pdf)*",
+                                                    style: FontStyles
+                                                        .font12Regular
+                                                        .copyWith(
+                                                            color: AppColors
+                                                                .blueColor,
+                                                            fontStyle: FontStyle
+                                                                .italic),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              _viewModel.getUser!.userType ==
+                                                  UserType.vendor,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text("Google Map"),
+                                              Row(
+                                                children: [
+                                                  ..._viewModel.documents
+                                                              .googleMap !=
+                                                          null
+                                                      ? [
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                launchUrlString(
+                                                                    _viewModel
+                                                                        .documents
+                                                                        .googleMap!);
+                                                              },
+                                                              icon: const Icon(
+                                                                  Icons
+                                                                      .download)),
+                                                          IconButton(
+                                                              onPressed: _viewModel
+                                                                      .googleMapLoading
+                                                                  ? null
+                                                                  : () async {
+                                                                      final file = await _viewModel.pickFile(await FilePicker
+                                                                          .platform
+                                                                          .pickFiles());
+                                                                      if (file !=
+                                                                          null) {
+                                                                        await _viewModel.uploadGoogleMap(
+                                                                            file:
+                                                                                file);
+                                                                      }
+                                                                    },
+                                                              icon: _viewModel
+                                                                      .googleMapLoading
+                                                                  ? const CircularProgressIndicator
+                                                                      .adaptive()
+                                                                  : const Icon(
+                                                                      Icons
+                                                                          .edit)),
+                                                        ]
+                                                      : [
+                                                          IconButton(
+                                                              onPressed: _viewModel
+                                                                      .googleMapLoading
+                                                                  ? null
+                                                                  : () async {
+                                                                      final file = await _viewModel.pickFile(await FilePicker
+                                                                          .platform
+                                                                          .pickFiles());
+                                                                      if (file !=
+                                                                          null) {
+                                                                        await _viewModel.uploadGoogleMap(
+                                                                            file:
+                                                                                file);
+                                                                      }
+                                                                    },
+                                                              icon: _viewModel
+                                                                      .googleMapLoading
+                                                                  ? const CircularProgressIndicator
+                                                                      .adaptive()
+                                                                  : const Icon(Icons
+                                                                      .upload_file))
+                                                        ],
+                                                  Text(
+                                                    "(jpg, jpeg, png, pdf)*",
+                                                    style: FontStyles
+                                                        .font12Regular
+                                                        .copyWith(
+                                                            color: AppColors
+                                                                .blueColor,
+                                                            fontStyle: FontStyle
+                                                                .italic),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              _viewModel.getUser!.userType ==
+                                                  UserType.vendor,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text("Name Board"),
+                                              Row(
+                                                children: [
+                                                  ..._viewModel.documents
+                                                              .nameBoard !=
+                                                          null
+                                                      ? [
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                launchUrlString(
+                                                                    _viewModel
+                                                                        .documents
+                                                                        .nameBoard!);
+                                                              },
+                                                              icon: const Icon(
+                                                                  Icons
+                                                                      .download)),
+                                                          IconButton(
+                                                              onPressed: _viewModel
+                                                                      .nameBoardLoading
+                                                                  ? null
+                                                                  : () async {
+                                                                      final file = await _viewModel.pickFile(await FilePicker
+                                                                          .platform
+                                                                          .pickFiles());
+                                                                      if (file !=
+                                                                          null) {
+                                                                        await _viewModel.uploadNameBoard(
+                                                                            file:
+                                                                                file);
+                                                                      }
+                                                                    },
+                                                              icon: _viewModel
+                                                                      .nameBoardLoading
+                                                                  ? const CircularProgressIndicator
+                                                                      .adaptive()
+                                                                  : const Icon(
+                                                                      Icons
+                                                                          .edit)),
+                                                        ]
+                                                      : [
+                                                          IconButton(
+                                                              onPressed: _viewModel
+                                                                      .nameBoardLoading
+                                                                  ? null
+                                                                  : () async {
+                                                                      final file = await _viewModel.pickFile(await FilePicker
+                                                                          .platform
+                                                                          .pickFiles());
+                                                                      if (file !=
+                                                                          null) {
+                                                                        await _viewModel.uploadNameBoard(
+                                                                            file:
+                                                                                file);
+                                                                      }
+                                                                    },
+                                                              icon: _viewModel
+                                                                      .nameBoardLoading
+                                                                  ? const CircularProgressIndicator
+                                                                      .adaptive()
+                                                                  : const Icon(Icons
+                                                                      .upload_file))
+                                                        ],
+                                                  Text(
+                                                    "(jpg, jpeg, png, pdf)*",
+                                                    style: FontStyles
+                                                        .font12Regular
+                                                        .copyWith(
+                                                            color: AppColors
+                                                                .blueColor,
+                                                            fontStyle: FontStyle
+                                                                .italic),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              _viewModel.getUser!.userType ==
+                                                  UserType.vendor,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text("Pass Photo"),
+                                              Row(
+                                                children: [
+                                                  ..._viewModel.documents
+                                                              .passPhoto !=
+                                                          null
+                                                      ? [
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                launchUrlString(
+                                                                    _viewModel
+                                                                        .documents
+                                                                        .passPhoto!);
+                                                              },
+                                                              icon: const Icon(
+                                                                  Icons
+                                                                      .download)),
+                                                          IconButton(
+                                                              onPressed: _viewModel
+                                                                      .passPhotoLoading
+                                                                  ? null
+                                                                  : () async {
+                                                                      final file = await _viewModel.pickFile(await FilePicker
+                                                                          .platform
+                                                                          .pickFiles());
+                                                                      if (file !=
+                                                                          null) {
+                                                                        await _viewModel.uploadPassPhoto(
+                                                                            file:
+                                                                                file);
+                                                                      }
+                                                                    },
+                                                              icon: _viewModel
+                                                                      .passPhotoLoading
+                                                                  ? const CircularProgressIndicator
+                                                                      .adaptive()
+                                                                  : const Icon(
+                                                                      Icons
+                                                                          .edit)),
+                                                        ]
+                                                      : [
+                                                          IconButton(
+                                                              onPressed: _viewModel
+                                                                      .passPhotoLoading
+                                                                  ? null
+                                                                  : () async {
+                                                                      final file = await _viewModel.pickFile(await FilePicker
+                                                                          .platform
+                                                                          .pickFiles());
+                                                                      if (file !=
+                                                                          null) {
+                                                                        await _viewModel.uploadPassPhoto(
+                                                                            file:
+                                                                                file);
+                                                                      }
+                                                                    },
+                                                              icon: _viewModel
+                                                                      .passPhotoLoading
+                                                                  ? const CircularProgressIndicator
+                                                                      .adaptive()
+                                                                  : const Icon(Icons
+                                                                      .upload_file))
+                                                        ],
+                                                  Text(
+                                                    "(jpg, jpeg, png, pdf)*",
+                                                    style: FontStyles
+                                                        .font12Regular
+                                                        .copyWith(
+                                                            color: AppColors
+                                                                .blueColor,
+                                                            fontStyle: FontStyle
+                                                                .italic),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              _viewModel.getUser!.userType ==
+                                                  UserType.vendor,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text("Power Bill"),
+                                              Row(
+                                                children: [
+                                                  ..._viewModel.documents
+                                                              .powerBill !=
+                                                          null
+                                                      ? [
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                launchUrlString(
+                                                                    _viewModel
+                                                                        .documents
+                                                                        .powerBill!);
+                                                              },
+                                                              icon: const Icon(
+                                                                  Icons
+                                                                      .download)),
+                                                          IconButton(
+                                                              onPressed: _viewModel
+                                                                      .powerBillLoading
+                                                                  ? null
+                                                                  : () async {
+                                                                      final file = await _viewModel.pickFile(await FilePicker
+                                                                          .platform
+                                                                          .pickFiles());
+                                                                      if (file !=
+                                                                          null) {
+                                                                        await _viewModel.uploadPowerBill(
+                                                                            file:
+                                                                                file);
+                                                                      }
+                                                                    },
+                                                              icon: _viewModel
+                                                                      .powerBillLoading
+                                                                  ? const CircularProgressIndicator
+                                                                      .adaptive()
+                                                                  : const Icon(
+                                                                      Icons
+                                                                          .edit)),
+                                                        ]
+                                                      : [
+                                                          IconButton(
+                                                              onPressed: _viewModel
+                                                                      .powerBillLoading
+                                                                  ? null
+                                                                  : () async {
+                                                                      final file = await _viewModel.pickFile(await FilePicker
+                                                                          .platform
+                                                                          .pickFiles());
+                                                                      if (file !=
+                                                                          null) {
+                                                                        await _viewModel.uploadPowerBill(
+                                                                            file:
+                                                                                file);
+                                                                      }
+                                                                    },
+                                                              icon: _viewModel
+                                                                      .powerBillLoading
+                                                                  ? const CircularProgressIndicator
+                                                                      .adaptive()
+                                                                  : const Icon(Icons
+                                                                      .upload_file))
+                                                        ],
+                                                  Text(
+                                                    "(jpg, jpeg, png, pdf)*",
+                                                    style: FontStyles
+                                                        .font12Regular
+                                                        .copyWith(
+                                                            color: AppColors
+                                                                .blueColor,
+                                                            fontStyle: FontStyle
+                                                                .italic),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              _viewModel.getUser!.userType ==
+                                                  UserType.vendor,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                  "Practice Certificate"),
+                                              Row(
+                                                children: [
+                                                  ..._viewModel.documents
+                                                              .practiceCerti !=
+                                                          null
+                                                      ? [
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                launchUrlString(
+                                                                    _viewModel
+                                                                        .documents
+                                                                        .practiceCerti!);
+                                                              },
+                                                              icon: const Icon(
+                                                                  Icons
+                                                                      .download)),
+                                                          IconButton(
+                                                              onPressed: _viewModel
+                                                                      .practiceCertiLoading
+                                                                  ? null
+                                                                  : () async {
+                                                                      final file = await _viewModel.pickFile(await FilePicker
+                                                                          .platform
+                                                                          .pickFiles());
+                                                                      if (file !=
+                                                                          null) {
+                                                                        await _viewModel.uploadPracticeCerti(
+                                                                            file:
+                                                                                file);
+                                                                      }
+                                                                    },
+                                                              icon: _viewModel
+                                                                      .practiceCertiLoading
+                                                                  ? const CircularProgressIndicator
+                                                                      .adaptive()
+                                                                  : const Icon(
+                                                                      Icons
+                                                                          .edit)),
+                                                        ]
+                                                      : [
+                                                          IconButton(
+                                                              onPressed: _viewModel
+                                                                      .practiceCertiLoading
+                                                                  ? null
+                                                                  : () async {
+                                                                      final file = await _viewModel.pickFile(await FilePicker
+                                                                          .platform
+                                                                          .pickFiles());
+                                                                      if (file !=
+                                                                          null) {
+                                                                        await _viewModel.uploadPan(
+                                                                            file:
+                                                                                file);
+                                                                      }
+                                                                    },
+                                                              icon: _viewModel
+                                                                      .practiceCertiLoading
+                                                                  ? const CircularProgressIndicator
+                                                                      .adaptive()
+                                                                  : const Icon(Icons
+                                                                      .upload_file))
+                                                        ],
+                                                  Text(
+                                                    "(jpg, jpeg, png, pdf)*",
+                                                    style: FontStyles
+                                                        .font12Regular
+                                                        .copyWith(
+                                                            color: AppColors
+                                                                .blueColor,
+                                                            fontStyle: FontStyle
+                                                                .italic),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              _viewModel.getUser!.userType ==
+                                                  UserType.vendor,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                  "Validity Date of Practice Certificate"),
+                                              Row(
+                                                children: [
+                                                  ..._viewModel.documents
+                                                              .validityDateOfPracticeCertificate !=
+                                                          null
+                                                      ? [
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                launchUrlString(
+                                                                    _viewModel
+                                                                        .documents
+                                                                        .validityDateOfPracticeCertificate!);
+                                                              },
+                                                              icon: const Icon(
+                                                                  Icons
+                                                                      .download)),
+                                                          IconButton(
+                                                              onPressed: _viewModel
+                                                                      .validityDateOfPracticeCertificateLoading
+                                                                  ? null
+                                                                  : () async {
+                                                                      final file = await _viewModel.pickFile(await FilePicker
+                                                                          .platform
+                                                                          .pickFiles());
+                                                                      if (file !=
+                                                                          null) {
+                                                                        await _viewModel.uploadPan(
+                                                                            file:
+                                                                                file);
+                                                                      }
+                                                                    },
+                                                              icon: _viewModel
+                                                                      .validityDateOfPracticeCertificateLoading
+                                                                  ? const CircularProgressIndicator
+                                                                      .adaptive()
+                                                                  : const Icon(
+                                                                      Icons
+                                                                          .edit)),
+                                                        ]
+                                                      : [
+                                                          IconButton(
+                                                              onPressed: _viewModel
+                                                                      .validityDateOfPracticeCertificateLoading
+                                                                  ? null
+                                                                  : () async {
+                                                                      final file = await _viewModel.pickFile(await FilePicker
+                                                                          .platform
+                                                                          .pickFiles());
+                                                                      if (file !=
+                                                                          null) {
+                                                                        await _viewModel.uploadPan(
+                                                                            file:
+                                                                                file);
+                                                                      }
+                                                                    },
+                                                              icon: _viewModel
+                                                                      .validityDateOfPracticeCertificateLoading
+                                                                  ? const CircularProgressIndicator
+                                                                      .adaptive()
+                                                                  : const Icon(Icons
+                                                                      .upload_file))
+                                                        ],
+                                                  Text(
+                                                    "(jpg, jpeg, png, pdf)*",
+                                                    style: FontStyles
+                                                        .font12Regular
+                                                        .copyWith(
+                                                            color: AppColors
+                                                                .blueColor,
                                                             fontStyle: FontStyle
                                                                 .italic),
                                                   ),
@@ -478,12 +1193,25 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                           children: [
                                             TextButton(
                                                 child: const Text("Cancel"),
-                                                onPressed: () {
-                                                  // TODO
-                                                }),
+                                                onPressed: () =>
+                                                    Routemaster.of(context)
+                                                        .history
+                                                        .back()),
                                             const SizedBox(width: 8),
                                             CTAButton(
                                               title: "Save",
+                                              loading: _viewModel
+                                                      .aadharLoading ||
+                                                  _viewModel.panLoading ||
+                                                  _viewModel.agreementLoading ||
+                                                  _viewModel.googleMapLoading ||
+                                                  _viewModel.nameBoardLoading ||
+                                                  _viewModel.passPhotoLoading ||
+                                                  _viewModel.powerBillLoading ||
+                                                  _viewModel
+                                                      .practiceCertiLoading ||
+                                                  _viewModel
+                                                      .validityDateOfPracticeCertificateLoading,
                                               onTap: () {
                                                 if (_viewModel.validate()) {
                                                   _viewModel.saveProfileData();

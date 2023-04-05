@@ -203,7 +203,7 @@ class VendorDocuments {
   Map<String, dynamic> toJson() => {
         "pan": pan,
         "aadhar": aadhar,
-        "pracice_certi": practiceCerti,
+        "practice_certi": practiceCerti,
         "validity_date_of_practice_certificate":
             validityDateOfPracticeCertificate,
         "pass_photo": passPhoto,
