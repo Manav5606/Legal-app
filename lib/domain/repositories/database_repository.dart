@@ -6,11 +6,12 @@ import 'package:dartz/dartz.dart';
 abstract class DatabaseRepository {
   Future<Either<AppError, bool>> createVendor({required Vendor vendor});
   Future<Either<AppError, User>> updateUser({required User user});
+  Future<Either<AppError, Vendor>> updateVendor({required Vendor vendor});
   Future<Either<AppError, bool>> deactivateUser({required User user});
   Future<Either<AppError, bool>> activateUser({required User user});
   Future<Either<AppError, List<User>>> fetchUsersByType(UserType type);
   Future<Either<AppError, Vendor>> fetchVendorByID(String uid);
-  Future<Either<AppError, User>> fetchUsersByID(String uid);
+  Future<Either<AppError, User>> fetchUserByID(String uid);
   Future<Either<AppError, Category>> createCategory(
       {required Category category});
   Future<Either<AppError, Category>> updateCategory(

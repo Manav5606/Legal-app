@@ -43,6 +43,46 @@ class Vendor {
     this.documents,
   });
 
+  Vendor copyWith({
+    String? companyName,
+    String? permanentAddress,
+    WorkingHour? workingHour,
+    BankInfo? bankAccount,
+    QualificationDegree? qualificationDegree,
+    String? otherQualificationDegree,
+    QualificationUniversity? qualificationUniversity,
+    String? otherQualificationUniversity,
+    AssociateDetail? associateDetail,
+    int? qualifiedYear,
+    int? practiceExperience,
+    String? expertServices,
+    int? landline,
+    int? mobile,
+    VendorDocuments? documents,
+  }) =>
+      Vendor(
+        id: id,
+        associateDetail: associateDetail ?? this.associateDetail,
+        bankAccount: bankAccount ?? this.bankAccount,
+        companyName: companyName ?? this.companyName,
+        documents: documents ?? this.documents,
+        expertServices: expertServices ?? this.expertServices,
+        landline: landline ?? this.landline,
+        mobile: mobile ?? this.mobile,
+        otherQualificationDegree:
+            otherQualificationDegree ?? this.otherQualificationDegree,
+        otherQualificationUniversity:
+            otherQualificationUniversity ?? this.otherQualificationUniversity,
+        permanentAddress: permanentAddress ?? this.permanentAddress,
+        practiceExperience: practiceExperience ?? this.practiceExperience,
+        qualificationDegree: qualificationDegree ?? this.qualificationDegree,
+        qualificationUniversity:
+            qualificationUniversity ?? this.qualificationUniversity,
+        qualifiedYear: qualifiedYear ?? this.qualifiedYear,
+        userID: userID,
+        workingHour: workingHour ?? this.workingHour,
+      );
+
   factory Vendor.fromSnapshot(DocumentSnapshot snapshot) {
     final Map<String, dynamic> data = (snapshot.data() as Map<String, dynamic>);
     return Vendor(

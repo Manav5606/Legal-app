@@ -1,12 +1,15 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/extension/date.dart';
+import 'package:admin/presentation/pages/home/home_view_model.dart';
+import 'package:admin/presentation/pages/profile/profile_page.dart';
 import 'package:admin/presentation/pages/vendor_admin/vendor_view_model.dart';
 import 'package:admin/presentation/pages/vendor_admin/dialog/add_vendor_dialog.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/utils/web_scroll.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
 class VendorPage extends ConsumerStatefulWidget {
   static const String routeName = "/vendor";
@@ -116,20 +119,36 @@ class _VendorPageState extends ConsumerState<VendorPage> {
                                       DataCell(
                                           Text(data.phoneNumber.toString())),
                                       DataCell(Text(data.email.toString())),
-                                      DataCell(TextButton(
-                                          child: const Text("Edit"),
-                                          onPressed: () {
-                                            showDialog(
-                                              context: context,
-                                              barrierDismissible: false,
-                                              builder: (_) => Dialog(
-                                                insetPadding:
-                                                    const EdgeInsets.all(24),
-                                                child: AddVendorDialog(
-                                                    vendorUser: data),
-                                              ),
-                                            );
-                                          })),
+                                      DataCell(Row(
+                                        children: [
+                                          TextButton(
+                                              child: const Text("Edit"),
+                                              onPressed: () {
+                                                showDialog(
+                                                  context: context,
+                                                  barrierDismissible: false,
+                                                  builder: (_) => Dialog(
+                                                    insetPadding:
+                                                        const EdgeInsets.all(
+                                                            24),
+                                                    child: AddVendorDialog(
+                                                        vendorUser: data),
+                                                  ),
+                                                );
+                                              }),
+                                          TextButton(
+                                              child: const Text("View"),
+                                              onPressed: () {
+                                                if (data.id != null) {
+                                                  Routemaster.of(context).push(
+                                                      ProfilePage.routeName,
+                                                      queryParameters: {
+                                                        "userID": data.id!
+                                                      });
+                                                }
+                                              }),
+                                        ],
+                                      )),
                                     ],
                                   );
                                 },

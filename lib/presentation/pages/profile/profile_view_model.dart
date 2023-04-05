@@ -1,5 +1,10 @@
+import 'dart:developer';
+import 'package:admin/core/enum/role.dart';
 import 'package:admin/core/extension/validator.dart';
 import 'package:admin/core/provider.dart';
+import 'package:admin/core/utils/messenger.dart';
+import 'package:admin/data/models/associate_detail.dart';
+import 'package:admin/data/models/bank_info.dart';
 import 'package:admin/data/models/models.dart';
 import 'package:admin/data/models/vendor.dart';
 import 'package:admin/data/repositories/index.dart';
@@ -19,10 +24,10 @@ class ProfileViewModel extends BaseViewModel {
 
   ProfileViewModel(this._databaseRepositoryImpl);
 
-  late final User _user;
-  late final Vendor? _vendor;
+  User? _user;
+  Vendor? _vendor;
 
-  User get getUser => _user;
+  User? get getUser => _user;
   Vendor? get getVendor => _vendor;
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -42,19 +47,20 @@ class ProfileViewModel extends BaseViewModel {
   // degree
   final TextEditingController otherDegreeController = TextEditingController();
   // university
-  final TextEditingController otherUniversityContoller =
+  final TextEditingController otherUniversityController =
       TextEditingController();
-  final TextEditingController associateNameContoller = TextEditingController();
-  final TextEditingController associateAddressContoller =
+  final TextEditingController associateNameController = TextEditingController();
+  final TextEditingController associateAddressController =
       TextEditingController();
   final TextEditingController associatePermanentAddressController =
       TextEditingController();
-  final TextEditingController qualifiedYearContoller = TextEditingController();
-  final TextEditingController practicingExperienceContoller =
+  final TextEditingController qualifiedYearController = TextEditingController();
+  final TextEditingController practicingExperienceController =
       TextEditingController();
-  final TextEditingController expertServicesContoller = TextEditingController();
-  final TextEditingController landlineContoller = TextEditingController();
-  final TextEditingController mobileContoller = TextEditingController();
+  final TextEditingController expertServicesController =
+      TextEditingController();
+  final TextEditingController landlineController = TextEditingController();
+  final TextEditingController mobileController = TextEditingController();
 
   String? emailError;
   String? phoneError;
@@ -98,22 +104,22 @@ class ProfileViewModel extends BaseViewModel {
     //     int.tryParse(accountNumberController.text) == null) {
     //   accountNumberError = "Please enter a valid Bank Account Number";
     // }
-    if (qualifiedYearContoller.text.isNotEmpty &&
-        int.tryParse(qualifiedYearContoller.text) == null &&
-        int.parse(qualifiedYearContoller.text) < 1900) {
+    if (qualifiedYearController.text.isNotEmpty &&
+        int.tryParse(qualifiedYearController.text) == null &&
+        int.parse(qualifiedYearController.text) < 1900) {
       qualifiedYearError = "Please enter a valid Year";
     }
-    if (practicingExperienceContoller.text.isNotEmpty &&
-        int.tryParse(practicingExperienceContoller.text) == null &&
-        int.parse(practicingExperienceContoller.text) > 0) {
+    if (practicingExperienceController.text.isNotEmpty &&
+        int.tryParse(practicingExperienceController.text) == null &&
+        int.parse(practicingExperienceController.text) > 0) {
       practicingExperienceError = "Please enter a valid Experience in Months";
     }
-    if (landlineContoller.text.isNotEmpty &&
-        !landlineContoller.text.isValidPhoneNumber()) {
+    if (landlineController.text.isNotEmpty &&
+        !landlineController.text.isValidPhoneNumber()) {
       landlineError = "Please enter a valid Landline number";
     }
-    if (mobileContoller.text.isNotEmpty &&
-        !mobileContoller.text.isValidPhoneNumber()) {
+    if (mobileController.text.isNotEmpty &&
+        !mobileController.text.isValidPhoneNumber()) {
       mobileError = "Please enter a valid mobile number";
     }
     notifyListeners();
@@ -129,8 +135,115 @@ class ProfileViewModel extends BaseViewModel {
         mobileError == null;
   }
 
+  String? error;
+
+  void clearErrors() {
+    error = null;
+    notifyListeners();
+  }
+
+  void preFillData() {
+    try {
+      toggleLoadingOn(true);
+      if (_user != null) {
+        nameController.text = _user!.name;
+        emailController.text = _user!.email;
+        phoneController.text = _user!.phoneNumber.toString();
+      }
+      if (_vendor != null) {
+        companyNameController.text = _vendor?.companyName ?? "";
+        permanentAddressController.text = _vendor?.permanentAddress ?? "";
+        startingWorkHourController.text =
+            _vendor?.workingHour?.startingHour.toString() ?? "";
+        endingWorkHourController.text =
+            _vendor?.workingHour?.endingHour.toString() ?? "";
+        accountNumberController.text =
+            _vendor?.bankAccount?.accountNumber ?? "";
+        ifscController.text = _vendor?.bankAccount?.ifsc ?? "";
+        otherDegreeController.text = _vendor?.otherQualificationDegree ?? "";
+        otherUniversityController.text =
+            _vendor?.otherQualificationUniversity ?? "";
+        associateNameController.text =
+            _vendor?.associateDetail?.associateName ?? "";
+        associateAddressController.text =
+            _vendor?.associateDetail?.addressOfAssociate ?? "";
+        associatePermanentAddressController.text =
+            _vendor?.associateDetail?.permanentAddress ?? "";
+        qualifiedYearController.text =
+            (_vendor?.qualifiedYear ?? "").toString();
+        practicingExperienceController.text =
+            (_vendor?.practiceExperience ?? "").toString();
+        expertServicesController.text = (_vendor?.expertServices ?? "");
+        landlineController.text = (_vendor?.landline ?? "").toString();
+        mobileController.text = (_vendor?.mobile ?? " ").toString();
+      }
+    } catch (_) {
+    } finally {
+      toggleLoadingOn(false);
+    }
+  }
+
   Future<void> fetchUser(String uid) async {
     toggleLoadingOn(true);
-    final res = await _databaseRepositoryImpl.fetchUsersByID(uid);
+    final res = await _databaseRepositoryImpl.fetchUserByID(uid);
+    res.fold((l) {
+      error = l.message;
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+    }, (r) async {
+      clearErrors();
+      _user = r;
+      if (_user?.userType == UserType.vendor) {
+        final vendorRes = await _databaseRepositoryImpl.fetchVendorByID(uid);
+        vendorRes.fold((l) {
+          error = l.message;
+          Messenger.showSnackbar(l.message);
+        }, (r) {
+          _vendor = r;
+        });
+      }
+      toggleLoadingOn(false);
+    });
+    preFillData();
+  }
+
+  Future<void> saveProfileData() async {
+    try {
+      toggleLoadingOn(true);
+      final updatedUser = _user!.copyWith(
+        name: nameController.text,
+        phoneNumber: int.tryParse(phoneController.text),
+      );
+      await _databaseRepositoryImpl.updateUser(user: updatedUser);
+      // TODO add 3 more parameters.
+      if (_user!.userType == UserType.vendor) {
+        final updatedVendor = _vendor!.copyWith(
+          companyName: companyNameController.text,
+          permanentAddress: permanentAddressController.text,
+          bankAccount: BankInfo(
+              accountNumber: accountNumberController.text,
+              ifsc: ifscController.text),
+          otherQualificationDegree: otherDegreeController.text,
+          otherQualificationUniversity: otherUniversityController.text,
+          associateDetail: AssociateDetail(
+              addressOfAssociate: associateAddressController.text,
+              associateName: associateNameController.text,
+              permanentAddress: permanentAddressController.text),
+          qualifiedYear: int.tryParse(qualifiedYearController.text),
+          practiceExperience: int.tryParse(practicingExperienceController.text),
+          expertServices: expertServicesController.text,
+          landline: int.tryParse(landlineController.text),
+          mobile: int.tryParse(mobileController.text),
+          // workingHour: WorkingHour(),
+          documents: VendorDocuments(),
+        );
+        await _databaseRepositoryImpl.updateVendor(vendor: updatedVendor);
+      }
+      Messenger.showSnackbar("Profile Updated ✅");
+    } catch (e) {
+      log("Failed to save profile:: ${e.toString()}");
+    } finally {
+      toggleLoadingOn(false);
+    }
   }
 }

@@ -26,7 +26,7 @@ class DatabaseRepositoryImpl extends DatabaseRepository
   Future<Either<AppError, bool>> createVendor({required Vendor vendor}) async {
     try {
       final result = await _firebaseFirestore
-          .collection(FirebaseConfig.userCollection)
+          .collection(FirebaseConfig.vendorCollection)
           .add(vendor.toJson());
       // TODO create client model from result
       return const Right(true);
@@ -60,7 +60,7 @@ class DatabaseRepositoryImpl extends DatabaseRepository
   }
 
   @override
-  Future<Either<AppError, User>> fetchUsersByID(String uid) async {
+  Future<Either<AppError, User>> fetchUserByID(String uid) async {
     try {
       final response = await _firebaseFirestore
           .collection(FirebaseConfig.userCollection)
@@ -223,6 +223,25 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           .doc(dCategory.id)
           .update(dCategory.toJson());
       return const Right(true);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<AppError, Vendor>> updateVendor(
+      {required Vendor vendor}) async {
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseConfig.vendorCollection)
+          .doc(vendor.id)
+          .update(vendor.toJson());
+      return Right(vendor);
     } on FirebaseException catch (fae) {
       logger.severe(fae);
       return Left(

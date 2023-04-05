@@ -34,5 +34,9 @@ final routeAdminLoggedIn = RouteMap(
   onUnknownRoute: (_) => const Redirect(HomePage.routeName),
   routes: {
     HomePage.routeName: (_) => const MaterialPage(child: HomePage()),
+    ProfilePage.routeName: (data) => MaterialPage(
+            child: ProfilePage(
+          userID: data.queryParameters['userID'] ?? "",
+        )),
   },
 );
