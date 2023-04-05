@@ -7,11 +7,14 @@ import 'package:admin/data/models/user.dart';
 import 'package:admin/data/repositories/index.dart';
 import 'package:admin/domain/repositories/index.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cross_file/cross_file.dart';
 import 'package:dartz/dartz.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _databaseRepositoryProvider = Provider<DatabaseRepositoryImpl>(
-    (ref) => DatabaseRepositoryImpl(FirebaseFirestore.instance));
+final _databaseRepositoryProvider = Provider<DatabaseRepositoryImpl>((ref) =>
+    DatabaseRepositoryImpl(
+        FirebaseFirestore.instance, FirebaseStorage.instance));
 
 class DatabaseRepositoryImpl extends DatabaseRepository
     with RepositoryExceptionMixin {
@@ -19,8 +22,17 @@ class DatabaseRepositoryImpl extends DatabaseRepository
       _databaseRepositoryProvider;
 
   final FirebaseFirestore _firebaseFirestore;
+  final FirebaseStorage _firebaseStorage;
 
-  DatabaseRepositoryImpl(this._firebaseFirestore);
+  DatabaseRepositoryImpl(this._firebaseFirestore, this._firebaseStorage);
+
+  @override
+  Future<String> uploadToFirestore(
+      {required XFile file, required String userID}) async {
+    final fileBytes = await file.readAsBytes();
+    final ref = _firebaseStorage.ref('documents/$userID');
+    return await (await ref.putData(fileBytes)).ref.getDownloadURL();
+  }
 
   @override
   Future<Either<AppError, bool>> createVendor({required Vendor vendor}) async {

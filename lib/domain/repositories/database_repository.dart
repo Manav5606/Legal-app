@@ -1,10 +1,13 @@
 import 'package:admin/core/enum/role.dart';
 import 'package:admin/data/models/vendor.dart';
 import 'package:admin/data/models/models.dart';
+import 'package:cross_file/cross_file.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class DatabaseRepository {
   Future<Either<AppError, bool>> createVendor({required Vendor vendor});
+  Future<String> uploadToFirestore(
+      {required XFile file, required String userID});
   Future<Either<AppError, User>> updateUser({required User user});
   Future<Either<AppError, Vendor>> updateVendor({required Vendor vendor});
   Future<Either<AppError, bool>> deactivateUser({required User user});

@@ -7,6 +7,7 @@ import 'package:admin/presentation/pages/widgets/custom_textfield.dart';
 import 'package:admin/presentation/pages/widgets/footer.dart';
 import 'package:admin/presentation/pages/widgets/header.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -404,6 +405,68 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                 hintText: "Your mobile number",
                                                 controller:
                                                     _viewModel.mobileController,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              _viewModel.getUser!.userType ==
+                                                  UserType.vendor,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text("Pan Card"),
+                                              Row(
+                                                children: [
+                                                  ..._viewModel.documents.pan !=
+                                                          null
+                                                      ? [
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                // TODO
+                                                              },
+                                                              icon: const Icon(
+                                                                  Icons
+                                                                      .download)),
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                // TODO
+                                                              },
+                                                              icon: const Icon(
+                                                                  Icons.edit)),
+                                                        ]
+                                                      : [
+                                                          IconButton(
+                                                              onPressed:
+                                                                  () async {
+                                                                final file = await _viewModel.pickFile(
+                                                                    await FilePicker
+                                                                        .platform
+                                                                        .pickFiles());
+                                                                if (file !=
+                                                                    null) {
+                                                                  _viewModel
+                                                                      .uploadPan(
+                                                                          file:
+                                                                              file);
+                                                                }
+                                                              },
+                                                              icon: const Icon(Icons
+                                                                  .upload_file))
+                                                        ],
+                                                  Text(
+                                                    "(jpg, jpeg, png, pdf)*",
+                                                    style: FontStyles
+                                                        .font12Regular
+                                                        .copyWith(
+                                                            color: AppColors
+                                                                .lightBlueColor,
+                                                            fontStyle: FontStyle
+                                                                .italic),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),

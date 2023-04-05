@@ -9,6 +9,9 @@ import 'package:admin/data/models/models.dart';
 import 'package:admin/data/models/vendor.dart';
 import 'package:admin/data/repositories/index.dart';
 import 'package:admin/presentation/base_view_model.dart';
+import 'package:cross_file/cross_file.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -31,6 +34,10 @@ class ProfileViewModel extends BaseViewModel {
   Vendor? get getVendor => _vendor;
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  VendorDocuments _documents = VendorDocuments();
+
+  VendorDocuments get documents => _documents;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -136,6 +143,30 @@ class ProfileViewModel extends BaseViewModel {
   }
 
   String? error;
+
+  bool panLoading = false;
+
+  Future<void> uploadPan({required XFile file}) async {
+    try {
+      panLoading = true;
+      notifyListeners();
+      final downloadUrl = await _databaseRepositoryImpl.uploadToFirestore(
+          file: file, userID: _user!.id!);
+      _documents = _documents.copyWith(pan: downloadUrl);
+    } catch (_) {
+    } finally {
+      panLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<XFile?> pickFile(FilePickerResult? result) async {
+    if (result != null) {
+      final choosenFile = result.files.first;
+      return XFile.fromData(choosenFile.bytes!, name: choosenFile.name);
+    }
+    return null;
+  }
 
   void clearErrors() {
     error = null;

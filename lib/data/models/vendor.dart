@@ -163,6 +163,30 @@ class VendorDocuments {
     this.agreement,
   });
 
+  VendorDocuments copyWith({
+    String? pan,
+    String? aadhar,
+    String? practiceCerti,
+    String? validityDateOfPracticeCertificate,
+    String? passPhoto,
+    String? powerBill,
+    String? nameBoard,
+    String? googleMap,
+    String? agreement,
+  }) =>
+      VendorDocuments(
+        aadhar: aadhar ?? this.aadhar,
+        agreement: agreement ?? this.agreement,
+        googleMap: googleMap ?? this.googleMap,
+        nameBoard: nameBoard ?? this.nameBoard,
+        pan: pan ?? this.pan,
+        passPhoto: passPhoto ?? this.passPhoto,
+        powerBill: powerBill ?? this.powerBill,
+        practiceCerti: practiceCerti ?? this.practiceCerti,
+        validityDateOfPracticeCertificate: validityDateOfPracticeCertificate ??
+            this.validityDateOfPracticeCertificate,
+      );
+
   factory VendorDocuments.fromMap(Map<String, dynamic> map) => VendorDocuments(
         pan: map['pan'],
         aadhar: map['aadhar'],
