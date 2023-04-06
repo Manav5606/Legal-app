@@ -1,14 +1,14 @@
 class WorkingHour {
-  final DateTime startingHour;
-  final DateTime endingHour;
+  String? startingHour;
+  String? endingHour;
 
   WorkingHour({
-    required this.startingHour,
-    required this.endingHour,
+    this.startingHour,
+    this.endingHour,
   });
 
   factory WorkingHour.fromMap(Map<String, dynamic> data) => WorkingHour(
-        startingHour: DateTime(data['starting_hour']),
+        startingHour: data['starting_hour'],
         endingHour: data['ending_hour'],
       );
 

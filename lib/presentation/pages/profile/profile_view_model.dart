@@ -7,6 +7,7 @@ import 'package:admin/data/models/associate_detail.dart';
 import 'package:admin/data/models/bank_info.dart';
 import 'package:admin/data/models/models.dart';
 import 'package:admin/data/models/vendor.dart';
+import 'package:admin/data/models/working_hour.dart';
 import 'package:admin/data/repositories/index.dart';
 import 'package:admin/presentation/base_view_model.dart';
 import 'package:cross_file/cross_file.dart';
@@ -36,6 +37,22 @@ class ProfileViewModel extends BaseViewModel {
 
   VendorDocuments _documents = VendorDocuments();
 
+  final List<String> _qualificationDegree = [];
+  final List<String> _qualificationUniversity = [];
+
+  List<String> get getQualificationDegree => _qualificationDegree;
+  List<String> get getQualificationUniversity => _qualificationUniversity;
+
+  void addQualificationDegree(String value) {
+    _qualificationDegree.add(value);
+    notifyListeners();
+  }
+
+  void addQualificationUniversity(String value) {
+    _qualificationUniversity.add(value);
+    notifyListeners();
+  }
+
   VendorDocuments get documents => _documents;
 
   final TextEditingController nameController = TextEditingController();
@@ -50,11 +67,6 @@ class ProfileViewModel extends BaseViewModel {
       TextEditingController();
   final TextEditingController accountNumberController = TextEditingController();
   final TextEditingController ifscController = TextEditingController();
-  // degree
-  final TextEditingController otherDegreeController = TextEditingController();
-  // university
-  final TextEditingController otherUniversityController =
-      TextEditingController();
   final TextEditingController associateNameController = TextEditingController();
   final TextEditingController associateAddressController =
       TextEditingController();
@@ -67,6 +79,16 @@ class ProfileViewModel extends BaseViewModel {
       TextEditingController();
   final TextEditingController landlineController = TextEditingController();
   final TextEditingController mobileController = TextEditingController();
+
+  void setStartingHour(TimeOfDay time) {
+    startingWorkHourController.text = "${time.hour}:${time.minute}";
+    notifyListeners();
+  }
+
+  void setEndingHour(TimeOfDay time) {
+    endingWorkHourController.text = "${time.hour}:${time.minute}";
+    notifyListeners();
+  }
 
   String? emailError;
   String? phoneError;
@@ -143,6 +165,7 @@ class ProfileViewModel extends BaseViewModel {
 
   String? error;
 
+  bool profileLoading = false;
   bool panLoading = false;
   bool aadharLoading = false;
   bool agreementLoading = false;
@@ -163,6 +186,20 @@ class ProfileViewModel extends BaseViewModel {
     } catch (_) {
     } finally {
       panLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> uploadProfilePic({required XFile file}) async {
+    try {
+      profileLoading = true;
+      notifyListeners();
+      final downloadUrl = await _databaseRepositoryImpl.uploadToFirestore(
+          file: file, userID: _user!.id!);
+      _user = _user!.copyWith(profilePic: downloadUrl);
+    } catch (_) {
+    } finally {
+      profileLoading = false;
       notifyListeners();
     }
   }
@@ -312,9 +349,6 @@ class ProfileViewModel extends BaseViewModel {
         accountNumberController.text =
             _vendor?.bankAccount?.accountNumber ?? "";
         ifscController.text = _vendor?.bankAccount?.ifsc ?? "";
-        otherDegreeController.text = _vendor?.otherQualificationDegree ?? "";
-        otherUniversityController.text =
-            _vendor?.otherQualificationUniversity ?? "";
         associateNameController.text =
             _vendor?.associateDetail?.associateName ?? "";
         associateAddressController.text =
@@ -329,6 +363,10 @@ class ProfileViewModel extends BaseViewModel {
         landlineController.text = (_vendor?.landline ?? "").toString();
         mobileController.text = (_vendor?.mobile ?? " ").toString();
         _documents = _vendor?.documents ?? VendorDocuments();
+        _qualificationDegree.clear();
+        _qualificationDegree.addAll(_vendor?.qualificationDegree ?? []);
+        _qualificationUniversity.clear();
+        _qualificationUniversity.addAll(_vendor?.qualificationUniversity ?? []);
       }
     } catch (_) {
     } finally {
@@ -369,7 +407,6 @@ class ProfileViewModel extends BaseViewModel {
         phoneNumber: int.tryParse(phoneController.text),
       );
       await _databaseRepositoryImpl.updateUser(user: updatedUser);
-      // TODO add 2 more parameters.
       if (_user!.userType == UserType.vendor) {
         final updatedVendor = _vendor!.copyWith(
           companyName: companyNameController.text,
@@ -377,8 +414,6 @@ class ProfileViewModel extends BaseViewModel {
           bankAccount: BankInfo(
               accountNumber: accountNumberController.text,
               ifsc: ifscController.text),
-          otherQualificationDegree: otherDegreeController.text,
-          otherQualificationUniversity: otherUniversityController.text,
           associateDetail: AssociateDetail(
               addressOfAssociate: associateAddressController.text,
               associateName: associateNameController.text,
@@ -388,7 +423,12 @@ class ProfileViewModel extends BaseViewModel {
           expertServices: expertServicesController.text,
           landline: int.tryParse(landlineController.text),
           mobile: int.tryParse(mobileController.text),
-          // workingHour: WorkingHour(),
+          workingHour: WorkingHour(
+            startingHour: startingWorkHourController.text,
+            endingHour: endingWorkHourController.text,
+          ),
+          qualificationDegree: _qualificationDegree,
+          qualificationUniversity: _qualificationUniversity,
           documents: _documents,
         );
         await _databaseRepositoryImpl.updateVendor(vendor: updatedVendor);

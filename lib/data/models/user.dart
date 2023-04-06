@@ -11,6 +11,7 @@ class User {
   final String email;
   final int phoneNumber;
   bool isDeactivated;
+  String? profilePic;
   Vendor? vendor;
 
   User({
@@ -23,6 +24,7 @@ class User {
     required this.email,
     required this.phoneNumber,
     this.vendor,
+    this.profilePic,
   });
 
   factory User.fromSnapshot(DocumentSnapshot snapshot) {
@@ -30,6 +32,7 @@ class User {
     return User(
       id: snapshot.id,
       createdAt: data['created_at'],
+      profilePic: data['profile_pic'],
       name: data['name'],
       createdBy: data['created_by'],
       userType: UserType.values.firstWhere(
@@ -46,6 +49,7 @@ class User {
     String? name,
     UserType? userType,
     String? email,
+    String? profilePic,
     int? phoneNumber,
     bool? isDeactivated,
   }) =>
@@ -53,6 +57,7 @@ class User {
           name: name ?? this.name,
           userType: userType ?? this.userType,
           email: email ?? this.email,
+          profilePic: profilePic ?? this.profilePic,
           phoneNumber: phoneNumber ?? this.phoneNumber,
           vendor: vendor ?? this.vendor,
           isDeactivated: isDeactivated ?? this.isDeactivated,
@@ -64,6 +69,7 @@ class User {
         "created_at": createdAt ?? DateTime.now().millisecondsSinceEpoch,
         "name": name,
         "created_by": createdBy,
+        "profile_pic": profilePic,
         "user_type": userType.name,
         "email": email,
         "phone_number": phoneNumber,

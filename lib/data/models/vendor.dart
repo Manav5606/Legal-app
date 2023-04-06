@@ -11,10 +11,8 @@ class Vendor {
   final String? permanentAddress;
   final WorkingHour? workingHour;
   final BankInfo? bankAccount;
-  final QualificationDegree? qualificationDegree;
-  final String? otherQualificationDegree;
-  final QualificationUniversity? qualificationUniversity;
-  final String? otherQualificationUniversity;
+  final List<String> qualificationDegree;
+  final List<String> qualificationUniversity;
   final AssociateDetail? associateDetail;
   final int? qualifiedYear;
   final int? practiceExperience;
@@ -34,10 +32,8 @@ class Vendor {
     this.practiceExperience,
     this.qualifiedYear,
     this.associateDetail,
-    this.otherQualificationDegree,
-    this.otherQualificationUniversity,
-    this.qualificationDegree,
-    this.qualificationUniversity,
+    this.qualificationDegree = const [],
+    this.qualificationUniversity = const [],
     this.landline,
     this.mobile,
     this.documents,
@@ -48,10 +44,8 @@ class Vendor {
     String? permanentAddress,
     WorkingHour? workingHour,
     BankInfo? bankAccount,
-    QualificationDegree? qualificationDegree,
-    String? otherQualificationDegree,
-    QualificationUniversity? qualificationUniversity,
-    String? otherQualificationUniversity,
+    List<String>? qualificationDegree,
+    List<String>? qualificationUniversity,
     AssociateDetail? associateDetail,
     int? qualifiedYear,
     int? practiceExperience,
@@ -69,10 +63,6 @@ class Vendor {
         expertServices: expertServices ?? this.expertServices,
         landline: landline ?? this.landline,
         mobile: mobile ?? this.mobile,
-        otherQualificationDegree:
-            otherQualificationDegree ?? this.otherQualificationDegree,
-        otherQualificationUniversity:
-            otherQualificationUniversity ?? this.otherQualificationUniversity,
         permanentAddress: permanentAddress ?? this.permanentAddress,
         practiceExperience: practiceExperience ?? this.practiceExperience,
         qualificationDegree: qualificationDegree ?? this.qualificationDegree,
@@ -99,16 +89,10 @@ class Vendor {
       expertServices: data['expert_services'],
       qualifiedYear: data['qualified_year'],
       practiceExperience: data['practice_experience'],
-      qualificationDegree: data['qualification_degree'] == null
-          ? null
-          : QualificationDegree.values.firstWhere(
-              (element) => element.name == data['qualification_degree']),
-      qualificationUniversity: data['qualification_university'] == null
-          ? null
-          : QualificationUniversity.values.firstWhere(
-              (element) => element.name == data['qualification_university']),
-      otherQualificationDegree: data['other_qualification_degree'],
-      otherQualificationUniversity: data['other_qualification_university'],
+      qualificationDegree:
+          List<String>.from(data['qualification_degree'] ?? []),
+      qualificationUniversity:
+          List<String>.from(data['qualification_university'] ?? []),
       associateDetail: data['associate_detail'] == null
           ? null
           : AssociateDetail.fromMap(data['associate_detail']),
@@ -129,10 +113,8 @@ class Vendor {
         "expert_services": expertServices,
         "qualified_year": qualifiedYear,
         "practice_experience": practiceExperience,
-        "qualification_university": qualificationUniversity?.title,
-        "qualification_degree": qualificationDegree?.title,
-        "other_qualification_degree": otherQualificationDegree,
-        "other_qualification_university": otherQualificationUniversity,
+        "qualification_university": qualificationUniversity,
+        "qualification_degree": qualificationDegree,
         "associate_detail": associateDetail?.toJson(),
         "landline": landline,
         "mobile": mobile,

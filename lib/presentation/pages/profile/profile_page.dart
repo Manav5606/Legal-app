@@ -2,6 +2,8 @@ import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/enum/role.dart';
 import 'package:admin/presentation/pages/profile/profile_view_model.dart';
+import 'package:admin/presentation/pages/profile/widget/add_qualification_degree.dart';
+import 'package:admin/presentation/pages/profile/widget/add_qualification_university.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/pages/widgets/custom_textfield.dart';
 import 'package:admin/presentation/pages/widgets/footer.dart';
@@ -74,11 +76,33 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                     children: [
                                       CircleAvatar(
                                         radius: 150,
-                                        child: CachedNetworkImage(imageUrl: ""),
+                                        child: _viewModel.profileLoading
+                                            ? const CircularProgressIndicator
+                                                .adaptive()
+                                            : CachedNetworkImage(
+                                                imageUrl: _viewModel
+                                                        .getUser?.profilePic ??
+                                                    ""),
                                       ),
+                                      const SizedBox(height: 4),
                                       TextButton(
-                                          onPressed: () {},
-                                          child: const Text("Edit")),
+                                          onPressed: _viewModel.profileLoading
+                                              ? null
+                                              : () async {
+                                                  final file = await _viewModel
+                                                      .pickFile(await FilePicker
+                                                          .platform
+                                                          .pickFiles());
+                                                  if (file != null) {
+                                                    await _viewModel
+                                                        .uploadProfilePic(
+                                                            file: file);
+                                                  }
+                                                },
+                                          child: _viewModel.profileLoading
+                                              ? const CircularProgressIndicator
+                                                  .adaptive()
+                                              : const Text("Edit")),
                                     ],
                                   ),
                                 ),
@@ -183,13 +207,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                     context: context,
                                                   );
                                                   if (pickedTime != null) {
-                                                    _viewModel
-                                                        .startingWorkHourController
-                                                        .text = DateFormat
-                                                            .jm()
-                                                        .parse(pickedTime
-                                                            .toString())
-                                                        .toString();
+                                                    _viewModel.setStartingHour(
+                                                        pickedTime);
                                                   }
                                                 },
                                                 child: CustomTextField(
@@ -221,13 +240,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                     context: context,
                                                   );
                                                   if (pickedTime != null) {
-                                                    _viewModel
-                                                        .endingWorkHourController
-                                                        .text = DateFormat
-                                                            .jm()
-                                                        .parse(pickedTime
-                                                            .toString())
-                                                        .toString();
+                                                    _viewModel.setEndingHour(
+                                                        pickedTime);
                                                   }
                                                 },
                                                 child: CustomTextField(
@@ -278,7 +292,74 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                             ],
                                           ),
                                         ),
-                                        // TODO qualification (degree and university) dropdown
+                                        Visibility(
+                                          visible:
+                                              _viewModel.getUser!.userType ==
+                                                  UserType.vendor,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                  "Qualification Degree"),
+                                              Row(
+                                                children: [
+                                                  Wrap(
+                                                    spacing: 2,
+                                                    children: _viewModel
+                                                        .getQualificationDegree
+                                                        .map((e) => Chip(
+                                                            label: Text(e)))
+                                                        .toList(),
+                                                  ),
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (_) {
+                                                              return const AddQualificationDegree();
+                                                            });
+                                                      },
+                                                      child: const Text("Add"))
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              _viewModel.getUser!.userType ==
+                                                  UserType.vendor,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                  "Qualification University"),
+                                              Row(
+                                                children: [
+                                                  Wrap(
+                                                    spacing: 2,
+                                                    children: _viewModel
+                                                        .getQualificationUniversity
+                                                        .map((e) => Chip(
+                                                            label: Text(e)))
+                                                        .toList(),
+                                                  ),
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (_) {
+                                                              return const AddQualificationUniversity();
+                                                            });
+                                                      },
+                                                      child: const Text("Add"))
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                         Visibility(
                                           visible:
                                               _viewModel.getUser!.userType ==
