@@ -1,6 +1,7 @@
 import 'package:admin/core/enum/role.dart';
 import 'package:admin/core/navigation/routes.dart';
 import 'package:admin/core/provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
@@ -37,7 +38,7 @@ class _LegalAppState extends ConsumerState<LegalApp> {
         final User? user = ref.read(AppState.auth).user;
 
         return isAuthenticated
-            ? (user?.userType ?? UserType.client) == UserType.admin
+            ? (user?.userType ?? UserType.client) == UserType.admin && kIsWeb
                 ? routeAdminLoggedIn
                 : routeLoggedIn
             : routeLoggedOut;

@@ -193,13 +193,13 @@ class _TopBarState extends ConsumerState<TopBar> {
                       PopupMenuButton(
                         child: Row(
                           children: [
-                            const SizedBox(
+                            SizedBox(
                               width: 28,
                               child: Padding(
-                                padding: EdgeInsets.all(4.0),
+                                padding: const EdgeInsets.all(4.0),
                                 child: CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      "https://randomuser.me/api/portraits/men/51.jpg"),
+                                  backgroundImage:
+                                      NetworkImage("${user?.profilePic}"),
                                 ),
                               ),
                             ),
