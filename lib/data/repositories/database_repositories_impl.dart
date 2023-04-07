@@ -352,8 +352,21 @@ class DatabaseRepositoryImpl extends DatabaseRepository
   }
 
   @override
-  Future<Either<AppError, Vendor>> updateVendor({required Vendor vendor}) {
-    // TODO: implement updateVendor
-    throw UnimplementedError();
+  Future<Either<AppError, Vendor>> updateVendor(
+      {required Vendor vendor}) async {
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseConfig.vendorCollection)
+          .doc(vendor.id)
+          .update(vendor.toJson());
+      return Right(vendor);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
   }
 }
