@@ -1,9 +1,12 @@
-class Qualification {
-  final String id;
-  final String name;
-  final String createdAt;
+// import 'package:admin/core/enum/qualification_type.dart';
 
-  Qualification(this.id, this.name, this.createdAt);
+// class Qualification {
+//   String? id;
+//   final String name;
+//   final QualificationType type;
+//   final 
 
-  Map<String, dynamic> toJson() => {"name": name, "created_at": createdAt};
-}
+//   Qualification(this.id, this.name, this.type);
+
+//   Map<String, dynamic> toJson() => {"name": name};
+// }

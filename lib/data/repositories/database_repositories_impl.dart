@@ -8,11 +8,14 @@ import 'package:admin/data/models/user.dart';
 import 'package:admin/data/repositories/index.dart';
 import 'package:admin/domain/repositories/index.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cross_file/cross_file.dart';
 import 'package:dartz/dartz.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _databaseRepositoryProvider = Provider<DatabaseRepositoryImpl>(
-    (ref) => DatabaseRepositoryImpl(FirebaseFirestore.instance));
+final _databaseRepositoryProvider = Provider<DatabaseRepositoryImpl>((ref) =>
+    DatabaseRepositoryImpl(
+        FirebaseFirestore.instance, FirebaseStorage.instance));
 
 class DatabaseRepositoryImpl extends DatabaseRepository
     with RepositoryExceptionMixin {
@@ -20,14 +23,24 @@ class DatabaseRepositoryImpl extends DatabaseRepository
       _databaseRepositoryProvider;
 
   final FirebaseFirestore _firebaseFirestore;
+  final FirebaseStorage _firebaseStorage;
 
-  DatabaseRepositoryImpl(this._firebaseFirestore);
+  DatabaseRepositoryImpl(this._firebaseFirestore, this._firebaseStorage);
+
+  @override
+  Future<String> uploadToFirestore(
+      {required XFile file, required String userID}) async {
+    final fileBytes = await file.readAsBytes();
+    final ref = _firebaseStorage.ref(
+        'documents/$userID/${DateTime.now().millisecondsSinceEpoch}_${file.name}');
+    return await (await ref.putData(fileBytes)).ref.getDownloadURL();
+  }
 
   @override
   Future<Either<AppError, bool>> createVendor({required Vendor vendor}) async {
     try {
       final result = await _firebaseFirestore
-          .collection(FirebaseConfig.userCollection)
+          .collection(FirebaseConfig.vendorCollection)
           .add(vendor.toJson());
       // TODO create client model from result
       return const Right(true);
@@ -50,6 +63,44 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           .get();
 
       return Right(response.docs.map((doc) => User.fromSnapshot(doc)).toList());
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<AppError, User>> fetchUserByID(String uid) async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.userCollection)
+          .doc(uid)
+          .get();
+
+      return Right(User.fromSnapshot(response));
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<AppError, Vendor>> fetchVendorByID(String uid) async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.vendorCollection)
+          .doc(uid)
+          .get();
+
+      return Right(Vendor.fromSnapshot(response));
     } on FirebaseException catch (fae) {
       logger.severe(fae);
       return Left(
@@ -298,5 +349,11 @@ class DatabaseRepositoryImpl extends DatabaseRepository
       logger.severe(e);
       return Left(AppError(message: "Unkown Error, Plese try again later."));
     }
+  }
+
+  @override
+  Future<Either<AppError, Vendor>> updateVendor({required Vendor vendor}) {
+    // TODO: implement updateVendor
+    throw UnimplementedError();
   }
 }

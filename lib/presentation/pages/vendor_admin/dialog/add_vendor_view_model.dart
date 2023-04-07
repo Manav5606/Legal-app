@@ -136,7 +136,7 @@ class AddVendorViewModel extends BaseViewModel {
         result = await _authProvider.register(
           user: model.User(
             name: nameController.text,
-            userType: UserType.client,
+            userType: UserType.vendor,
             email: emailController.text,
             phoneNumber: int.parse(numberController.text),
             createdBy: _authProvider.state.user!.id,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CustomTextField extends FormField<String> {
+  final bool disable;
   final String? label;
   final String hintText;
   final bool readOnly;
@@ -36,6 +37,7 @@ class CustomTextField extends FormField<String> {
     this.maxLines = 1,
     this.readOnly = false,
     this.showBorder = true,
+    this.disable = false,
     this.onTap,
     this.errorText,
     AutovalidateMode autovalidateMode = AutovalidateMode.onUserInteraction,
@@ -71,7 +73,7 @@ class CustomTextField extends FormField<String> {
                 children: [
                   Visibility(
                       visible: label != null,
-                      child: Text(label!,
+                      child: Text(label ?? "",
                           style: FontStyles.font14Semibold
                               .copyWith(color: AppColors.greyColor))),
                   Container(
@@ -88,7 +90,9 @@ class CustomTextField extends FormField<String> {
                       borderRadius: BorderRadius.circular(Sizes.s6.r),
                       border: showBorder ? setBorder() : null,
                     ),
+                    width: 500,
                     child: TextField(
+                      enabled: !disable,
                       cursorColor: AppColors.greyColor,
                       autocorrect: false,
                       style: TextStyle(

@@ -215,31 +215,48 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                     title: Text("Settings",
                         style: FontStyles.font12Regular.copyWith(
                             fontSize: 16, color: AppColors.blackColor))),
-                Visibility(
-                  visible: !isAuthenticated,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton.icon(
-                          onPressed: () {
-                            Routemaster.of(context).push(LoginPage.routeName);
-                          },
-                          icon: Icon(Icons.login, color: AppColors.blueColor),
-                          label: Text("Login",
-                              style: FontStyles.font14Semibold.copyWith(
-                                  fontSize: 16, color: AppColors.blueColor))),
-                      TextButton(
-                          onPressed: () {
-                            Routemaster.of(context)
-                                .push(RegisterPage.routeName);
-                          },
-                          child: Text("New User?",
-                              style: FontStyles.font12Regular.copyWith(
-                                  fontSize: 16, color: AppColors.whiteColor))),
-                      const SizedBox.shrink(),
-                    ],
-                  ),
-                ),
+                !isAuthenticated
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton.icon(
+                              onPressed: () {
+                                Routemaster.of(context)
+                                    .push(LoginPage.routeName);
+                              },
+                              icon:
+                                  Icon(Icons.login, color: AppColors.blueColor),
+                              label: Text("Login",
+                                  style: FontStyles.font14Semibold.copyWith(
+                                      fontSize: 16,
+                                      color: AppColors.blueColor))),
+                          TextButton(
+                              onPressed: () {
+                                Routemaster.of(context)
+                                    .push(RegisterPage.routeName);
+                              },
+                              child: Text("New User?",
+                                  style: FontStyles.font12Regular.copyWith(
+                                      fontSize: 16,
+                                      color: AppColors.whiteColor))),
+                          const SizedBox.shrink(),
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton.icon(
+                              onPressed: () {
+                                ref.read(AppState.auth.notifier).logout();
+                              },
+                              icon:
+                                  Icon(Icons.login, color: AppColors.blueColor),
+                              label: Text("SignOut",
+                                  style: FontStyles.font14Semibold.copyWith(
+                                      fontSize: 16,
+                                      color: AppColors.blueColor))),
+                        ],
+                      ),
               ],
             ),
           ),
