@@ -50,210 +50,132 @@ class _ServicePageState extends ConsumerState<ServicePage> {
 
   Widget _dataTable() {
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.8,
-      child: _viewModel.isLoading
-          ? const Center(child: CircularProgressIndicator.adaptive())
-          : _viewModel.error != null
-              ? Center(child: Text("⚠️ ${_viewModel.error}"))
-              : LayoutBuilder(builder: (context, constraints) {
-                  return ScrollConfiguration(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.8,
+        child: _viewModel.isLoading
+            ? const Center(child: CircularProgressIndicator.adaptive())
+            : _viewModel.error != null
+                ? Center(child: Text("⚠️ ${_viewModel.error}"))
+                : ScrollConfiguration(
                     behavior: WebScrollBehavior(),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: ConstrainedBox(
-                          constraints:
-                              BoxConstraints(minWidth: constraints.minWidth),
-                          child: ExpandableTable(
-                              header: ExpandableTableHeader(children: [
-                                const Text("Service ID"),
-                                const Text("Short Description"),
-                                const Text("About Description"),
-                                const Text("Market Price"),
-                                const Text("Our Price"),
-                                const Text("Created at"),
-                                const Text("Created by"),
-                                const Text("Action"),
-                              ], firstCell: const SizedBox.shrink()),
-                              rows: _viewModel.getServices
-                                  .map((data) =>
-                                      createExpandableTableRow(data, context))
-                                  .toList()),
-                          // child: DataTable(
-                          //     clipBehavior: Clip.antiAlias,
-                          //     border: TableBorder.symmetric(
-                          //         outside:
-                          //             BorderSide(color: AppColors.greyColor)),
-                          //     sortAscending: !_viewModel.sortAscending,
-                          //     sortColumnIndex: _viewModel.sortIndex,
-                          //     dataRowColor: MaterialStateProperty.all(
-                          //         AppColors.lightGreyColor),
-                          //     headingRowColor: MaterialStateProperty.all(
-                          //         AppColors.whiteColor),
-                          //     dataTextStyle: FontStyles.font14Semibold
-                          //         .copyWith(color: AppColors.blueColor),
-                          //     headingTextStyle: FontStyles.font16Semibold
-                          //         .copyWith(color: AppColors.blackColor),
-                          //     columns: [
-                          //       DataColumn(
-                          //         label: const Text("Service ID"),
-                          //
-                          //       ),
-                          //       DataColumn(
-                          //         label: const Text("Short Description"),
-                          //
-                          //       ),
-                          //       const DataColumn(
-                          //         label: Text("About Description"),
-                          //       ),
-                          //       const DataColumn(
-                          //         label: Text("Market Price"),
-                          //       ),
-                          //       DataColumn(
-                          //         numeric: true,
-                          //         label: const Text("Our Price"),
-                          //
-                          //       ),
-                          //       DataColumn(
-                          //         label: const Text("Created at"),
-                          //
-                          //       ),
-                          //       DataColumn(
-                          //         label: const Text("Created by"),
-                          //
-                          //       ),
-                          //       const DataColumn(label: Text("Action")),
-                          //     ],
-                          //     rows: _viewModel.getServices
-                          //         .where((service) =>
-                          //             service.categoryID == widget.categoryID &&
-                          //             service.parentServiceID == null)
-                          //         .map(
-                          //       (data) {
-                          //         return DataRow(
-                          //           color: data.isDeactivated
-                          //               ? MaterialStateProperty.all(
-                          //                   AppColors.lightRedColor)
-                          //               : null,
-                          //           cells: [
-                          //             DataCell(Text(data.id.toString())),
-                          //             DataCell(Text(
-                          //                 data.shortDescription.toString())),
-                          //             DataCell(Text(
-                          //                 data.aboutDescription.toString())),
-                          //             DataCell(Text(
-                          //                 (data.marketPrice ?? "").toString())),
-                          //             DataCell(Text(
-                          //                 (data.ourPrice ?? "").toString())),
-                          //             DataCell(
-                          //                 Text(data.createdAt!.formatToDate())),
-                          //             DataCell(Text(data.createdBy.toString())),
-                          //             DataCell(Row(
-                          //               children: [
-                          //                 TextButton(
-                          //                     child: const Text("Edit"),
-                          //                     onPressed: () {
-                          //                       showDialog(
-                          //                         context: context,
-                          //                         barrierDismissible: false,
-                          //                         builder: (_) => Dialog(
-                          //                           insetPadding:
-                          //                               const EdgeInsets.all(
-                          //                                   24),
-                          //                           child: AddServiceDialog(
-                          //                               serviceDetail: data,
-                          //                               categoryID:
-                          //                                   widget.categoryID),
-                          //                         ),
-                          //                       );
-                          //                     }),
-                          //                 TextButton(
-                          //                     child: const Text("Add Service"),
-                          //                     onPressed: () {
-                          //                       showDialog(
-                          //                         context: context,
-                          //                         barrierDismissible: false,
-                          //                         builder: (_) => Dialog(
-                          //                           insetPadding:
-                          //                               const EdgeInsets.all(
-                          //                                   24),
-                          //                           child: AddServiceDialog(
-                          //                             parentServiceDetail: data,
-                          //                             categoryID:
-                          //                                 widget.categoryID,
-                          //                           ),
-                          //                         ),
-                          //                       );
-                          //                     }),
-                          //               ],
-                          //             )),
-                          //           ],
-                          //         );
-                          //       },
-                          //     ).toList()),
-                        ),
-                      ),
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: _viewModel.getServices
+                          .map((data) => serviceDataNested(data, context))
+                          .toList(),
                     ),
-                  );
-                }),
-    );
+                  ));
   }
 
-  ExpandableTableRow createExpandableTableRow(
-      Service data, BuildContext context) {
-    return ExpandableTableRow(
-      height: 50,
-      firstCell: const SizedBox.shrink(),
-      legend: Row(
-        children: [
-          (Text(data.id.toString())),
-          (Text(data.shortDescription.toString())),
-          (Text(data.aboutDescription.toString())),
-          (Text((data.marketPrice ?? "").toString())),
-          (Text((data.ourPrice ?? "").toString())),
-          (Text(data.createdAt!.formatToDate())),
-          (Text(data.createdBy.toString())),
-          (Row(
-            children: [
-              TextButton(
-                  child: const Text("Edit"),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (_) => Dialog(
-                        insetPadding: const EdgeInsets.all(24),
-                        child: AddServiceDialog(
-                            serviceDetail: data, categoryID: widget.categoryID),
-                      ),
-                    );
-                  }),
-              TextButton(
-                  child: const Text("Add Service"),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (_) => Dialog(
-                        insetPadding: const EdgeInsets.all(24),
-                        child: AddServiceDialog(
-                          parentServiceDetail: data,
-                          categoryID: widget.categoryID,
-                        ),
-                      ),
-                    );
-                  }),
-            ],
-          )),
-        ],
-      ),
+  Widget serviceDataNested(Service data, BuildContext context) {
+    return ExpansionTile(
+      title: serviceData(data, context),
       children: data.childServices.map((e) {
         final service = _viewModel.getServiceByID(e);
-        return createExpandableTableRow(service, context);
+        return service.childServices.isNotEmpty
+            ? serviceDataNested(service, context)
+            : serviceData(service, context);
       }).toList(),
     );
   }
+
+  Widget serviceData(Service data, BuildContext context) {
+    return data.ourPrice != null
+        ? Text("Show real values")
+        : ListTile(
+            title: Text(data.shortDescription),
+            subtitle: Text(data.aboutDescription),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (_) => Dialog(
+                          insetPadding: const EdgeInsets.all(24),
+                          child: AddServiceDialog(
+                              serviceDetail: data,
+                              categoryID: widget.categoryID),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.edit)),
+                IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (_) => Dialog(
+                          insetPadding: const EdgeInsets.all(24),
+                          child: AddServiceDialog(
+                            parentServiceDetail: data,
+                            categoryID: widget.categoryID,
+                          ),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.add)),
+              ],
+            ),
+          );
+  }
+
+  // ExpandableTableRow createExpandableTableRow(
+  //     Service data, BuildContext context) {
+  //   return ExpandableTableRow(
+  //     height: 50,
+  //     firstCell: const SizedBox.shrink(),
+  //     legend: Row(
+  //       children: [
+  //         (Text(data.id.toString())),
+  //         (Text(data.shortDescription.toString())),
+  //         (Text(data.aboutDescription.toString())),
+  //         (Text((data.marketPrice ?? "").toString())),
+  //         (Text((data.ourPrice ?? "").toString())),
+  //         (Text(data.createdAt!.formatToDate())),
+  //         (Text(data.createdBy.toString())),
+  //         (Row(
+  //           children: [
+  //             TextButton(
+  //                 child: const Text("Edit"),
+  //                 onPressed: () {
+  //                   showDialog(
+  //                     context: context,
+  //                     barrierDismissible: false,
+  //                     builder: (_) => Dialog(
+  //                       insetPadding: const EdgeInsets.all(24),
+  //                       child: AddServiceDialog(
+  //                           serviceDetail: data, categoryID: widget.categoryID),
+  //                     ),
+  //                   );
+  //                 }),
+  //             TextButton(
+  //                 child: const Text("Add Service"),
+  //                 onPressed: () {
+  //                   showDialog(
+  //                     context: context,
+  //                     barrierDismissible: false,
+  //                     builder: (_) => Dialog(
+  //                       insetPadding: const EdgeInsets.all(24),
+  //                       child: AddServiceDialog(
+  //                         parentServiceDetail: data,
+  //                         categoryID: widget.categoryID,
+  //                       ),
+  //                     ),
+  //                   );
+  //                 }),
+  //           ],
+  //         )),
+  //       ],
+  //     ),
+  //     children: data.childServices.map((e) {
+  //       final service = _viewModel.getServiceByID(e);
+  //       return createExpandableTableRow(service, context);
+  //     }).toList(),
+  //   );
+  // }
 
   Widget _heading() {
     return Row(
