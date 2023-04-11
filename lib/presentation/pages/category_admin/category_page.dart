@@ -153,7 +153,9 @@ class _CategoryPageState extends ConsumerState<CategoryPage> {
                                                     .read(
                                                         HomeViewModel.provider)
                                                     .loadOtherView(ServicePage(
-                                                        categoryID: data.id!));
+                                                      categoryID: data.id!,
+                                                      categoryName: data.name,
+                                                    ));
                                               }),
                                         ],
                                       )),

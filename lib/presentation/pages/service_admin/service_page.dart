@@ -1,20 +1,24 @@
+import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
-import 'package:admin/core/extension/date.dart';
 import 'package:admin/data/models/service.dart';
 import 'package:admin/presentation/pages/service_admin/service_view_model.dart';
 import 'package:admin/presentation/pages/service_admin/dialog/add_service_dialog.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/utils/web_scroll.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_expandable_table/flutter_expandable_table.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ServicePage extends ConsumerStatefulWidget {
   static const String routeName = "/service";
 
   final String categoryID;
+  final String categoryName;
 
-  const ServicePage({super.key, required this.categoryID});
+  const ServicePage({
+    super.key,
+    required this.categoryID,
+    required this.categoryName,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ServicePageState();
@@ -80,15 +84,15 @@ class _ServicePageState extends ConsumerState<ServicePage> {
   }
 
   Widget serviceData(Service data, BuildContext context) {
-    return data.ourPrice != null
-        ? Text("Show real values")
-        : ListTile(
-            title: Text(data.shortDescription),
-            subtitle: Text(data.aboutDescription),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
+    return data.shortDescription.isEmpty
+        ? const SizedBox.shrink()
+        : data.ourPrice != null
+            ? ListTile(
+                tileColor: data.isDeactivated ? AppColors.lightRedColor : null,
+                dense: true,
+                title: Text(data.shortDescription),
+                subtitle: Text(data.aboutDescription),
+                leading: IconButton(
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -102,24 +106,54 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                       );
                     },
                     icon: const Icon(Icons.edit)),
-                IconButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (_) => Dialog(
-                          insetPadding: const EdgeInsets.all(24),
-                          child: AddServiceDialog(
-                            parentServiceDetail: data,
-                            categoryID: widget.categoryID,
-                          ),
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.add)),
-              ],
-            ),
-          );
+                trailing: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text("Market Price: ${data.marketPrice}"),
+                    Text("Our Price: ${data.ourPrice}"),
+                  ],
+                ),
+              )
+            : ListTile(
+                dense: true,
+                tileColor: data.isDeactivated ? AppColors.lightRedColor : null,
+                title: Text(data.shortDescription),
+                subtitle: Text(data.aboutDescription),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) => Dialog(
+                              insetPadding: const EdgeInsets.all(24),
+                              child: AddServiceDialog(
+                                  serviceDetail: data,
+                                  categoryID: widget.categoryID),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.edit)),
+                    IconButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) => Dialog(
+                              insetPadding: const EdgeInsets.all(24),
+                              child: AddServiceDialog(
+                                parentServiceDetail: data,
+                                categoryID: widget.categoryID,
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.add)),
+                  ],
+                ),
+              );
   }
 
   // ExpandableTableRow createExpandableTableRow(
@@ -184,7 +218,8 @@ class _ServicePageState extends ConsumerState<ServicePage> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Service", style: FontStyles.font24Semibold),
+            Text("Service (${widget.categoryName})",
+                style: FontStyles.font24Semibold),
             Text("Your list of service is here",
                 style: FontStyles.font14Semibold),
           ],

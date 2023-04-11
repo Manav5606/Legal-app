@@ -49,7 +49,6 @@ class Service {
     String? aboutDescription,
     double? marketPrice,
     double? ourPrice,
-    String? parentServiceID,
     List<String>? childServices,
     String? categoryID,
     bool? isDeactivated,
@@ -63,8 +62,8 @@ class Service {
         id: id,
         createdBy: createdBy,
         createdAt: createdAt,
-        marketPrice: marketPrice,
-        ourPrice: ourPrice,
+        marketPrice: marketPrice ?? this.marketPrice,
+        ourPrice: ourPrice ?? this.ourPrice,
         parentServiceID: parentServiceID,
       );
 

@@ -29,11 +29,11 @@ class ServiceViewModel extends BaseViewModel {
   Service getServiceByID(String id) {
     return _services.firstWhere((element) => element.id == id,
         orElse: () => Service(
-            shortDescription: "No Data Found",
-            aboutDescription: "No Data Found",
+            shortDescription: "",
+            aboutDescription: "",
             childServices: [],
-            categoryID: "No Data Found",
-            createdBy: "No Data Found"));
+            categoryID: "",
+            createdBy: ""));
   }
 
   void clearErrors() {

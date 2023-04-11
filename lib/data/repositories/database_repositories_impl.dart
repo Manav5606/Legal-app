@@ -249,9 +249,22 @@ class DatabaseRepositoryImpl extends DatabaseRepository
 
   @override
   Future<Either<AppError, bool>> activateCategory(
-      {required Category category}) {
-    // TODO: implement activateCategory
-    throw UnimplementedError();
+      {required Category category}) async {
+    try {
+      final dCategory = category.copyWith(isDeactivated: false);
+      await _firebaseFirestore
+          .collection(FirebaseConfig.categoryCollection)
+          .doc(dCategory.id)
+          .update(dCategory.toJson());
+      return const Right(true);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
   }
 
   @override
@@ -299,6 +312,26 @@ class DatabaseRepositoryImpl extends DatabaseRepository
       {required Service service}) async {
     try {
       final s = service.copyWith(isDeactivated: true);
+      await _firebaseFirestore
+          .collection(FirebaseConfig.serviceCollection)
+          .doc(s.id)
+          .update(s.toJson());
+      return const Right(true);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<AppError, bool>> activateService(
+      {required Service service}) async {
+    try {
+      final s = service.copyWith(isDeactivated: false);
       await _firebaseFirestore
           .collection(FirebaseConfig.serviceCollection)
           .doc(s.id)

@@ -103,16 +103,29 @@ class _AddServiceDialogState extends ConsumerState<AddServiceDialog> {
                       onPressed: _viewModel.isLoading
                           ? null
                           : () async {
-                              await _viewModel
-                                  .deactivateService(widget.serviceDetail!)
-                                  .then((value) => Navigator.pop(context));
+                              if (widget.serviceDetail?.isDeactivated ??
+                                  false) {
+                                await _viewModel
+                                    .activateService(widget.serviceDetail!)
+                                    .then((value) => Navigator.pop(context));
+                              } else {
+                                await _viewModel
+                                    .deactivateService(widget.serviceDetail!)
+                                    .then((value) => Navigator.pop(context));
+                              }
                               await ref
                                   .read(ServiceViewModel.provider)
                                   .initCategory(widget.categoryID);
                             },
-                      child: Text("Deactivate Service",
-                          style: FontStyles.font12Regular
-                              .copyWith(color: AppColors.redColor))),
+                      child: Text(
+                          widget.serviceDetail?.isDeactivated ?? false
+                              ? "Activate Category"
+                              : "Deactivate Service",
+                          style: FontStyles.font12Regular.copyWith(
+                              color:
+                                  widget.serviceDetail?.isDeactivated ?? false
+                                      ? AppColors.greenColor
+                                      : AppColors.redColor))),
                 ),
                 TextButton(
                     onPressed: _viewModel.isLoading

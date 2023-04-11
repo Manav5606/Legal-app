@@ -96,6 +96,23 @@ class AddServiceViewModel extends BaseViewModel {
     toggleLoadingOn(false);
   }
 
+  Future activateService(model.Service service) async {
+    toggleLoadingOn(true);
+    final result =
+        await _databaseRepositoryImpl.activateService(service: service);
+    result.fold((l) async {
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+      return null;
+    }, (r) {
+      Messenger.showSnackbar("Service Activated");
+      toggleLoadingOn(false);
+
+      return r;
+    });
+    toggleLoadingOn(false);
+  }
+
   Future createService(
       {model.Service? existingService,
       model.Service? parentService,
@@ -106,12 +123,11 @@ class AddServiceViewModel extends BaseViewModel {
       if (existingService != null) {
         final service = existingService.copyWith(
           aboutDescription: aboutDescController.text,
-          categoryID: categoryID,
-          childServices: existingService.childServices,
+          // categoryID: categoryID,
+          // childServices: existingService.childServices,
           marketPrice: double.tryParse(marketPriceController.text),
           ourPrice: double.tryParse(ourPriceController.text),
-          parentServiceID: existingService.parentServiceID,
-          isDeactivated: existingService.isDeactivated,
+          // isDeactivated: existingService.isDeactivated,
           shortDescription: shortDescController.text,
         );
         result = await _databaseRepositoryImpl.updateService(service: service);
@@ -129,15 +145,24 @@ class AddServiceViewModel extends BaseViewModel {
         result = await _databaseRepositoryImpl.createService(service: service);
       }
 
-      return result.fold((l) async {
+      return await result.fold((l) async {
         Messenger.showSnackbar(l.message);
         toggleLoadingOn(false);
         return null;
-      }, (r) {
+      }, (r) async {
         if (existingService == null) {
           Messenger.showSnackbar("Service Created ✅");
         } else {
           Messenger.showSnackbar("Updated Service");
+        }
+        if (parentService != null && existingService == null) {
+          final _parentService = parentService.copyWith(
+            childServices: [
+              ...parentService.childServices,
+              r.id!,
+            ],
+          );
+          await _databaseRepositoryImpl.updateService(service: _parentService);
         }
         toggleLoadingOn(false);
         return r;
