@@ -23,8 +23,8 @@ class AddClientViewModel extends BaseViewModel {
 
   static AutoDisposeChangeNotifierProvider<AddClientViewModel> get provider =>
       _provider;
-  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController numberController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   bool _passwordVisible = false;
@@ -45,7 +45,7 @@ class AddClientViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  bool _validateValues() {
+  bool _validateValues(bool create) {
     clearError();
 
     if (emailController.text.isEmpty || !emailController.text.isValidEmail()) {
@@ -54,9 +54,11 @@ class AddClientViewModel extends BaseViewModel {
     if (nameController.text.isEmpty) {
       nameError = "This field is required";
     }
-    if (passwordController.text.isEmpty ||
-        !passwordController.text.isValidPassword()) {
-      passwordError = "This field is required";
+    if (create) {
+      if (passwordController.text.isEmpty ||
+          !passwordController.text.isValidPassword()) {
+        passwordError = "This field is required";
+      }
     }
     if (numberController.text.isEmpty ||
         !numberController.text.isValidPhoneNumber()) {
@@ -78,18 +80,18 @@ class AddClientViewModel extends BaseViewModel {
     super.dispose();
   }
 
-  void initClientUser(model.User? clientUser) {
-    if (clientUser != null) {
-      emailController.text = clientUser.email;
-      numberController.text = clientUser.phoneNumber.toString();
-      nameController.text = clientUser.name;
+  void initUserUser(model.User? userClient) {
+    if (userClient != null) {
+      emailController.text = userClient.email;
+      numberController.text = userClient.phoneNumber.toString();
+      nameController.text = userClient.name;
       notifyListeners();
     }
   }
 
-  Future deactivateClient(model.User user) async {
+  Future deactivateClient(model.User client) async {
     toggleLoadingOn(true);
-    final result = await _databaseRepositoryImpl.deactivateUser(user: user);
+    final result = await _databaseRepositoryImpl.deactivateUser(user: client);
     result.fold((l) async {
       Messenger.showSnackbar(l.message);
       toggleLoadingOn(false);
@@ -103,12 +105,28 @@ class AddClientViewModel extends BaseViewModel {
     toggleLoadingOn(false);
   }
 
-  Future createClient(model.User? existingClient) async {
-    if (_validateValues()) {
+  Future activateClient(model.User client) async {
+    toggleLoadingOn(true);
+    final result = await _databaseRepositoryImpl.activateUser(user: client);
+    result.fold((l) async {
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+      return null;
+    }, (r) {
+      Messenger.showSnackbar("Client Activated");
+      toggleLoadingOn(false);
+
+      return r;
+    });
+    toggleLoadingOn(false);
+  }
+
+  Future createUser(model.User? existingUser) async {
+    if (_validateValues(existingUser == null ? true : false)) {
       toggleLoadingOn(true);
       late final Either<AppError, User> result;
-      if (existingClient != null) {
-        final _user = existingClient.copyWith(
+      if (existingUser != null) {
+        final _user = existingUser.copyWith(
           name: nameController.text,
           email: emailController.text,
           phoneNumber: int.parse(numberController.text),
@@ -126,6 +144,7 @@ class AddClientViewModel extends BaseViewModel {
           password: passwordController.text,
         );
       }
+      // Sent a email to registerd email ID with default Password.
 
       // TODO ask for other details and add them also
       return result.fold((l) async {
@@ -133,12 +152,13 @@ class AddClientViewModel extends BaseViewModel {
         toggleLoadingOn(false);
         return null;
       }, (r) {
-        if (existingClient == null) {
-          Messenger.showSnackbar("Client Created ✅ with Default Password");
+        if (existingUser == null) {
+          Messenger.showSnackbar("Client Created ✅");
         } else {
           Messenger.showSnackbar("Updated Client");
         }
         toggleLoadingOn(false);
+
         return r;
       });
     }

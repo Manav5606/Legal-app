@@ -1,6 +1,8 @@
 import 'package:admin/core/constant/firebase_config.dart';
+import 'package:admin/core/enum/role.dart';
 import 'package:admin/data/models/app_error.dart';
 import 'package:admin/data/models/models.dart' as model;
+import 'package:admin/data/models/vendor.dart';
 import 'package:admin/domain/repositories/auth_repository.dart';
 import 'package:admin/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -110,6 +112,12 @@ class AuthRepositoryImpl extends AuthRepository with RepositoryExceptionMixin {
           .collection(FirebaseConfig.userCollection)
           .doc(firebaseUser.uid)
           .set(user.toJson());
+      if (user.userType == UserType.vendor) {
+        await _firebaseFirestore
+            .collection(FirebaseConfig.vendorCollection)
+            .doc(firebaseUser.uid)
+            .set(Vendor(userID: firebaseUser.uid).toJson());
+      }
       return Right(model.User.fromSnapshot((await _firebaseFirestore
           .collection(FirebaseConfig.userCollection)
           .doc(firebaseUser.uid)

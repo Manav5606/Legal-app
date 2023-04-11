@@ -11,10 +11,8 @@ final _provider = ChangeNotifierProvider.autoDispose(
 
 class ClientViewModel extends BaseViewModel {
   final DatabaseRepositoryImpl _databaseRepositoryImpl;
-
   bool sortAscending = false;
   int sortIndex = 0;
-
   ClientViewModel(this._databaseRepositoryImpl) {
     fetchClients();
   }
@@ -33,21 +31,7 @@ class ClientViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> fetchClients() async {
-    toggleLoadingOn(true);
-    final res = await _databaseRepositoryImpl.fetchUsersByType(UserType.client);
-    res.fold((l) {
-      error = l.message;
-      Messenger.showSnackbar(l.message);
-      toggleLoadingOn(false);
-    }, (r) {
-      clearErrors();
-      _clients = r;
-      toggleLoadingOn(false);
-    });
-  }
-
-  void sortClients(int index, bool ascending) {
+  void sortUsers(int index, bool ascending) {
     switch (index) {
       case 0:
         _clients.sort((a, b) =>
@@ -78,5 +62,19 @@ class ClientViewModel extends BaseViewModel {
     sortAscending = !ascending;
     sortIndex = index;
     notifyListeners();
+  }
+
+  Future<void> fetchClients() async {
+    toggleLoadingOn(true);
+    final res = await _databaseRepositoryImpl.fetchUsersByType(UserType.client);
+    res.fold((l) {
+      error = l.message;
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+    }, (r) {
+      clearErrors();
+      _clients = r;
+      toggleLoadingOn(false);
+    });
   }
 }

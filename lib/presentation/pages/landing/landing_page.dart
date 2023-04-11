@@ -5,6 +5,8 @@ import 'package:admin/core/provider.dart';
 import 'package:admin/data/models/customer_review.dart';
 import 'package:admin/data/models/general_stat.dart';
 import 'package:admin/data/models/news.dart';
+import 'package:admin/legal_app.dart';
+import 'package:admin/presentation/pages/authentication/index.dart';
 import 'package:admin/presentation/pages/landing/widgets/services.dart';
 import 'package:admin/presentation/pages/widgets/banner.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
@@ -20,6 +22,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:admin/data/models/models.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:routemaster/routemaster.dart';
+
+final landingScaffold = GlobalKey<ScaffoldState>();
 
 class LandingPage extends ConsumerStatefulWidget {
   static const String routeName = "/landing";
@@ -147,10 +152,116 @@ class _LandingPageState extends ConsumerState<LandingPage> {
       addedBy: "",
     ),
   ];
+
+  late bool isAuthenticated;
   @override
   Widget build(BuildContext context) {
-    ref.watch(AppState.auth).isAuthenticated;
+    isAuthenticated = ref.watch(AppState.auth).isAuthenticated;
     return Scaffold(
+      key: landingScaffold,
+      endDrawerEnableOpenDragGesture: false,
+      endDrawer: ClipRRect(
+        borderRadius:
+            const BorderRadius.horizontal(left: Radius.circular(20.0)),
+        child: Drawer(
+          backgroundColor: AppColors.yellowColor,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: ListView(
+              // TODO make this dynamic
+              children: [
+                ListTile(
+                  title: Text(
+                    "Menu",
+                    textAlign: TextAlign.center,
+                    style: FontStyles.font14Bold
+                        .copyWith(color: AppColors.blueColor, fontSize: 24),
+                  ),
+                  trailing: IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(Icons.cancel_outlined,
+                          color: AppColors.blueColor)),
+                ),
+                ListTile(
+                    title: Text("Home",
+                        style: FontStyles.font14Semibold.copyWith(
+                            fontSize: 18, color: AppColors.blackColor))),
+                ListTile(
+                    title: Text("Business",
+                        style: FontStyles.font14Semibold.copyWith(
+                            fontSize: 18, color: AppColors.blackColor))),
+                ListTile(
+                    title: Text("Finance",
+                        style: FontStyles.font14Semibold.copyWith(
+                            fontSize: 18, color: AppColors.blackColor))),
+                ListTile(
+                    title: Text("Legal",
+                        style: FontStyles.font14Semibold.copyWith(
+                            fontSize: 18, color: AppColors.blackColor))),
+                ListTile(
+                    title: Text("Advertisement",
+                        style: FontStyles.font14Semibold.copyWith(
+                            fontSize: 18, color: AppColors.blackColor))),
+                Divider(color: AppColors.lightGreyColor, thickness: 2),
+                ListTile(
+                    title: Text("FAQs",
+                        style: FontStyles.font12Regular.copyWith(
+                            fontSize: 16, color: AppColors.blackColor))),
+                ListTile(
+                    title: Text("Contact Us",
+                        style: FontStyles.font12Regular.copyWith(
+                            fontSize: 16, color: AppColors.blackColor))),
+                ListTile(
+                    title: Text("Settings",
+                        style: FontStyles.font12Regular.copyWith(
+                            fontSize: 16, color: AppColors.blackColor))),
+                !isAuthenticated
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton.icon(
+                              onPressed: () {
+                                Routemaster.of(context)
+                                    .push(LoginPage.routeName);
+                              },
+                              icon:
+                                  Icon(Icons.login, color: AppColors.blueColor),
+                              label: Text("Login",
+                                  style: FontStyles.font14Semibold.copyWith(
+                                      fontSize: 16,
+                                      color: AppColors.blueColor))),
+                          TextButton(
+                              onPressed: () {
+                                Routemaster.of(context)
+                                    .push(RegisterPage.routeName);
+                              },
+                              child: Text("New User?",
+                                  style: FontStyles.font12Regular.copyWith(
+                                      fontSize: 16,
+                                      color: AppColors.whiteColor))),
+                          const SizedBox.shrink(),
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton.icon(
+                              onPressed: () {
+                                ref.read(AppState.auth.notifier).logout();
+                              },
+                              icon:
+                                  Icon(Icons.login, color: AppColors.blueColor),
+                              label: Text("SignOut",
+                                  style: FontStyles.font14Semibold.copyWith(
+                                      fontSize: 16,
+                                      color: AppColors.blueColor))),
+                        ],
+                      ),
+              ],
+            ),
+          ),
+        ),
+      ),
       backgroundColor: AppColors.whiteColor,
       body: ScreenTypeLayout.builder(
         mobile: (context) => ListView(

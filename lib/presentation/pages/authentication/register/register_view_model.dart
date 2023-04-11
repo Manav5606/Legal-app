@@ -97,7 +97,7 @@ class RegisterViewModel extends BaseViewModel {
         final result = await _authProvider.register(
           user: User(
             name: usernameController.text,
-            userType: UserType.user,
+            userType: UserType.client,
             email: emailController.text,
             phoneNumber: int.parse(numberController.text),
           ),

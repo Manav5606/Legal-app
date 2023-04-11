@@ -77,6 +77,23 @@ class AddCategoryViewModel extends BaseViewModel {
     toggleLoadingOn(false);
   }
 
+  Future activateCategory(model.Category category) async {
+    toggleLoadingOn(true);
+    final result =
+        await _databaseRepositoryImpl.activateCategory(category: category);
+    result.fold((l) async {
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+      return null;
+    }, (r) {
+      Messenger.showSnackbar("Category Activated");
+      toggleLoadingOn(false);
+
+      return r;
+    });
+    toggleLoadingOn(false);
+  }
+
   Future createCategory(model.Category? existingCategory) async {
     if (_validateValues()) {
       toggleLoadingOn(true);

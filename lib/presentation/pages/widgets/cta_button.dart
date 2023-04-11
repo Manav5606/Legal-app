@@ -9,6 +9,7 @@ class CTAButton extends StatelessWidget {
   final double? radius;
   final bool loading;
   final bool mobile;
+  final Color? color;
 
   const CTAButton({
     super.key,
@@ -18,6 +19,7 @@ class CTAButton extends StatelessWidget {
     this.fullWidth = false,
     this.radius,
     this.loading = false,
+    this.color,
   });
 
   @override
@@ -29,7 +31,7 @@ class CTAButton extends StatelessWidget {
                 horizontal: mobile ? 12 : 42, vertical: mobile ? 4 : 14),
             width: fullWidth ? MediaQuery.of(context).size.width : null,
             decoration: BoxDecoration(
-                color: AppColors.yellowColor,
+                color: color ?? AppColors.yellowColor,
                 borderRadius: BorderRadius.circular(radius ?? 8)),
             child: fullWidth ? Center(child: _title()) : _title()));
   }

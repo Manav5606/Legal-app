@@ -34,9 +34,9 @@ class Service {
       shortDescription: data['short_description'],
       aboutDescription: data['about_description'],
       marketPrice: data['market_price'],
-      ourPrice: data['our_rice'],
+      ourPrice: data['our_price'],
       parentServiceID: data['parent_service_id'],
-      childServices: data['child_services'],
+      childServices: List<String>.from(data['child_services']),
       categoryID: data['category_id'],
       createdAt: data['created_at'],
       createdBy: data['created_by'],
@@ -49,7 +49,6 @@ class Service {
     String? aboutDescription,
     double? marketPrice,
     double? ourPrice,
-    String? parentServiceID,
     List<String>? childServices,
     String? categoryID,
     bool? isDeactivated,
@@ -63,8 +62,8 @@ class Service {
         id: id,
         createdBy: createdBy,
         createdAt: createdAt,
-        marketPrice: marketPrice,
-        ourPrice: ourPrice,
+        marketPrice: marketPrice ?? this.marketPrice,
+        ourPrice: ourPrice ?? this.ourPrice,
         parentServiceID: parentServiceID,
       );
 
@@ -77,7 +76,7 @@ class Service {
         "parent_service_id": parentServiceID,
         "child_services": childServices,
         "category_id": categoryID,
-        "created_at": createdAt,
+        "created_at": createdAt ?? DateTime.now().millisecondsSinceEpoch,
         "created_by": createdBy,
       };
 }

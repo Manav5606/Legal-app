@@ -3,6 +3,8 @@ import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/extension/date.dart';
 import 'package:admin/presentation/pages/category_admin/category_view_model.dart';
 import 'package:admin/presentation/pages/category_admin/dialog/add_category_dialog.dart';
+import 'package:admin/presentation/pages/home/home_view_model.dart';
+import 'package:admin/presentation/pages/service_admin/service_page.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/utils/web_scroll.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -126,20 +128,37 @@ class _CategoryPageState extends ConsumerState<CategoryPage> {
                                       DataCell(
                                           Text(data.addedAt!.formatToDate())),
                                       DataCell(Text(data.addedBy.toString())),
-                                      DataCell(TextButton(
-                                          child: const Text("Edit"),
-                                          onPressed: () {
-                                            showDialog(
-                                              context: context,
-                                              barrierDismissible: false,
-                                              builder: (_) => Dialog(
-                                                insetPadding:
-                                                    const EdgeInsets.all(24),
-                                                child: AddCategoryDialog(
-                                                    categoryDetail: data),
-                                              ),
-                                            );
-                                          })),
+                                      DataCell(Row(
+                                        children: [
+                                          TextButton(
+                                              child: const Text("Edit"),
+                                              onPressed: () {
+                                                showDialog(
+                                                  context: context,
+                                                  barrierDismissible: false,
+                                                  builder: (_) => Dialog(
+                                                    insetPadding:
+                                                        const EdgeInsets.all(
+                                                            24),
+                                                    child: AddCategoryDialog(
+                                                        categoryDetail: data),
+                                                  ),
+                                                );
+                                              }),
+                                          TextButton(
+                                              child: const Text("View"),
+                                              onPressed: () {
+                                                // Open Services with this category
+                                                ref
+                                                    .read(
+                                                        HomeViewModel.provider)
+                                                    .loadOtherView(ServicePage(
+                                                      categoryID: data.id!,
+                                                      categoryName: data.name,
+                                                    ));
+                                              }),
+                                        ],
+                                      )),
                                     ],
                                   );
                                 },

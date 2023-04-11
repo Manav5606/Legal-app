@@ -6,12 +6,15 @@ import 'package:admin/core/enum/admin_menu.dart';
 import 'package:admin/core/enum/role.dart';
 import 'package:admin/core/provider.dart';
 import 'package:admin/data/models/models.dart';
+import 'package:admin/legal_app.dart';
 import 'package:admin/presentation/pages/authentication/index.dart';
 import 'package:admin/presentation/pages/home/home_view_model.dart';
+import 'package:admin/presentation/pages/landing/landing_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 // TODO make all displayed text dynamic
 class Header extends StatelessWidget {
@@ -53,7 +56,11 @@ class Header extends StatelessWidget {
           ),
           const Spacer(),
           mobile
-              ? IconButton(onPressed: () {}, icon: const Icon(Icons.menu))
+              ? IconButton(
+                  onPressed: () {
+                    landingScaffold.currentState!.openEndDrawer();
+                  },
+                  icon: const Icon(Icons.menu))
               : Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
@@ -116,9 +123,14 @@ class _TopBarState extends ConsumerState<TopBar> {
           const SizedBox(
             width: 9.68,
           ),
-          Text(
-            "+91-11153-42382",
-            style: FontStyles.font12Regular,
+          InkWell(
+            onTap: () {
+              launchUrlString("tel:+911115342382");
+            },
+            child: Text(
+              "+91-11153-42382",
+              style: FontStyles.font12Regular,
+            ),
           ),
           const SizedBox(
             width: 11.22,
@@ -128,9 +140,14 @@ class _TopBarState extends ConsumerState<TopBar> {
           const SizedBox(
             width: 9.68,
           ),
-          Text(
-            "contact@247legal.in",
-            style: FontStyles.font12Regular,
+          InkWell(
+            onTap: () {
+              launchUrlString("mail:contact@247legal.in");
+            },
+            child: Text(
+              "contact@247legal.in",
+              style: FontStyles.font12Regular,
+            ),
           ),
           Visibility(visible: !widget.mobile, child: const Spacer()),
           Visibility(
@@ -176,13 +193,13 @@ class _TopBarState extends ConsumerState<TopBar> {
                       PopupMenuButton(
                         child: Row(
                           children: [
-                            const SizedBox(
+                            SizedBox(
                               width: 28,
                               child: Padding(
-                                padding: EdgeInsets.all(4.0),
+                                padding: const EdgeInsets.all(4.0),
                                 child: CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      "https://randomuser.me/api/portraits/men/51.jpg"),
+                                  backgroundImage:
+                                      NetworkImage("${user?.profilePic}"),
                                 ),
                               ),
                             ),
