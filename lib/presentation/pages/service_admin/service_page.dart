@@ -92,20 +92,45 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                 dense: true,
                 title: Text(data.shortDescription),
                 subtitle: Text(data.aboutDescription),
-                leading: IconButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (_) => Dialog(
-                          insetPadding: const EdgeInsets.all(24),
-                          child: AddServiceDialog(
-                              serviceDetail: data,
-                              categoryID: widget.categoryID),
-                        ),
-                      );
+                leading: PopupMenuButton<String>(
+                    onSelected: (value) {
+                      switch (value) {
+                        case "edit":
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) => Dialog(
+                              insetPadding: const EdgeInsets.all(24),
+                              child: AddServiceDialog(
+                                  serviceDetail: data,
+                                  categoryID: widget.categoryID),
+                            ),
+                          );
+                          break;
+                        case "request":
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) => Dialog(
+                              insetPadding: const EdgeInsets.all(24),
+                              child: AddServiceDialog(
+                                  serviceDetail: data,
+                                  categoryID: widget.categoryID),
+                            ),
+                          );
+                          break;
+                      }
                     },
-                    icon: const Icon(Icons.edit)),
+                    itemBuilder: (_) => [
+                          const PopupMenuItem(
+                            value: "edit",
+                            child: Text("Edit"),
+                          ),
+                          const PopupMenuItem(
+                            value: "request",
+                            child: Text("Add Request File"),
+                          ),
+                        ]),
                 trailing: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [

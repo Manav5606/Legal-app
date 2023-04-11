@@ -1,6 +1,7 @@
 import 'package:admin/core/constant/firebase_config.dart';
 import 'package:admin/core/enum/role.dart';
 import 'package:admin/data/models/category.dart';
+import 'package:admin/data/models/service_request.dart';
 import 'package:admin/data/models/vendor.dart';
 import 'package:admin/data/models/app_error.dart';
 import 'package:admin/data/models/service.dart';
@@ -393,6 +394,24 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           .doc(vendor.id)
           .update(vendor.toJson());
       return Right(vendor);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<AppError, ServiceRequest>> createNewServiceRequest(
+      {required ServiceRequest serviceRequest}) async {
+    try {
+      final result = await _firebaseFirestore
+          .collection(FirebaseConfig.serviceCollection)
+          .add(serviceRequest.toJson());
+      return Right(ServiceRequest.fromSnapshot((await result.get())));
     } on FirebaseException catch (fae) {
       logger.severe(fae);
       return Left(
