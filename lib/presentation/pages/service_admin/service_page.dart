@@ -1,6 +1,7 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/data/models/service.dart';
+import 'package:admin/presentation/pages/service_admin/dialog/manage_service_request_dialog.dart';
 import 'package:admin/presentation/pages/service_admin/service_view_model.dart';
 import 'package:admin/presentation/pages/service_admin/dialog/add_service_dialog.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
@@ -92,20 +93,45 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                 dense: true,
                 title: Text(data.shortDescription),
                 subtitle: Text(data.aboutDescription),
-                leading: IconButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (_) => Dialog(
-                          insetPadding: const EdgeInsets.all(24),
-                          child: AddServiceDialog(
-                              serviceDetail: data,
-                              categoryID: widget.categoryID),
-                        ),
-                      );
+                leading: PopupMenuButton<String>(
+                    onSelected: (value) {
+                      switch (value) {
+                        case "edit":
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) => Dialog(
+                              insetPadding: const EdgeInsets.all(24),
+                              child: AddServiceDialog(
+                                  serviceDetail: data,
+                                  categoryID: widget.categoryID),
+                            ),
+                          );
+                          break;
+                        case "request":
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) => Dialog(
+                              insetPadding: const EdgeInsets.all(24),
+                              child: ManageServiceRequestDialog(
+                                serviceID: data.id!,
+                              ),
+                            ),
+                          );
+                          break;
+                      }
                     },
-                    icon: const Icon(Icons.edit)),
+                    itemBuilder: (_) => [
+                          const PopupMenuItem(
+                            value: "edit",
+                            child: Text("Edit"),
+                          ),
+                          const PopupMenuItem(
+                            value: "request",
+                            child: Text("Add Request File"),
+                          ),
+                        ]),
                 trailing: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [

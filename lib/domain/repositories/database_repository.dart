@@ -29,5 +29,10 @@ abstract class DatabaseRepository {
   Future<Either<AppError, List<Service>>> getServicesbyCategory(
       {required String categoryID});
   Future<Either<AppError, Service>> createService({required Service service});
+  Future<Either<AppError, ServiceRequest>> createNewServiceRequest(
+      {required ServiceRequest serviceRequest});
   Future<Either<AppError, Service>> updateService({required Service service});
+  Future<Either<AppError, bool>> deleteServiceRequest({required String id});
+  Future<Either<AppError, List<ServiceRequest>>> getServiceRequestByServiceId(
+      {required String serviceId});
 }

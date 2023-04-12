@@ -1,9 +1,9 @@
-enum FieldType {
+enum ServiceFieldType {
   text,
   file,
   number,
   date,
   image,
-  multipleImages,
-  multipleFiles
+  // multipleImages,
+  // multipleFiles
 }
