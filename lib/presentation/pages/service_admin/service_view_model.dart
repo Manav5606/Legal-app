@@ -41,48 +41,6 @@ class ServiceViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  // Future<void> fetchServices() async {
-  //   toggleLoadingOn(true);
-  //   final res = await _databaseRepositoryImpl.fetchServices();
-  //   res.fold((l) {
-  //     error = l.message;
-  //     Messenger.showSnackbar(l.message);
-  //     toggleLoadingOn(false);
-  //   }, (r) {
-  //     clearErrors();
-  //     _services = r;
-  //     toggleLoadingOn(false);
-  //   });
-  // }
-
-  void sortServices(int index, bool ascending) {
-    // switch (index) {
-    //   case 0:
-    //     _services.sort((a, b) =>
-    //         ascending ? a.id!.compareTo(b.id!) : b.id!.compareTo(a.id!));
-    //     break;
-    //   case 1:
-    //     _services.sort((a, b) =>
-    //         ascending ? a.name.compareTo(b.name) : b.name.compareTo(a.name));
-    //     break;
-    //   case 4:
-    //     _services.sort((a, b) => ascending
-    //         ? DateTime.fromMillisecondsSinceEpoch(a.addedAt!)
-    //             .compareTo(DateTime.fromMillisecondsSinceEpoch(b.addedAt!))
-    //         : DateTime.fromMillisecondsSinceEpoch(b.addedAt!)
-    //             .compareTo(DateTime.fromMillisecondsSinceEpoch(a.addedAt!)));
-    //     break;
-    //   case 5:
-    //     _services.sort((a, b) => ascending
-    //         ? a.addedBy.compareTo(b.addedBy)
-    //         : b.addedBy.compareTo(a.addedBy));
-    //     break;
-    // }
-    sortAscending = !ascending;
-    sortIndex = index;
-    notifyListeners();
-  }
-
   Future<void> initCategory(String categoryId) async {
     toggleLoadingOn(true);
     final res = await _databaseRepositoryImpl.getServicesbyCategory(

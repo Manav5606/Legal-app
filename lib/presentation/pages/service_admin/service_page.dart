@@ -1,6 +1,7 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/data/models/service.dart';
+import 'package:admin/presentation/pages/service_admin/dialog/manage_service_request_dialog.dart';
 import 'package:admin/presentation/pages/service_admin/service_view_model.dart';
 import 'package:admin/presentation/pages/service_admin/dialog/add_service_dialog.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
@@ -113,9 +114,9 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                             barrierDismissible: false,
                             builder: (_) => Dialog(
                               insetPadding: const EdgeInsets.all(24),
-                              child: AddServiceDialog(
-                                  serviceDetail: data,
-                                  categoryID: widget.categoryID),
+                              child: ManageServiceRequestDialog(
+                                serviceID: data.id!,
+                              ),
                             ),
                           );
                           break;

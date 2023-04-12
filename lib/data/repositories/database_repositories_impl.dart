@@ -409,9 +409,51 @@ class DatabaseRepositoryImpl extends DatabaseRepository
       {required ServiceRequest serviceRequest}) async {
     try {
       final result = await _firebaseFirestore
-          .collection(FirebaseConfig.serviceCollection)
+          .collection(FirebaseConfig.serviceRequestCollection)
           .add(serviceRequest.toJson());
       return Right(ServiceRequest.fromSnapshot((await result.get())));
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<AppError, bool>> deleteServiceRequest(
+      {required String id}) async {
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseConfig.serviceRequestCollection)
+          .doc(id)
+          .delete();
+
+      return const Right(true);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<AppError, List<ServiceRequest>>> getServiceRequestByServiceId(
+      {required String serviceId}) async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.serviceRequestCollection)
+          .where("service_id", isEqualTo: serviceId)
+          .get();
+
+      return Right(response.docs
+          .map((doc) => ServiceRequest.fromSnapshot(doc))
+          .toList());
     } on FirebaseException catch (fae) {
       logger.severe(fae);
       return Left(
