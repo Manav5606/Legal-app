@@ -5,6 +5,8 @@ import 'package:cross_file/cross_file.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class DatabaseRepository {
+  Future<Either<AppError, Category>> getCategoryByID(
+      {required String categoryId});
   Future<Either<AppError, bool>> createVendor({required Vendor vendor});
   Future<String> uploadToFirestore(
       {required XFile file, required String userID});
