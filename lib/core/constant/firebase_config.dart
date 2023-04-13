@@ -4,4 +4,5 @@ class FirebaseConfig {
   static String categoryCollection = "category";
   static String serviceCollection = "service";
   static String serviceRequestCollection = "service-request";
+  static String landingBannerCollection = "landing-banner";
 }

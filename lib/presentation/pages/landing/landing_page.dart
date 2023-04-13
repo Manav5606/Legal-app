@@ -5,8 +5,8 @@ import 'package:admin/core/provider.dart';
 import 'package:admin/data/models/customer_review.dart';
 import 'package:admin/data/models/general_stat.dart';
 import 'package:admin/data/models/news.dart';
-import 'package:admin/legal_app.dart';
 import 'package:admin/presentation/pages/authentication/index.dart';
+import 'package:admin/presentation/pages/landing/landing_page_view_model.dart';
 import 'package:admin/presentation/pages/landing/widgets/services.dart';
 import 'package:admin/presentation/pages/widgets/banner.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
@@ -154,9 +154,19 @@ class _LandingPageState extends ConsumerState<LandingPage> {
   ];
 
   late bool isAuthenticated;
+
+  late final LandingPageViewModel _viewModel;
+
+  @override
+  void initState() {
+    _viewModel = ref.read(LandingPageViewModel.provider);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     isAuthenticated = ref.watch(AppState.auth).isAuthenticated;
+    ref.watch(LandingPageViewModel.provider);
     return Scaffold(
       key: landingScaffold,
       endDrawerEnableOpenDragGesture: false,
@@ -186,22 +196,28 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                     title: Text("Home",
                         style: FontStyles.font14Semibold.copyWith(
                             fontSize: 18, color: AppColors.blackColor))),
-                ListTile(
-                    title: Text("Business",
-                        style: FontStyles.font14Semibold.copyWith(
-                            fontSize: 18, color: AppColors.blackColor))),
-                ListTile(
-                    title: Text("Finance",
-                        style: FontStyles.font14Semibold.copyWith(
-                            fontSize: 18, color: AppColors.blackColor))),
-                ListTile(
-                    title: Text("Legal",
-                        style: FontStyles.font14Semibold.copyWith(
-                            fontSize: 18, color: AppColors.blackColor))),
-                ListTile(
-                    title: Text("Advertisement",
-                        style: FontStyles.font14Semibold.copyWith(
-                            fontSize: 18, color: AppColors.blackColor))),
+                ..._viewModel.getCategories
+                    .map((category) => ListTile(
+                        title: Text(category.name,
+                            style: FontStyles.font14Semibold.copyWith(
+                                fontSize: 18, color: AppColors.blackColor))))
+                    .toList(),
+                // ListTile(
+                //     title: Text("Business",
+                //         style: FontStyles.font14Semibold.copyWith(
+                //             fontSize: 18, color: AppColors.blackColor))),
+                // ListTile(
+                //     title: Text("Finance",
+                //         style: FontStyles.font14Semibold.copyWith(
+                //             fontSize: 18, color: AppColors.blackColor))),
+                // ListTile(
+                //     title: Text("Legal",
+                //         style: FontStyles.font14Semibold.copyWith(
+                //             fontSize: 18, color: AppColors.blackColor))),
+                // ListTile(
+                //     title: Text("Advertisement",
+                //         style: FontStyles.font14Semibold.copyWith(
+                //             fontSize: 18, color: AppColors.blackColor))),
                 Divider(color: AppColors.lightGreyColor, thickness: 2),
                 ListTile(
                     title: Text("FAQs",
@@ -263,48 +279,50 @@ class _LandingPageState extends ConsumerState<LandingPage> {
         ),
       ),
       backgroundColor: AppColors.whiteColor,
-      body: ScreenTypeLayout.builder(
-        mobile: (context) => ListView(
-          children: [
-            const Header(mobile: true),
-            BannerSlides(
-              mobile: true,
-              height: 250,
-              bannerDetails: _bannerList,
+      body: _viewModel.isLoading
+          ? const Center(child: CircularProgressIndicator.adaptive())
+          : ScreenTypeLayout.builder(
+              mobile: (context) => ListView(
+                children: [
+                  const Header(mobile: true),
+                  BannerSlides(
+                    mobile: true,
+                    height: 250,
+                    bannerDetails: _bannerList,
+                  ),
+                  Services(height: 0, category: _viewModel.getCategories),
+                  _frequentlyUsedServices(300, mobile: true),
+                  // _newsAndUpdates(800),
+                  Center(child: _generalStats(300, mobile: true)),
+                  CustomerReviewSlides(
+                      customerReviews: _customerReviewData,
+                      height: MediaQuery.of(context).size.width,
+                      mobile: true),
+                  _contactUs(250, mobile: true),
+                  // _contactUsCard(200),
+                  const Footer(),
+                ],
+              ),
+              desktop: (context) => ListView(
+                children: [
+                  const Header(mobile: false),
+                  BannerSlides(
+                    mobile: false,
+                    height: 700,
+                    bannerDetails: _bannerList,
+                  ),
+                  Services(height: 700, category: _viewModel.getCategories),
+                  _frequentlyUsedServices(350),
+                  // _newsAndUpdates(800),
+                  Center(child: _generalStats(300)),
+                  CustomerReviewSlides(
+                      customerReviews: _customerReviewData, height: 700),
+                  _contactUs(250),
+                  _contactUsCard(200),
+                  const Footer(),
+                ],
+              ),
             ),
-            Services(height: 0),
-            _frequentlyUsedServices(300, mobile: true),
-            // _newsAndUpdates(800),
-            Center(child: _generalStats(300, mobile: true)),
-            CustomerReviewSlides(
-                customerReviews: _customerReviewData,
-                height: MediaQuery.of(context).size.width,
-                mobile: true),
-            _contactUs(250, mobile: true),
-            // _contactUsCard(200),
-            const Footer(),
-          ],
-        ),
-        desktop: (context) => ListView(
-          children: [
-            const Header(mobile: false),
-            BannerSlides(
-              mobile: false,
-              height: 700,
-              bannerDetails: _bannerList,
-            ),
-            Services(height: 700),
-            _frequentlyUsedServices(350),
-            // _newsAndUpdates(800),
-            Center(child: _generalStats(300)),
-            CustomerReviewSlides(
-                customerReviews: _customerReviewData, height: 700),
-            _contactUs(250),
-            _contactUsCard(200),
-            const Footer(),
-          ],
-        ),
-      ),
     );
   }
 
@@ -507,13 +525,6 @@ class _LandingPageState extends ConsumerState<LandingPage> {
               ],
             ),
           ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //   children: _category
-          //       .map((category) =>
-          //           ServiceContainer(category: category, width: height * 1.6))
-          //       .toList(),
-          // ),
         ],
       ),
     );
