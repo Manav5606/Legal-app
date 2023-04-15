@@ -483,4 +483,24 @@ class DatabaseRepositoryImpl extends DatabaseRepository
       return Left(AppError(message: "Unkown Error, Plese try again later."));
     }
   }
+
+  @override
+  Future<Either<AppError, Service>> getServiceByID(
+      {required String serviceId}) async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.serviceCollection)
+          .doc(serviceId)
+          .get();
+
+      return Right(Service.fromSnapshot(response));
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
 }

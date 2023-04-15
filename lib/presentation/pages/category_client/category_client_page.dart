@@ -1,10 +1,12 @@
 import 'dart:developer';
 
 import 'package:admin/core/constant/colors.dart';
+import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/provider.dart';
 import 'package:admin/core/utils/messenger.dart';
 import 'package:admin/data/models/models.dart';
 import 'package:admin/presentation/pages/category_client/category_client_view_model.dart';
+import 'package:admin/presentation/pages/service_info/service_info_page.dart';
 import 'package:admin/presentation/pages/widgets/contact_us.dart';
 import 'package:admin/presentation/pages/widgets/contact_us_card.dart';
 import 'package:admin/presentation/pages/widgets/footer.dart';
@@ -12,6 +14,7 @@ import 'package:admin/presentation/pages/widgets/header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:routemaster/routemaster.dart';
 
 class CategoryClientPage extends ConsumerStatefulWidget {
   static const String routeName = "/categoryClient";
@@ -81,7 +84,9 @@ class _CategoryClientPageState extends ConsumerState<CategoryClientPage> {
                   const Header(mobile: true),
                   Container(
                     width: MediaQuery.of(context).size.width * 0.8,
-                    height: MediaQuery.of(context).size.height * 0.8,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 14),
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
                     decoration: BoxDecoration(
                       color: AppColors.blueColor,
                       borderRadius: BorderRadius.circular(8),
@@ -89,7 +94,11 @@ class _CategoryClientPageState extends ConsumerState<CategoryClientPage> {
                     child: ListView(
                       shrinkWrap: true,
                       children: [
-                        Text(_viewModel.selectedCategory!.name),
+                        Center(
+                            child: Text(_viewModel.selectedCategory!.name,
+                                style: FontStyles.font24Semibold
+                                    .copyWith(color: AppColors.yellowColor))),
+                        const SizedBox(height: 12),
                         ..._viewModel.getServices.map(expandServices).toList(),
                       ],
                     ),
@@ -111,20 +120,30 @@ class _CategoryClientPageState extends ConsumerState<CategoryClientPage> {
     );
   }
 
-  ExpansionTile expandServices(Service data) {
-    return ExpansionTile(
-      backgroundColor: AppColors.whiteColor,
-      shape: Border.all(),
-      title: ListTile(
-        dense: true,
-        title: Text(data.shortDescription),
-      ),
-      children: data.childServices.map((e) {
-        final service = _viewModel.getServiceByID(e);
-        return service.childServices.isNotEmpty
-            ? expandServices(service)
-            : showServices(service);
-      }).toList(),
+  Widget expandServices(Service data) {
+    return Column(
+      children: [
+        ExpansionTile(
+          backgroundColor: AppColors.whiteColor,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          collapsedShape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          collapsedBackgroundColor: AppColors.whiteColor,
+          title: ListTile(
+            dense: true,
+            title:
+                Text(data.shortDescription, style: FontStyles.font14Semibold),
+          ),
+          children: data.childServices.map((e) {
+            final service = _viewModel.getServiceByID(e);
+            return service.childServices.isNotEmpty
+                ? expandServices(service)
+                : showServices(service);
+          }).toList(),
+        ),
+        const SizedBox(height: 8),
+      ],
     );
   }
 
@@ -132,13 +151,18 @@ class _CategoryClientPageState extends ConsumerState<CategoryClientPage> {
     return data.shortDescription.isEmpty || data.ourPrice == null
         ? const SizedBox.shrink()
         : ListTile(
+            leading: const SizedBox.shrink(),
+            minLeadingWidth: 10,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             onTap: () {
-              // TODO
-              Messenger.showSnackbar(
-                  "Client selected ${data.shortDescription}.");
+              Routemaster.of(context).push(ServiceInfoPage.routeName,
+                  queryParameters: {"serviceId": data.id!});
             },
             dense: true,
-            title: Text(data.shortDescription),
+            title: Text(data.shortDescription,
+                style: FontStyles.font12Medium
+                    .copyWith(color: AppColors.blackColor)),
             trailing: const Icon(Icons.check_circle),
           );
   }

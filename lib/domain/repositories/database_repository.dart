@@ -37,4 +37,5 @@ abstract class DatabaseRepository {
   Future<Either<AppError, bool>> deleteServiceRequest({required String id});
   Future<Either<AppError, List<ServiceRequest>>> getServiceRequestByServiceId(
       {required String serviceId});
+  Future<Either<AppError, Service>> getServiceByID({required String serviceId});
 }
