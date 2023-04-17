@@ -135,7 +135,9 @@ class _ServiceInfoPageState extends ConsumerState<ServiceInfoPage> {
                                 fullWidth: false,
                                 mobile: true,
                                 loading: _viewModel.isLoading,
-                                onTap: () {},
+                                onTap: () async {
+                                  await _viewModel.createPurchase();
+                                },
                                 radius: 4),
                           ],
                         ),

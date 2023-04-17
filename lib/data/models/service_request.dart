@@ -8,6 +8,7 @@ class ServiceRequest {
   final ServiceFieldType fieldType;
   final int? createdAt;
   final String createdBy;
+  final String? value;
 
   ServiceRequest({
     this.id,
@@ -16,6 +17,7 @@ class ServiceRequest {
     required this.fieldType,
     this.createdAt,
     required this.createdBy,
+    this.value,
   });
 
   factory ServiceRequest.fromSnapshot(DocumentSnapshot documentSnapshot) {
@@ -29,6 +31,19 @@ class ServiceRequest {
           orElse: () => ServiceFieldType.text),
       createdBy: data['created_by'],
       createdAt: data['created_at'],
+      value: data['value'],
+    );
+  }
+  factory ServiceRequest.fromData(Map<String, dynamic> data) {
+    return ServiceRequest(
+      serviceID: data['service_id'],
+      fieldName: data['field_name'],
+      fieldType: ServiceFieldType.values.firstWhere(
+          (element) => element.name == data['field_type'],
+          orElse: () => ServiceFieldType.text),
+      createdBy: data['created_by'],
+      createdAt: data['created_at'],
+      value: data['value'],
     );
   }
 
@@ -36,11 +51,13 @@ class ServiceRequest {
     String? serviceID,
     String? fieldName,
     ServiceFieldType? fieldType,
+    String? value,
   }) =>
       ServiceRequest(
         serviceID: serviceID ?? this.serviceID,
         fieldName: fieldName ?? this.fieldName,
         fieldType: fieldType ?? this.fieldType,
+        value: value ?? this.value,
         createdBy: createdBy,
         createdAt: createdAt,
         id: id,
@@ -52,5 +69,6 @@ class ServiceRequest {
         "field_type": fieldType.name,
         "created_by": createdBy,
         "created_at": createdAt ?? DateTime.now().millisecondsSinceEpoch,
+        "value": value,
       };
 }
