@@ -1,4 +1,3 @@
-import 'package:admin/data/models/vendor.dart';
 import 'package:admin/presentation/base_view_model.dart';
 import 'package:admin/presentation/pages/vendor_admin/vendor_page.dart';
 import 'package:flutter/material.dart';

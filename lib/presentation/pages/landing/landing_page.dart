@@ -90,29 +90,37 @@ class _LandingPageState extends ConsumerState<LandingPage> {
 
   final _bannerList = [
     BannerDetail(
-        title: "Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-        description:
-            "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-        imageUrl: Assets.personImage,
-        btnText: "btnText"),
+      title: "Lorem Ipsum Lorem Ipsum Lorem Ipsum",
+      description:
+          "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
+      imageUrl: Assets.personImage,
+      btnText: "btnText",
+      urlToLoad: "",
+    ),
     BannerDetail(
-        title: "1 Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-        description:
-            "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-        imageUrl: Assets.personImage,
-        btnText: "btnText"),
+      title: "1 Lorem Ipsum Lorem Ipsum Lorem Ipsum",
+      description:
+          "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
+      imageUrl: Assets.personImage,
+      urlToLoad: "",
+      btnText: "btnText",
+    ),
     BannerDetail(
-        title: "2 Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-        description:
-            "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-        imageUrl: Assets.personImage,
-        btnText: "btnText"),
+      title: "2 Lorem Ipsum Lorem Ipsum Lorem Ipsum",
+      description:
+          "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
+      imageUrl: Assets.personImage,
+      urlToLoad: "",
+      btnText: "btnText",
+    ),
     BannerDetail(
-        title: "3 Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-        description:
-            "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-        imageUrl: Assets.personImage,
-        btnText: "btnText"),
+      title: "3 Lorem Ipsum Lorem Ipsum Lorem Ipsum",
+      description:
+          "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
+      imageUrl: Assets.personImage,
+      urlToLoad: "",
+      btnText: "btnText",
+    ),
   ];
 
   final _frequentlyUsedServicesList = [

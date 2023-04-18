@@ -9,13 +9,13 @@ import 'package:admin/presentation/utils/web_scroll.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ServicePage extends ConsumerStatefulWidget {
-  static const String routeName = "/service";
+class EditLandingPage extends ConsumerStatefulWidget {
+  static const String routeName = "/editLanding";
 
   final String categoryID;
   final String categoryName;
 
-  const ServicePage({
+  const EditLandingPage({
     super.key,
     required this.categoryID,
     required this.categoryName,
@@ -25,7 +25,7 @@ class ServicePage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _ServicePageState();
 }
 
-class _ServicePageState extends ConsumerState<ServicePage> {
+class _ServicePageState extends ConsumerState<EditLandingPage> {
   late final ServiceViewModel _viewModel;
 
   @override
@@ -46,6 +46,7 @@ class _ServicePageState extends ConsumerState<ServicePage> {
         children: [
           _heading(),
           const SizedBox(height: 28),
+          _editBanner(),
           Expanded(child: _dataTable()),
           const SizedBox(height: 4),
         ],
@@ -183,20 +184,34 @@ class _ServicePageState extends ConsumerState<ServicePage> {
   }
 
   Widget _heading() {
+    return Text("Edit Landing Page", style: FontStyles.font24Semibold);
+  }
+
+  Widget _editBanner() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _bannerHeading(),
+        const Divider(),
+        
+      ],
+    );
+  }
+
+  Widget _bannerHeading() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Service (${widget.categoryName})",
-                style: FontStyles.font24Semibold),
-            Text("Your list of service is here",
+            Text("Banner", style: FontStyles.font24Semibold),
+            Text("Your list of banner is here",
                 style: FontStyles.font14Semibold),
           ],
         ),
         CTAButton(
-            title: "Add Service",
+            title: "Add Banner",
             onTap: () {
               showDialog(
                 context: context,

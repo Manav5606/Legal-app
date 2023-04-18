@@ -6,6 +6,7 @@ class BannerDetail {
   final String description;
   final String imageUrl;
   final String btnText;
+  final String urlToLoad;
 
   BannerDetail({
     this.id,
@@ -13,6 +14,7 @@ class BannerDetail {
     required this.description,
     required this.imageUrl,
     required this.btnText,
+    required this.urlToLoad,
   });
 
   factory BannerDetail.fromSnapshot(DocumentSnapshot documentSnapshot) {
@@ -23,6 +25,7 @@ class BannerDetail {
       description: data['description'],
       imageUrl: data['image_url'],
       btnText: data['btn_text'],
+      urlToLoad: data['url_to_load'],
     );
   }
 
@@ -31,5 +34,6 @@ class BannerDetail {
         "description": description,
         "image_url": imageUrl,
         "btn_text": btnText,
+        "url_to_load": urlToLoad,
       };
 }
