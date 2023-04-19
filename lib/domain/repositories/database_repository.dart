@@ -53,4 +53,12 @@ abstract class DatabaseRepository {
       {required model.Transaction transaction});
   Future<Either<model.AppError, model.Order>> createOrder(
       {required model.Order order});
+  Future<Either<model.AppError, model.BannerDetail>> createBanner(
+      {required model.BannerDetail banner});
+  Future<Either<model.AppError, model.BannerDetail>> updateBanner(
+      {required model.BannerDetail banner});
+  Future<Either<model.AppError, bool>> deleteBanner(
+      {required model.BannerDetail banner});
+
+  Future<Either<model.AppError, List<model.BannerDetail>>> getBanners();
 }

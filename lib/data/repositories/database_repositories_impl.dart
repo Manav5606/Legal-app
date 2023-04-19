@@ -570,4 +570,85 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           model.AppError(message: "Unkown Error, Plese try again later."));
     }
   }
+
+  @override
+  Future<Either<model.AppError, model.BannerDetail>> createBanner(
+      {required model.BannerDetail banner}) async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.landingBannerCollection)
+          .add(banner.toJson());
+
+      return Right(model.BannerDetail.fromSnapshot(await response.get()));
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<model.AppError, bool>> deleteBanner(
+      {required model.BannerDetail banner}) async {
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseConfig.landingBannerCollection)
+          .doc(banner.id!)
+          .delete();
+      return const Right(true);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<model.AppError, List<model.BannerDetail>>> getBanners() async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.landingBannerCollection)
+          .get();
+
+      return Right(response.docs
+          .map((doc) => model.BannerDetail.fromSnapshot(doc))
+          .toList());
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<model.AppError, model.BannerDetail>> updateBanner(
+      {required model.BannerDetail banner}) async {
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseConfig.serviceCollection)
+          .doc(banner.id)
+          .update(banner.toJson());
+      return Right(banner);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
 }

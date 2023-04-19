@@ -29,6 +29,22 @@ class BannerDetail {
     );
   }
 
+  BannerDetail copyWith({
+    String? title,
+    String? description,
+    String? imageUrl,
+    String? btnText,
+    String? urlToLoad,
+  }) =>
+      BannerDetail(
+        id: id,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        imageUrl: imageUrl ?? this.imageUrl,
+        btnText: btnText ?? this.btnText,
+        urlToLoad: urlToLoad ?? this.urlToLoad,
+      );
+
   Map<String, dynamic> toJson() => {
         "title": title,
         "description": description,

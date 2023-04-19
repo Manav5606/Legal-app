@@ -21,37 +21,26 @@ class EditLandingViewModel extends BaseViewModel {
 
   String? error;
 
-  List<Service> _services = [];
+  final List<BannerDetail> _banners = [];
 
-  List<Service> get getServices =>
-      _services.where((e) => e.parentServiceID == null).toList();
-
-  Service getServiceByID(String id) {
-    return _services.firstWhere((element) => element.id == id,
-        orElse: () => Service(
-            shortDescription: "",
-            aboutDescription: "",
-            childServices: [],
-            categoryID: "",
-            createdBy: ""));
-  }
+  List<BannerDetail> get getBanners => _banners;
 
   void clearErrors() {
     error = null;
     notifyListeners();
   }
 
-  Future<void> initCategory(String categoryId) async {
+  Future<void> initBanner() async {
     toggleLoadingOn(true);
-    final res = await _databaseRepositoryImpl.getServicesbyCategory(
-        categoryID: categoryId);
+    final res = await _databaseRepositoryImpl.getBanners();
     res.fold((l) {
       error = l.message;
       Messenger.showSnackbar(l.message);
       toggleLoadingOn(false);
     }, (r) {
       clearErrors();
-      _services = r;
+      _banners.clear();
+      _banners.addAll(r);
       toggleLoadingOn(false);
     });
   }
