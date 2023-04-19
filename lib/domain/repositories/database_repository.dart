@@ -59,6 +59,12 @@ abstract class DatabaseRepository {
       {required model.BannerDetail banner});
   Future<Either<model.AppError, bool>> deleteBanner(
       {required model.BannerDetail banner});
-
   Future<Either<model.AppError, List<model.BannerDetail>>> getBanners();
+  Future<Either<model.AppError, model.CustomerReview>> createReview(
+      {required model.CustomerReview review});
+  Future<Either<model.AppError, model.CustomerReview>> updateReview(
+      {required model.CustomerReview review});
+  Future<Either<model.AppError, bool>> deleteReview(
+      {required model.CustomerReview review});
+  Future<Either<model.AppError, List<model.CustomerReview>>> getReviews();
 }

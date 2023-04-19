@@ -7,3 +7,4 @@ export 'service.dart';
 export 'banner.dart';
 export 'transaction.dart';
 export 'vendor.dart';
+export 'customer_review.dart';

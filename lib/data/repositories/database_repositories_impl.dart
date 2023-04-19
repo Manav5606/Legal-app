@@ -651,4 +651,86 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           model.AppError(message: "Unkown Error, Plese try again later."));
     }
   }
+
+  @override
+  Future<Either<model.AppError, model.CustomerReview>> createReview(
+      {required model.CustomerReview review}) async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.reviewCollection)
+          .add(review.toJson());
+
+      return Right(model.CustomerReview.fromSnapshot(await response.get()));
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<model.AppError, bool>> deleteReview(
+      {required model.CustomerReview review}) async {
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseConfig.reviewCollection)
+          .doc(review.id!)
+          .delete();
+      return const Right(true);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<model.AppError, List<model.CustomerReview>>>
+      getReviews() async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.reviewCollection)
+          .get();
+
+      return Right(response.docs
+          .map((doc) => model.CustomerReview.fromSnapshot(doc))
+          .toList());
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<model.AppError, model.CustomerReview>> updateReview(
+      {required model.CustomerReview review}) async {
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseConfig.reviewCollection)
+          .doc(review.id)
+          .update(review.toJson());
+      return Right(review);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
 }

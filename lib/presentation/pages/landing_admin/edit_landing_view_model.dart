@@ -22,8 +22,10 @@ class EditLandingViewModel extends BaseViewModel {
   String? error;
 
   final List<BannerDetail> _banners = [];
-
   List<BannerDetail> get getBanners => _banners;
+
+  final List<CustomerReview> _reviews = [];
+  List<CustomerReview> get getReviews => _reviews;
 
   void clearErrors() {
     error = null;
@@ -41,6 +43,21 @@ class EditLandingViewModel extends BaseViewModel {
       clearErrors();
       _banners.clear();
       _banners.addAll(r);
+      toggleLoadingOn(false);
+    });
+  }
+
+  Future<void> initReview() async {
+    toggleLoadingOn(true);
+    final res = await _databaseRepositoryImpl.getReviews();
+    res.fold((l) {
+      error = l.message;
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+    }, (r) {
+      clearErrors();
+      _reviews.clear();
+      _reviews.addAll(r);
       toggleLoadingOn(false);
     });
   }

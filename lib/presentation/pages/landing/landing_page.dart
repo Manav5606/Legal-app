@@ -88,41 +88,6 @@ class _LandingPageState extends ConsumerState<LandingPage> {
     GeneralStat(value: "567", title: "Users"),
   ];
 
-  final _bannerList = [
-    BannerDetail(
-      title: "Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-      description:
-          "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-      imageUrl: Assets.personImage,
-      btnText: "btnText",
-      urlToLoad: "",
-    ),
-    BannerDetail(
-      title: "1 Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-      description:
-          "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-      imageUrl: Assets.personImage,
-      urlToLoad: "",
-      btnText: "btnText",
-    ),
-    BannerDetail(
-      title: "2 Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-      description:
-          "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-      imageUrl: Assets.personImage,
-      urlToLoad: "",
-      btnText: "btnText",
-    ),
-    BannerDetail(
-      title: "3 Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-      description:
-          "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-      imageUrl: Assets.personImage,
-      urlToLoad: "",
-      btnText: "btnText",
-    ),
-  ];
-
   final _frequentlyUsedServicesList = [
     "Business",
     "Taxation",
@@ -186,19 +151,25 @@ class _LandingPageState extends ConsumerState<LandingPage> {
               mobile: (context) => ListView(
                 children: [
                   const Header(mobile: true),
-                  BannerSlides(
-                    mobile: true,
-                    height: 250,
-                    bannerDetails: _bannerList,
+                  Visibility(
+                    visible: _viewModel.getBanners.isNotEmpty,
+                    child: BannerSlides(
+                      mobile: true,
+                      height: 250,
+                      bannerDetails: _viewModel.getBanners,
+                    ),
                   ),
                   Services(height: 0, category: _viewModel.getCategories),
                   _frequentlyUsedServices(300, mobile: true),
                   // _newsAndUpdates(800),
                   Center(child: _generalStats(300, mobile: true)),
-                  CustomerReviewSlides(
-                      customerReviews: _customerReviewData,
-                      height: MediaQuery.of(context).size.width,
-                      mobile: true),
+                  Visibility(
+                    visible: _viewModel.getReviews.isNotEmpty,
+                    child: CustomerReviewSlides(
+                        customerReviews: _customerReviewData,
+                        height: MediaQuery.of(context).size.width,
+                        mobile: true),
+                  ),
                   const ContactUs(height: 250, mobile: true),
                   const Footer(),
                 ],
@@ -206,17 +177,23 @@ class _LandingPageState extends ConsumerState<LandingPage> {
               desktop: (context) => ListView(
                 children: [
                   const Header(mobile: false),
-                  BannerSlides(
-                    mobile: false,
-                    height: 700,
-                    bannerDetails: _bannerList,
+                  Visibility(
+                    visible: _viewModel.getBanners.isNotEmpty,
+                    child: BannerSlides(
+                      mobile: false,
+                      height: 700,
+                      bannerDetails: _viewModel.getBanners,
+                    ),
                   ),
                   Services(height: 700, category: _viewModel.getCategories),
                   _frequentlyUsedServices(350),
                   // _newsAndUpdates(800),
                   Center(child: _generalStats(300)),
-                  CustomerReviewSlides(
-                      customerReviews: _customerReviewData, height: 700),
+                  Visibility(
+                    visible: _viewModel.getReviews.isNotEmpty,
+                    child: CustomerReviewSlides(
+                        customerReviews: _customerReviewData, height: 700),
+                  ),
                   const ContactUs(height: 250),
                   ContactUsCard(contactDetails: _contactDetails, height: 200),
                   const Footer(),
