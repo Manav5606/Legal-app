@@ -733,4 +733,86 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           model.AppError(message: "Unkown Error, Plese try again later."));
     }
   }
+
+  @override
+  Future<Either<model.AppError, model.Category>> createContact(
+      {required model.Category contact}) async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.contactCollection)
+          .add(contact.toJson());
+
+      return Right(model.Category.fromSnapshot(await response.get()));
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<model.AppError, bool>> deleteContact(
+      {required model.Category contact}) async {
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseConfig.contactCollection)
+          .doc(contact.id!)
+          .delete();
+      return const Right(true);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<model.AppError, model.Category>> updateContact(
+      {required model.Category contact}) async {
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseConfig.contactCollection)
+          .doc(contact.id)
+          .update(contact.toJson());
+      return Right(contact);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<model.AppError, List<model.Category>>>
+      getContactDetails() async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.contactCollection)
+          .get();
+
+      return Right(response.docs
+          .map((doc) => model.Category.fromSnapshot(doc))
+          .toList());
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
 }

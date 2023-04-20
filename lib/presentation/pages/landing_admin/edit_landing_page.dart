@@ -1,5 +1,6 @@
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/presentation/pages/landing_admin/dialog/add_banner_dialog.dart';
+import 'package:admin/presentation/pages/landing_admin/dialog/add_contact_dialog.dart';
 import 'package:admin/presentation/pages/landing_admin/dialog/add_review_dialog.dart';
 import 'package:admin/presentation/pages/landing_admin/edit_landing_view_model.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
@@ -26,6 +27,7 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
     _viewModel = ref.read(EditLandingViewModel.provider);
     _viewModel.initBanner();
     _viewModel.initReview();
+    _viewModel.initContactDetails();
     super.initState();
   }
 
@@ -45,6 +47,7 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
               children: [
                 _editBanner(),
                 _editReview(),
+                _editContactDetail(),
               ],
             ),
           ),
@@ -180,6 +183,65 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
                 builder: (_) => const Dialog(
                   insetPadding: EdgeInsets.all(24),
                   child: AddReviewDialog(),
+                ),
+              );
+            }),
+      ],
+    );
+  }
+
+  Widget _editContactDetail() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _contactDetailHeading(),
+        const Divider(),
+        ListView.builder(
+          itemCount: _viewModel.getContactDetails.length,
+          itemBuilder: (_, i) => ListTile(
+            dense: true,
+            title: Text(_viewModel.getContactDetails[i].name),
+            subtitle: Text(_viewModel.getContactDetails[i].description),
+            leading: Image.network(_viewModel.getContactDetails[i].iconUrl),
+            onTap: () {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => Dialog(
+                  insetPadding: const EdgeInsets.all(24),
+                  child: AddContactDialog(
+                      contactDetail: _viewModel.getContactDetails[i]),
+                ),
+              );
+            },
+          ),
+          shrinkWrap: true,
+        ),
+      ],
+    );
+  }
+
+  Widget _contactDetailHeading() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Contact Detail", style: FontStyles.font24Semibold),
+            Text("Your list of contacts is here",
+                style: FontStyles.font14Semibold),
+          ],
+        ),
+        CTAButton(
+            title: "Add Contact Detail",
+            onTap: () {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => const Dialog(
+                  insetPadding: EdgeInsets.all(24),
+                  child: AddContactDialog(),
                 ),
               );
             }),

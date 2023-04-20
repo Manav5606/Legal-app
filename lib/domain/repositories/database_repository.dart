@@ -67,4 +67,11 @@ abstract class DatabaseRepository {
   Future<Either<model.AppError, bool>> deleteReview(
       {required model.CustomerReview review});
   Future<Either<model.AppError, List<model.CustomerReview>>> getReviews();
+  Future<Either<model.AppError, model.Category>> createContact(
+      {required model.Category contact});
+  Future<Either<model.AppError, model.Category>> updateContact(
+      {required model.Category contact});
+  Future<Either<model.AppError, bool>> deleteContact(
+      {required model.Category contact});
+  Future<Either<model.AppError, List<model.Category>>> getContactDetails();
 }

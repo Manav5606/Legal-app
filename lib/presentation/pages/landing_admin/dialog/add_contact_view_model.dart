@@ -11,32 +11,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _provider = ChangeNotifierProvider.autoDispose(
-    (ref) => AddBannerViewModel(ref.read(DatabaseRepositoryImpl.provider)));
+    (ref) => AddContactViewModel(ref.read(DatabaseRepositoryImpl.provider)));
 
-class AddBannerViewModel extends BaseViewModel {
+class AddContactViewModel extends BaseViewModel {
   final DatabaseRepositoryImpl _databaseRepositoryImpl;
 
-  AddBannerViewModel(this._databaseRepositoryImpl);
+  AddContactViewModel(this._databaseRepositoryImpl);
 
-  static AutoDisposeChangeNotifierProvider<AddBannerViewModel> get provider =>
+  static AutoDisposeChangeNotifierProvider<AddContactViewModel> get provider =>
       _provider;
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController btnController = TextEditingController();
-  final TextEditingController urlController = TextEditingController();
 
   String? imageUrl;
 
   String? titleError;
   String? descriptionError;
-  String? btnError;
-  String? urlError;
 
   bool imageLoading = false;
 
   void clearError() {
-    titleError = descriptionError = btnError = urlError = null;
+    titleError = descriptionError = null;
     notifyListeners();
   }
 
@@ -52,40 +48,27 @@ class AddBannerViewModel extends BaseViewModel {
     clearError();
 
     if (titleController.text.isEmpty) {
-      titleError = "Banner title description can't be empty.";
+      titleError = "Title can't be empty.";
     }
     if (descriptionController.text.isEmpty) {
-      descriptionError = "Banner description can't be empty.";
-    }
-    if (btnController.text.isEmpty) {
-      btnError = "Banner button text can't be empty.";
-    }
-    if (urlController.text.isEmpty) {
-      urlError = "On Banner tap URL can't be empty.";
+      descriptionError = "Description can't be empty.";
     }
 
-    return titleError == null &&
-        descriptionError == null &&
-        btnError == null &&
-        urlError == null;
+    return titleError == null && descriptionError == null;
   }
 
   @override
   void dispose() {
     titleController.dispose();
     descriptionController.dispose();
-    btnController.dispose();
-    urlController.dispose();
     super.dispose();
   }
 
-  void initBanner(model.BannerDetail? bannerDetail) {
-    if (bannerDetail != null) {
-      titleController.text = bannerDetail.title;
-      descriptionController.text = bannerDetail.description;
-      btnController.text = bannerDetail.btnText;
-      urlController.text = bannerDetail.urlToLoad;
-      imageUrl = bannerDetail.imageUrl;
+  void initContact(model.Category? contactDetail) {
+    if (contactDetail != null) {
+      titleController.text = contactDetail.name;
+      descriptionController.text = contactDetail.description;
+      imageUrl = contactDetail.iconUrl;
       notifyListeners();
     }
   }
@@ -95,7 +78,7 @@ class AddBannerViewModel extends BaseViewModel {
       imageLoading = true;
       notifyListeners();
       final downloadUrl = await _databaseRepositoryImpl.uploadToFirestore(
-          file: file, userID: "banner");
+          file: file, userID: "contact");
       imageUrl = downloadUrl;
     } catch (e) {
       log(e.toString());
@@ -105,15 +88,16 @@ class AddBannerViewModel extends BaseViewModel {
     }
   }
 
-  Future deleteBanner(model.BannerDetail banner) async {
+  Future deleteContact(model.Category contact) async {
     toggleLoadingOn(true);
-    final result = await _databaseRepositoryImpl.deleteBanner(banner: banner);
+    final result =
+        await _databaseRepositoryImpl.deleteContact(contact: contact);
     result.fold((l) async {
       Messenger.showSnackbar(l.message);
       toggleLoadingOn(false);
       return null;
     }, (r) {
-      Messenger.showSnackbar("Banner Deleted");
+      Messenger.showSnackbar("Contact Deleted");
       toggleLoadingOn(false);
 
       return r;
@@ -121,28 +105,25 @@ class AddBannerViewModel extends BaseViewModel {
     toggleLoadingOn(false);
   }
 
-  Future createBanner({model.BannerDetail? existingBanner}) async {
+  Future createContact({model.Category? existingContact}) async {
     if (_validateValues()) {
       toggleLoadingOn(true);
-      late final Either<AppError, model.BannerDetail> result;
-      if (existingBanner != null) {
-        final banner = existingBanner.copyWith(
-          btnText: btnController.text,
+      late final Either<AppError, model.Category> result;
+      if (existingContact != null) {
+        final contact = existingContact.copyWith(
           description: descriptionController.text,
-          imageUrl: imageUrl,
-          title: titleController.text,
-          urlToLoad: urlController.text,
+          iconUrl: imageUrl ?? "",
+          name: titleController.text,
         );
-        result = await _databaseRepositoryImpl.updateBanner(banner: banner);
+        result = await _databaseRepositoryImpl.updateContact(contact: contact);
       } else {
-        final banner = model.BannerDetail(
-          title: titleController.text,
-          btnText: btnController.text,
+        final contact = model.Category(
           description: descriptionController.text,
-          imageUrl: imageUrl ?? "",
-          urlToLoad: urlController.text,
+          iconUrl: imageUrl ?? "",
+          name: titleController.text,
+          addedBy: "",
         );
-        result = await _databaseRepositoryImpl.createBanner(banner: banner);
+        result = await _databaseRepositoryImpl.createContact(contact: contact);
       }
 
       return await result.fold((l) async {
@@ -150,10 +131,10 @@ class AddBannerViewModel extends BaseViewModel {
         toggleLoadingOn(false);
         return null;
       }, (r) async {
-        if (existingBanner == null) {
-          Messenger.showSnackbar("Banner Created ✅");
+        if (existingContact == null) {
+          Messenger.showSnackbar("Contact Created ✅");
         } else {
-          Messenger.showSnackbar("Updated Banner");
+          Messenger.showSnackbar("Updated Contact");
         }
         toggleLoadingOn(false);
         return r;

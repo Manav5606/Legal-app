@@ -13,6 +13,7 @@ class LandingPageViewModel extends BaseViewModel {
 
   LandingPageViewModel(this._databaseRepositoryImpl) {
     fetchCategories();
+    fetchContacts();
     fetchBanners();
     fetchReviews();
   }
@@ -20,16 +21,32 @@ class LandingPageViewModel extends BaseViewModel {
   static ChangeNotifierProvider<LandingPageViewModel> get provider => _provider;
 
   final List<Category> _categories = [];
+  final List<Category> _contacts = [];
   final List<BannerDetail> _banners = [];
   final List<CustomerReview> _reviews = [];
 
   List<Category> get getCategories => _categories;
+  List<Category> get getContacts => _contacts;
   List<BannerDetail> get getBanners => _banners;
   List<CustomerReview> get getReviews => _reviews;
 
   Future<void> fetchCategories() async {
     toggleLoadingOn(true);
     final res = await _databaseRepositoryImpl.fetchCategories();
+    res.fold((l) {
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+    }, (r) {
+      _categories.clear();
+      _categories.addAll(r.where((e) => !e.isDeactivated).toList()
+        ..sort((a, b) => a.name.compareTo(b.name)));
+    });
+    toggleLoadingOn(false);
+  }
+
+  Future<void> fetchContacts() async {
+    toggleLoadingOn(true);
+    final res = await _databaseRepositoryImpl.getContactDetails();
     res.fold((l) {
       Messenger.showSnackbar(l.message);
       toggleLoadingOn(false);

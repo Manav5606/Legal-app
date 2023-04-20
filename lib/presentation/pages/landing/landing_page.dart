@@ -68,33 +68,6 @@ class _LandingPageState extends ConsumerState<LandingPage> {
     "Lorem Ipsum",
   ];
 
-  final _contactDetails = [
-    Category(
-      id: "b",
-      name: "Phone",
-      iconUrl: "",
-      description: "Lorem Ipsum",
-      addedAt: DateTime.now().millisecondsSinceEpoch,
-      addedBy: "",
-    ),
-    Category(
-      id: "f",
-      name: "Office",
-      iconUrl: "",
-      description: "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-      addedAt: DateTime.now().millisecondsSinceEpoch,
-      addedBy: "",
-    ),
-    Category(
-      id: "l",
-      name: "Working hours",
-      iconUrl: "",
-      description: "Lorem Ipsum",
-      addedAt: DateTime.now().millisecondsSinceEpoch,
-      addedBy: "",
-    ),
-  ];
-
   late bool isAuthenticated;
 
   late final LandingPageViewModel _viewModel;
@@ -163,7 +136,8 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                       child: CustomerReviewSlides(
                           customerReviews: _viewModel.getReviews, height: 700)),
                   const ContactUs(height: 250),
-                  ContactUsCard(contactDetails: _contactDetails, height: 200),
+                  ContactUsCard(
+                      contactDetails: _viewModel.getContacts, height: 200),
                   const Footer(),
                 ],
               ),
