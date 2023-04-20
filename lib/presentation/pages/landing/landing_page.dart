@@ -2,7 +2,6 @@ import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
 import 'package:admin/core/provider.dart';
-import 'package:admin/data/models/customer_review.dart';
 import 'package:admin/data/models/general_stat.dart';
 import 'package:admin/data/models/news.dart';
 import 'package:admin/presentation/pages/landing/landing_page_view_model.dart';
@@ -36,36 +35,6 @@ class LandingPage extends ConsumerStatefulWidget {
 }
 
 class _LandingPageState extends ConsumerState<LandingPage> {
-  final _customerReviewData = [
-    CustomerReview(
-      title:
-          "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year.",
-      review:
-          "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year. Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year.",
-      name: "Abhinav Kushwaha",
-      designation: "CEO, QUBEx",
-      customerProfilePic: "https://randomuser.me/api/portraits/men/51.jpg",
-    ),
-    CustomerReview(
-      title:
-          "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year.",
-      review:
-          "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year. Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year.",
-      name: "Abhinav Kushwaha",
-      designation: "CEO, QUBEx",
-      customerProfilePic: "https://randomuser.me/api/portraits/men/51.jpg",
-    ),
-    CustomerReview(
-      title:
-          "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year.",
-      review:
-          "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year. Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year.",
-      name: "Abhinav Kushwaha",
-      designation: "CEO, QUBEx",
-      customerProfilePic: "https://randomuser.me/api/portraits/men/51.jpg",
-    ),
-  ];
-
   final _news = [
     News(
         headline:
@@ -166,7 +135,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                   Visibility(
                     visible: _viewModel.getReviews.isNotEmpty,
                     child: CustomerReviewSlides(
-                        customerReviews: _customerReviewData,
+                        customerReviews: _viewModel.getReviews,
                         height: MediaQuery.of(context).size.width,
                         mobile: true),
                   ),
@@ -190,10 +159,9 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                   // _newsAndUpdates(800),
                   Center(child: _generalStats(300)),
                   Visibility(
-                    visible: _viewModel.getReviews.isNotEmpty,
-                    child: CustomerReviewSlides(
-                        customerReviews: _customerReviewData, height: 700),
-                  ),
+                      visible: _viewModel.getReviews.isNotEmpty,
+                      child: CustomerReviewSlides(
+                          customerReviews: _viewModel.getReviews, height: 700)),
                   const ContactUs(height: 250),
                   ContactUsCard(contactDetails: _contactDetails, height: 200),
                   const Footer(),
