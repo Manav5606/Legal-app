@@ -1,6 +1,7 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/enum/order_status.dart';
+import 'package:admin/core/extension/date.dart';
 import 'package:admin/presentation/pages/home/tabs/dashboard/dashboard_view_model.dart';
 import 'package:admin/presentation/pages/home/tabs/widgets/stats_box.dart';
 import 'package:admin/presentation/utils/web_scroll.dart';
@@ -43,89 +44,94 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
   }
 
   Widget _dataTable() {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.8,
-      child: _viewModel.isLoading
-          ? const Center(child: CircularProgressIndicator.adaptive())
-          : _viewModel.error != null
-              ? Center(child: Text("⚠️ ${_viewModel.error}"))
-              : LayoutBuilder(builder: (context, constraints) {
-                  return ScrollConfiguration(
-                    behavior: WebScrollBehavior(),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
+    return Center(
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: _viewModel.isLoading
+            ? const Center(child: CircularProgressIndicator.adaptive())
+            : _viewModel.error != null
+                ? Center(child: Text("⚠️ ${_viewModel.error}"))
+                : LayoutBuilder(builder: (context, constraints) {
+                    return ScrollConfiguration(
+                      behavior: WebScrollBehavior(),
                       child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: ConstrainedBox(
-                          constraints:
-                              BoxConstraints(minWidth: constraints.minWidth),
-                          child: DataTable(
-                              clipBehavior: Clip.antiAlias,
-                              border: TableBorder.symmetric(
-                                  outside:
-                                      BorderSide(color: AppColors.greyColor)),
-                              sortAscending: !_viewModel.sortAscending,
-                              sortColumnIndex: _viewModel.sortIndex,
-                              dataRowColor: MaterialStateProperty.all(
-                                  AppColors.lightGreyColor),
-                              headingRowColor: MaterialStateProperty.all(
-                                  AppColors.whiteColor),
-                              dataTextStyle: FontStyles.font14Semibold
-                                  .copyWith(color: AppColors.blueColor),
-                              headingTextStyle: FontStyles.font16Semibold
-                                  .copyWith(color: AppColors.blackColor),
-                              columns: [
-                                DataColumn(
-                                    label: const Text("Order ID"),
-                                    onSort: (_, __) {}),
-                                const DataColumn(label: Text("Date")),
-                                const DataColumn(label: Text("Username")),
-                                const DataColumn(label: Text("Status")),
-                                const DataColumn(label: Text("Details")),
-                              ],
-                              rows: _viewModel.getOrders.map(
-                                (data) {
-                                  Color statusColor = AppColors.blueColor;
-                                  switch (data.status) {
-                                    case OrderStatus.completed:
-                                      statusColor = AppColors.greenColor;
-                                      break;
-                                    case OrderStatus.assignedToClient:
-                                      statusColor = AppColors.orangeColor;
-                                      break;
-                                    case OrderStatus.created:
-                                      statusColor = AppColors.lightOrangeColor;
+                        scrollDirection: Axis.vertical,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: ConstrainedBox(
+                            constraints:
+                                BoxConstraints(minWidth: constraints.minWidth),
+                            child: DataTable(
+                                clipBehavior: Clip.antiAlias,
+                                border: TableBorder.symmetric(
+                                    outside:
+                                        BorderSide(color: AppColors.greyColor)),
+                                sortAscending: !_viewModel.sortAscending,
+                                sortColumnIndex: _viewModel.sortIndex,
+                                dataRowColor: MaterialStateProperty.all(
+                                    AppColors.lightGreyColor),
+                                headingRowColor: MaterialStateProperty.all(
+                                    AppColors.whiteColor),
+                                dataTextStyle: FontStyles.font14Semibold
+                                    .copyWith(color: AppColors.blueColor),
+                                headingTextStyle: FontStyles.font16Semibold
+                                    .copyWith(color: AppColors.blackColor),
+                                columns: [
+                                  DataColumn(
+                                      label: const Text("Order ID"),
+                                      onSort: (_, __) {}),
+                                  const DataColumn(label: Text("Date")),
+                                  const DataColumn(label: Text("Username")),
+                                  const DataColumn(label: Text("Status")),
+                                  const DataColumn(label: Text("Details")),
+                                ],
+                                rows: _viewModel.getOrders.map(
+                                  (data) {
+                                    Color statusColor = AppColors.blueColor;
+                                    switch (data.status) {
+                                      case OrderStatus.completed:
+                                        statusColor = AppColors.greenColor;
+                                        break;
+                                      case OrderStatus.assignedToClient:
+                                        statusColor = AppColors.orangeColor;
+                                        break;
+                                      case OrderStatus.created:
+                                        statusColor =
+                                            AppColors.lightOrangeColor;
 
-                                      break;
-                                    case OrderStatus.approved:
-                                      statusColor = AppColors.lightGreenColor;
+                                        break;
+                                      case OrderStatus.approved:
+                                        statusColor = AppColors.lightGreenColor;
 
-                                      break;
-                                    case OrderStatus.rejected:
-                                      statusColor = AppColors.redColor;
+                                        break;
+                                      case OrderStatus.rejected:
+                                        statusColor = AppColors.redColor;
 
-                                      break;
-                                  }
-                                  return DataRow(
-                                    cells: [
-                                      DataCell(Text(data.id)),
-                                      DataCell(Text("")),
-                                      DataCell(Text(data.userID)),
-                                      DataCell(Text(data.status.name,
-                                          style:
-                                              TextStyle(color: statusColor))),
-                                      DataCell(TextButton(
-                                          child: const Text("View"),
-                                          onPressed: () {})),
-                                    ],
-                                  );
-                                },
-                              ).toList()),
+                                        break;
+                                    }
+                                    return DataRow(
+                                      cells: [
+                                        DataCell(Text(data.id ?? "")),
+                                        DataCell(Text(
+                                            data.createdAt?.formatToDate() ??
+                                                "-")),
+                                        DataCell(Text(data.userID)),
+                                        DataCell(Text(data.status.name,
+                                            style:
+                                                TextStyle(color: statusColor))),
+                                        DataCell(TextButton(
+                                            child: const Text("View"),
+                                            onPressed: () {})),
+                                      ],
+                                    );
+                                  },
+                                ).toList()),
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  }),
+      ),
     );
   }
 

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Order {
   String? id;
   final String userID;
+  final int? createdAt;
   final OrderStatus status;
   final String? clientID;
   final String serviceID;
@@ -13,6 +14,7 @@ class Order {
 
   Order({
     this.id,
+    this.createdAt,
     required this.userID,
     required this.status,
     required this.clientID,
@@ -27,6 +29,7 @@ class Order {
 
     return Order(
       id: documentSnapshot.id,
+      createdAt: data['created_at'],
       userID: data['user_id'],
       status: OrderStatus.values.firstWhere(
           (element) => element.name == data['status'],
@@ -50,5 +53,6 @@ class Order {
         "order_service_request":
             orderServiceRequest.map((e) => e.toJson()).toList(),
         "transaction_id": transactionID,
+        "created_at": createdAt ?? DateTime.now().millisecondsSinceEpoch,
       };
 }
