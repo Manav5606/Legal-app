@@ -94,18 +94,21 @@ class ServiceInfoPageViewModel extends BaseViewModel {
       Messenger.showSnackbar(l.message);
       toggleLoadingOn(false);
     }, (r) async {
+      // TODO orderId is received from RazorPay
       await createOrderOnServer(
-          transactionId: r.id!);
+        orderId: DateTime.now().millisecondsSinceEpoch.toString(),
+        transactionId: r.id!,
+      );
     });
   }
 
   Future<void> createOrderOnServer({
-    // required String orderId,
+    required String orderId,
     required String transactionId,
   }) async {
     toggleLoadingOn(true);
     final Order order = Order(
-      id: "",
+      id: orderId,
       userID: _authState.user!.id!,
       status: OrderStatus.created,
       clientID: null,
