@@ -94,8 +94,11 @@ class ServiceInfoPageViewModel extends BaseViewModel {
       Messenger.showSnackbar(l.message);
       toggleLoadingOn(false);
     }, (r) async {
+      // TODO orderId is received from RazorPay
       await createOrderOnServer(
-          orderId: rpData['razorpay_order_id'], transactionId: r.id!);
+        orderId: DateTime.now().millisecondsSinceEpoch.toString(),
+        transactionId: r.id!,
+      );
     });
   }
 

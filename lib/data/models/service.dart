@@ -12,7 +12,7 @@ class Service {
   final int? createdAt;
   final String createdBy;
   final bool isDeactivated;
-
+  
   Service({
     this.id,
     required this.shortDescription,

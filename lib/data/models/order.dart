@@ -3,7 +3,7 @@ import 'package:admin/data/models/service_request.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Order {
-  final String id;
+  String? id;
   final String userID;
   final OrderStatus status;
   final String? clientID;
@@ -12,7 +12,7 @@ class Order {
   final String transactionID;
 
   Order({
-    required this.id,
+    this.id,
     required this.userID,
     required this.status,
     required this.clientID,
@@ -35,8 +35,8 @@ class Order {
       serviceID: data['service_id'],
       orderServiceRequest: data['order_service_request'] == null
           ? []
-          : (data['order_service_request'] as List<Map<String, dynamic>>)
-              .map((e) => ServiceRequest.fromData(e))
+          : (data['order_service_request'] as List)
+              .map((e) => ServiceRequest.fromData(e as Map<String, dynamic>))
               .toList(),
       transactionID: data['transaction_id'],
     );
