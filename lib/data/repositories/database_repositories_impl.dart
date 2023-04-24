@@ -221,6 +221,8 @@ class DatabaseRepositoryImpl extends DatabaseRepository
     }
   }
 
+  
+
   @override
   Future<Either<model.AppError, model.Category>> updateCategory(
       {required model.Category category}) async {
