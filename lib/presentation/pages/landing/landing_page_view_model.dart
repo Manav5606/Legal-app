@@ -51,8 +51,8 @@ class LandingPageViewModel extends BaseViewModel {
       Messenger.showSnackbar(l.message);
       toggleLoadingOn(false);
     }, (r) {
-      _categories.clear();
-      _categories.addAll(r.where((e) => !e.isDeactivated).toList()
+      _contacts.clear();
+      _contacts.addAll(r.where((e) => !e.isDeactivated).toList()
         ..sort((a, b) => a.name.compareTo(b.name)));
     });
     toggleLoadingOn(false);
