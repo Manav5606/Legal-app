@@ -21,6 +21,7 @@ abstract class DatabaseRepository {
       UserType type);
   Future<Either<model.AppError, model.Vendor>> fetchVendorByID(String uid);
   Future<Either<model.AppError, model.User>> fetchUserByID(String uid);
+  Future<Either<model.AppError, List<model.Order>>> fetchOrders();
   Future<Either<model.AppError, model.Category>> createCategory(
       {required model.Category category});
   Future<Either<model.AppError, model.Category>> updateCategory(
