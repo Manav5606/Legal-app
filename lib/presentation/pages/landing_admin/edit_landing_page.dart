@@ -62,41 +62,30 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
   }
 
   Widget _editBanner() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _bannerHeading(),
-        const Divider(),
-        SizedBox(
-          height: 400,
-          child: ListView.builder(
-            itemCount: _viewModel.getBanners.length,
-            itemBuilder: (_, i) => ListTile(
-              dense: true,
-              title: Text(_viewModel.getBanners[i].title),
-              subtitle: Text(_viewModel.getBanners[i].description),
-              leading: Image.network(_viewModel.getBanners[i].imageUrl),
-              trailing: TextButton(
-                child: Text(_viewModel.getBanners[i].btnText),
-                onPressed: () =>
-                    launchUrlString(_viewModel.getBanners[i].urlToLoad),
-              ),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (_) => Dialog(
-                    insetPadding: const EdgeInsets.all(24),
-                    child:
-                        AddBannerDialog(bannerDetail: _viewModel.getBanners[i]),
-                  ),
-                );
-              },
-            ),
-            shrinkWrap: true,
+    return ExpansionTile(
+      title: _bannerHeading(),
+      children: _viewModel.getBanners.map((banner) {
+        return ListTile(
+          dense: true,
+          title: Text(banner.title),
+          subtitle: Text(banner.description),
+          leading: Image.network(banner.imageUrl),
+          trailing: TextButton(
+            child: Text(banner.btnText),
+            onPressed: () => launchUrlString(banner.urlToLoad),
           ),
-        ),
-      ],
+          onTap: () {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) => Dialog(
+                insetPadding: const EdgeInsets.all(24),
+                child: AddBannerDialog(bannerDetail: banner),
+              ),
+            );
+          },
+        );
+      }).toList(),
     );
   }
 
@@ -129,43 +118,37 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
   }
 
   Widget _editReview() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _reviewHeading(),
-        const Divider(),
-        SizedBox(
-          height: 400,
-          child: ListView.builder(
-            itemCount: _viewModel.getReviews.length,
-            itemBuilder: (_, i) => ListTile(
-              dense: true,
-              title: Text(_viewModel.getReviews[i].title),
-              subtitle: Text(_viewModel.getReviews[i].review),
-              leading:
-                  Image.network(_viewModel.getReviews[i].customerProfilePic),
-              trailing: Row(
-                children: [
-                  Text(_viewModel.getReviews[i].designation),
-                  Text(_viewModel.getReviews[i].name),
-                ],
-              ),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (_) => Dialog(
-                    insetPadding: const EdgeInsets.all(24),
-                    child: AddReviewDialog(
-                        customerReview: _viewModel.getReviews[i]),
-                  ),
-                );
-              },
-            ),
-            shrinkWrap: true,
-          ),
-        ),
-      ],
+    return ExpansionTile(
+      title: _reviewHeading(),
+      children: _viewModel.getReviews
+          .map((review) => ListTile(
+                dense: true,
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(review.title),
+                    Column(
+                      children: [
+                        Text(review.designation),
+                        Text(review.name),
+                      ],
+                    )
+                  ],
+                ),
+                subtitle: Text(review.review),
+                leading: Image.network(review.customerProfilePic),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (_) => Dialog(
+                      insetPadding: const EdgeInsets.all(24),
+                      child: AddReviewDialog(customerReview: review),
+                    ),
+                  );
+                },
+              ))
+          .toList(),
     );
   }
 
@@ -198,36 +181,26 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
   }
 
   Widget _editContactDetail() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _contactDetailHeading(),
-        const Divider(),
-        SizedBox(
-          height: 400,
-          child: ListView.builder(
-            itemCount: _viewModel.getContactDetails.length,
-            itemBuilder: (_, i) => ListTile(
-              dense: true,
-              title: Text(_viewModel.getContactDetails[i].name),
-              subtitle: Text(_viewModel.getContactDetails[i].description),
-              leading: Image.network(_viewModel.getContactDetails[i].iconUrl),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (_) => Dialog(
-                    insetPadding: const EdgeInsets.all(24),
-                    child: AddContactDialog(
-                        contactDetail: _viewModel.getContactDetails[i]),
-                  ),
-                );
-              },
-            ),
-            shrinkWrap: true,
-          ),
-        ),
-      ],
+    return ExpansionTile(
+      title: _contactDetailHeading(),
+      children: _viewModel.getContactDetails
+          .map((contactDetails) => ListTile(
+                dense: true,
+                title: Text(contactDetails.name),
+                subtitle: Text(contactDetails.description),
+                leading: Image.network(contactDetails.iconUrl),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (_) => Dialog(
+                      insetPadding: const EdgeInsets.all(24),
+                      child: AddContactDialog(contactDetail: contactDetails),
+                    ),
+                  );
+                },
+              ))
+          .toList(),
     );
   }
 
