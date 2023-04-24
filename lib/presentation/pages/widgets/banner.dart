@@ -40,11 +40,8 @@ class _BannerSlidesState extends State<BannerSlides> {
                   Align(
                     alignment: Alignment.bottomRight,
                     // TODO replace with CacheNetworkImage Later
-                    child: Transform(
-                        alignment: Alignment.center,
-                        transform: Matrix4.rotationY(pi),
-                        child: Image.asset(widget.bannerDetails[i].imageUrl,
-                            height: widget.height * 0.85)),
+                    child: Image.network(widget.bannerDetails[i].imageUrl,
+                        height: widget.height * 0.85),
                   ),
                   Padding(
                     padding:

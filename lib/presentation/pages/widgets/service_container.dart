@@ -1,6 +1,7 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
+import 'package:admin/core/utils/messenger.dart';
 import 'package:admin/data/models/models.dart';
 import 'package:admin/presentation/pages/category_client/category_client_page.dart';
 import 'package:admin/presentation/pages/widgets/circular_arrow.dart';
@@ -11,18 +12,24 @@ import 'package:routemaster/routemaster.dart';
 class ServiceContainer extends StatelessWidget {
   final Category category;
   final double width;
+  final bool contactCard;
   const ServiceContainer({
     super.key,
     required this.category,
     required this.width,
+    this.contactCard = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Routemaster.of(context).push(CategoryClientPage.routeName,
-            queryParameters: {"categoryId": category.id!});
+        if (contactCard) {
+          Messenger.showSnackbar("Implementation Pending");
+        } else {
+          Routemaster.of(context).push(CategoryClientPage.routeName,
+              queryParameters: {"categoryId": category.id!});
+        }
       },
       child: Container(
         width: width / 5,

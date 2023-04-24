@@ -33,6 +33,7 @@ class ContactUsCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: contactDetails
                   .map((contact) => ServiceContainer(
+                      contactCard: true,
                       category: contact,
                       width: MediaQuery.of(context).size.width))
                   .toList(),
