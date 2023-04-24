@@ -95,17 +95,17 @@ class ServiceInfoPageViewModel extends BaseViewModel {
       toggleLoadingOn(false);
     }, (r) async {
       await createOrderOnServer(
-          orderId: rpData['razorpay_order_id'], transactionId: r.id!);
+          transactionId: r.id!);
     });
   }
 
   Future<void> createOrderOnServer({
-    required String orderId,
+    // required String orderId,
     required String transactionId,
   }) async {
     toggleLoadingOn(true);
     final Order order = Order(
-      id: orderId,
+      id: "",
       userID: _authState.user!.id!,
       status: OrderStatus.created,
       clientID: null,

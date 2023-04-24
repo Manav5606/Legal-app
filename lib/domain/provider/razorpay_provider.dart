@@ -1,11 +1,18 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:admin/core/enum/transaction_status.dart';
 import 'package:admin/core/utils/messenger.dart';
+import 'package:admin/data/models/models.dart';
+import 'package:admin/data/repositories/index.dart';
+import 'package:admin/domain/repositories/index.dart';
+import 'package:admin/presentation/base_view_model.dart';
 import 'package:admin/presentation/pages/service_info/service_info_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:razorpay_web/razorpay_web.dart';
 import 'package:http/http.dart' as http;
+
+import 'auth_provider.dart';
 
 final _provider = ChangeNotifierProvider.autoDispose(
     (ref) => RazorpayHandler(Razorpay(), ref));
@@ -15,7 +22,7 @@ class RazorpayEndpoints {
   static const String orders = "$_baseUrl/orders";
 }
 
-class RazorpayHandler extends ChangeNotifier {
+class RazorpayHandler extends BaseViewModel {
   final Razorpay _razorpay;
   final Ref ref;
 

@@ -3,7 +3,7 @@ import 'package:admin/data/models/service_request.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Order {
-  final String id;
+   String? id;
   final String userID;
   final OrderStatus status;
   final String? clientID;
@@ -12,7 +12,7 @@ class Order {
   final String transactionID;
 
   Order({
-    required this.id,
+     this.id,
     required this.userID,
     required this.status,
     required this.clientID,

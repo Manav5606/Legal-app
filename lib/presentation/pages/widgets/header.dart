@@ -97,7 +97,7 @@ class TopBar extends ConsumerStatefulWidget {
 class _TopBarState extends ConsumerState<TopBar> {
   late bool isAuthenticated;
   late User? user;
-
+  
   @override
   void initState() {
     super.initState();
