@@ -1,7 +1,9 @@
 import 'package:admin/presentation/pages/authentication/index.dart';
+import 'package:admin/presentation/pages/category_client/category_client_page.dart';
 import 'package:admin/presentation/pages/home/home_page.dart';
 import 'package:admin/presentation/pages/landing/landing_page.dart';
 import 'package:admin/presentation/pages/profile/profile_page.dart';
+import 'package:admin/presentation/pages/service_info/service_info_page.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 
@@ -17,6 +19,12 @@ final routeLoggedOut = RouteMap(
     LandingPage.routeName: (_) => const MaterialPage(child: LandingPage()),
     LoginPage.routeName: (_) => const MaterialPage(child: LoginPage()),
     RegisterPage.routeName: (_) => const MaterialPage(child: RegisterPage()),
+    CategoryClientPage.routeName: (data) => MaterialPage(
+        child: CategoryClientPage(
+            categoryId: data.queryParameters['categoryId'] ?? "")),
+    ServiceInfoPage.routeName: (data) => MaterialPage(
+        child: ServiceInfoPage(
+            serviceId: data.queryParameters['serviceId'] ?? "")),
   },
 );
 final routeLoggedIn = RouteMap(
@@ -24,10 +32,16 @@ final routeLoggedIn = RouteMap(
   routes: {
     LandingPage.routeName: (_) => const MaterialPage(child: LandingPage()),
     HomePage.routeName: (_) => const MaterialPage(child: HomePage()),
+    CategoryClientPage.routeName: (data) => MaterialPage(
+        child: CategoryClientPage(
+            categoryId: data.queryParameters['categoryId'] ?? "")),
     ProfilePage.routeName: (data) => MaterialPage(
             child: ProfilePage(
           userID: data.queryParameters['userID'] ?? "",
         )),
+    ServiceInfoPage.routeName: (data) => MaterialPage(
+        child: ServiceInfoPage(
+            serviceId: data.queryParameters['serviceId'] ?? "")),
   },
 );
 final routeAdminLoggedIn = RouteMap(

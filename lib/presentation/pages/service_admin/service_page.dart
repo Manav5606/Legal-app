@@ -182,61 +182,6 @@ class _ServicePageState extends ConsumerState<ServicePage> {
               );
   }
 
-  // ExpandableTableRow createExpandableTableRow(
-  //     Service data, BuildContext context) {
-  //   return ExpandableTableRow(
-  //     height: 50,
-  //     firstCell: const SizedBox.shrink(),
-  //     legend: Row(
-  //       children: [
-  //         (Text(data.id.toString())),
-  //         (Text(data.shortDescription.toString())),
-  //         (Text(data.aboutDescription.toString())),
-  //         (Text((data.marketPrice ?? "").toString())),
-  //         (Text((data.ourPrice ?? "").toString())),
-  //         (Text(data.createdAt!.formatToDate())),
-  //         (Text(data.createdBy.toString())),
-  //         (Row(
-  //           children: [
-  //             TextButton(
-  //                 child: const Text("Edit"),
-  //                 onPressed: () {
-  //                   showDialog(
-  //                     context: context,
-  //                     barrierDismissible: false,
-  //                     builder: (_) => Dialog(
-  //                       insetPadding: const EdgeInsets.all(24),
-  //                       child: AddServiceDialog(
-  //                           serviceDetail: data, categoryID: widget.categoryID),
-  //                     ),
-  //                   );
-  //                 }),
-  //             TextButton(
-  //                 child: const Text("Add Service"),
-  //                 onPressed: () {
-  //                   showDialog(
-  //                     context: context,
-  //                     barrierDismissible: false,
-  //                     builder: (_) => Dialog(
-  //                       insetPadding: const EdgeInsets.all(24),
-  //                       child: AddServiceDialog(
-  //                         parentServiceDetail: data,
-  //                         categoryID: widget.categoryID,
-  //                       ),
-  //                     ),
-  //                   );
-  //                 }),
-  //           ],
-  //         )),
-  //       ],
-  //     ),
-  //     children: data.childServices.map((e) {
-  //       final service = _viewModel.getServiceByID(e);
-  //       return createExpandableTableRow(service, context);
-  //     }).toList(),
-  //   );
-  // }
-
   Widget _heading() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

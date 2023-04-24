@@ -2,9 +2,11 @@ import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
 import 'package:admin/data/models/models.dart';
+import 'package:admin/presentation/pages/category_client/category_client_page.dart';
 import 'package:admin/presentation/pages/widgets/circular_arrow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:routemaster/routemaster.dart';
 
 class ServiceContainer extends StatelessWidget {
   final Category category;
@@ -19,7 +21,8 @@ class ServiceContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // TODO
+        Routemaster.of(context).push(CategoryClientPage.routeName,
+            queryParameters: {"categoryId": category.id!});
       },
       child: Container(
         width: width / 5,

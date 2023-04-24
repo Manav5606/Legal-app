@@ -2,27 +2,26 @@ import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
 import 'package:admin/core/provider.dart';
-import 'package:admin/data/models/customer_review.dart';
 import 'package:admin/data/models/general_stat.dart';
 import 'package:admin/data/models/news.dart';
-import 'package:admin/legal_app.dart';
-import 'package:admin/presentation/pages/authentication/index.dart';
+import 'package:admin/presentation/pages/landing/landing_page_view_model.dart';
 import 'package:admin/presentation/pages/landing/widgets/services.dart';
 import 'package:admin/presentation/pages/widgets/banner.dart';
+import 'package:admin/presentation/pages/widgets/contact_us.dart';
+import 'package:admin/presentation/pages/widgets/contact_us_card.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
+import 'package:admin/presentation/pages/widgets/custom_mobile_drawer.dart';
 import 'package:admin/presentation/pages/widgets/customer_review_slider.dart';
 import 'package:admin/presentation/pages/widgets/footer.dart';
 import 'package:admin/presentation/pages/widgets/frequent_service_container.dart';
 import 'package:admin/presentation/pages/widgets/general_stat_container.dart';
 import 'package:admin/presentation/pages/widgets/header.dart';
 import 'package:admin/presentation/pages/widgets/news_tile.dart';
-import 'package:admin/presentation/pages/widgets/service_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:admin/data/models/models.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:routemaster/routemaster.dart';
 
 final landingScaffold = GlobalKey<ScaffoldState>();
 
@@ -36,36 +35,6 @@ class LandingPage extends ConsumerStatefulWidget {
 }
 
 class _LandingPageState extends ConsumerState<LandingPage> {
-  final _customerReviewData = [
-    CustomerReview(
-      title:
-          "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year.",
-      review:
-          "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year. Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year.",
-      name: "Abhinav Kushwaha",
-      designation: "CEO, QUBEx",
-      customerProfilePic: "https://randomuser.me/api/portraits/men/51.jpg",
-    ),
-    CustomerReview(
-      title:
-          "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year.",
-      review:
-          "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year. Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year.",
-      name: "Abhinav Kushwaha",
-      designation: "CEO, QUBEx",
-      customerProfilePic: "https://randomuser.me/api/portraits/men/51.jpg",
-    ),
-    CustomerReview(
-      title:
-          "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year.",
-      review:
-          "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year. Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year.",
-      name: "Abhinav Kushwaha",
-      designation: "CEO, QUBEx",
-      customerProfilePic: "https://randomuser.me/api/portraits/men/51.jpg",
-    ),
-  ];
-
   final _news = [
     News(
         headline:
@@ -88,33 +57,6 @@ class _LandingPageState extends ConsumerState<LandingPage> {
     GeneralStat(value: "567", title: "Users"),
   ];
 
-  final _bannerList = [
-    BannerDetail(
-        title: "Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-        description:
-            "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-        imageUrl: Assets.personImage,
-        btnText: "btnText"),
-    BannerDetail(
-        title: "1 Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-        description:
-            "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-        imageUrl: Assets.personImage,
-        btnText: "btnText"),
-    BannerDetail(
-        title: "2 Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-        description:
-            "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-        imageUrl: Assets.personImage,
-        btnText: "btnText"),
-    BannerDetail(
-        title: "3 Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-        description:
-            "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-        imageUrl: Assets.personImage,
-        btnText: "btnText"),
-  ];
-
   final _frequentlyUsedServicesList = [
     "Business",
     "Taxation",
@@ -126,263 +68,80 @@ class _LandingPageState extends ConsumerState<LandingPage> {
     "Lorem Ipsum",
   ];
 
-  final _contactDetails = [
-    Category(
-      id: "b",
-      name: "Phone",
-      iconUrl: "",
-      description: "Lorem Ipsum",
-      addedAt: DateTime.now().millisecondsSinceEpoch,
-      addedBy: "",
-    ),
-    Category(
-      id: "f",
-      name: "Office",
-      iconUrl: "",
-      description: "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
-      addedAt: DateTime.now().millisecondsSinceEpoch,
-      addedBy: "",
-    ),
-    Category(
-      id: "l",
-      name: "Working hours",
-      iconUrl: "",
-      description: "Lorem Ipsum",
-      addedAt: DateTime.now().millisecondsSinceEpoch,
-      addedBy: "",
-    ),
-  ];
-
   late bool isAuthenticated;
+
+  late final LandingPageViewModel _viewModel;
+
+  @override
+  void initState() {
+    _viewModel = ref.read(LandingPageViewModel.provider);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     isAuthenticated = ref.watch(AppState.auth).isAuthenticated;
+    ref.watch(LandingPageViewModel.provider);
     return Scaffold(
       key: landingScaffold,
       endDrawerEnableOpenDragGesture: false,
-      endDrawer: ClipRRect(
-        borderRadius:
-            const BorderRadius.horizontal(left: Radius.circular(20.0)),
-        child: Drawer(
-          backgroundColor: AppColors.yellowColor,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            child: ListView(
-              // TODO make this dynamic
-              children: [
-                ListTile(
-                  title: Text(
-                    "Menu",
-                    textAlign: TextAlign.center,
-                    style: FontStyles.font14Bold
-                        .copyWith(color: AppColors.blueColor, fontSize: 24),
-                  ),
-                  trailing: IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: Icon(Icons.cancel_outlined,
-                          color: AppColors.blueColor)),
-                ),
-                ListTile(
-                    title: Text("Home",
-                        style: FontStyles.font14Semibold.copyWith(
-                            fontSize: 18, color: AppColors.blackColor))),
-                ListTile(
-                    title: Text("Business",
-                        style: FontStyles.font14Semibold.copyWith(
-                            fontSize: 18, color: AppColors.blackColor))),
-                ListTile(
-                    title: Text("Finance",
-                        style: FontStyles.font14Semibold.copyWith(
-                            fontSize: 18, color: AppColors.blackColor))),
-                ListTile(
-                    title: Text("Legal",
-                        style: FontStyles.font14Semibold.copyWith(
-                            fontSize: 18, color: AppColors.blackColor))),
-                ListTile(
-                    title: Text("Advertisement",
-                        style: FontStyles.font14Semibold.copyWith(
-                            fontSize: 18, color: AppColors.blackColor))),
-                Divider(color: AppColors.lightGreyColor, thickness: 2),
-                ListTile(
-                    title: Text("FAQs",
-                        style: FontStyles.font12Regular.copyWith(
-                            fontSize: 16, color: AppColors.blackColor))),
-                ListTile(
-                    title: Text("Contact Us",
-                        style: FontStyles.font12Regular.copyWith(
-                            fontSize: 16, color: AppColors.blackColor))),
-                ListTile(
-                    title: Text("Settings",
-                        style: FontStyles.font12Regular.copyWith(
-                            fontSize: 16, color: AppColors.blackColor))),
-                !isAuthenticated
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton.icon(
-                              onPressed: () {
-                                Routemaster.of(context)
-                                    .push(LoginPage.routeName);
-                              },
-                              icon:
-                                  Icon(Icons.login, color: AppColors.blueColor),
-                              label: Text("Login",
-                                  style: FontStyles.font14Semibold.copyWith(
-                                      fontSize: 16,
-                                      color: AppColors.blueColor))),
-                          TextButton(
-                              onPressed: () {
-                                Routemaster.of(context)
-                                    .push(RegisterPage.routeName);
-                              },
-                              child: Text("New User?",
-                                  style: FontStyles.font12Regular.copyWith(
-                                      fontSize: 16,
-                                      color: AppColors.whiteColor))),
-                          const SizedBox.shrink(),
-                        ],
-                      )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton.icon(
-                              onPressed: () {
-                                ref.read(AppState.auth.notifier).logout();
-                              },
-                              icon:
-                                  Icon(Icons.login, color: AppColors.blueColor),
-                              label: Text("SignOut",
-                                  style: FontStyles.font14Semibold.copyWith(
-                                      fontSize: 16,
-                                      color: AppColors.blueColor))),
-                        ],
-                      ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      endDrawer: CustomMobileDrawer(categories: _viewModel.getCategories),
       backgroundColor: AppColors.whiteColor,
-      body: ScreenTypeLayout.builder(
-        mobile: (context) => ListView(
-          children: [
-            const Header(mobile: true),
-            BannerSlides(
-              mobile: true,
-              height: 250,
-              bannerDetails: _bannerList,
-            ),
-            Services(height: 0),
-            _frequentlyUsedServices(300, mobile: true),
-            // _newsAndUpdates(800),
-            Center(child: _generalStats(300, mobile: true)),
-            CustomerReviewSlides(
-                customerReviews: _customerReviewData,
-                height: MediaQuery.of(context).size.width,
-                mobile: true),
-            _contactUs(250, mobile: true),
-            // _contactUsCard(200),
-            const Footer(),
-          ],
-        ),
-        desktop: (context) => ListView(
-          children: [
-            const Header(mobile: false),
-            BannerSlides(
-              mobile: false,
-              height: 700,
-              bannerDetails: _bannerList,
-            ),
-            Services(height: 700),
-            _frequentlyUsedServices(350),
-            // _newsAndUpdates(800),
-            Center(child: _generalStats(300)),
-            CustomerReviewSlides(
-                customerReviews: _customerReviewData, height: 700),
-            _contactUs(250),
-            _contactUsCard(200),
-            const Footer(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _contactUsCard(double height) {
-    return SizedBox(
-      height: height,
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: height * 0.40,
-              width: double.infinity,
-              color: AppColors.blueColor,
-            ),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: _contactDetails
-                  .map((contact) => ServiceContainer(
-                      category: contact,
-                      width: MediaQuery.of(context).size.width))
-                  .toList(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _contactUs(double height, {bool mobile = false}) {
-    return SizedBox(
-      height: height,
-      child: Stack(
-        children: [
-          Positioned(
-              bottom: 20,
-              right: 20,
-              child: SvgPicture.asset(Assets.iconsVectorblueSquare,
-                  width: mobile ? 60 : 120)),
-          Positioned(
-              top: 15,
-              right: 80,
-              child:
-                  SvgPicture.asset(Assets.iconsVectoryellowSquare, width: 30)),
-          Positioned(
-              top: 30,
-              child: SvgPicture.asset(Assets.ASSETS_ICONS_VECTOROVERLAYLEFT_SVG,
-                  width: 110)),
-          Align(
-            alignment: Alignment.center,
-            child: Padding(
-              padding: EdgeInsets.all(mobile ? 12.0 : 0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+      body: _viewModel.isLoading
+          ? const Center(child: CircularProgressIndicator.adaptive())
+          : ScreenTypeLayout.builder(
+              mobile: (context) => ListView(
                 children: [
-                  Text("Contact us regarding any query",
-                      style: FontStyles.font24Semibold.copyWith(
-                          color: AppColors.blackColor,
-                          fontSize: mobile ? 18 : null)),
-                  const SizedBox(height: 4),
-                  Text(
-                      "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7",
-                      textAlign: TextAlign.center,
-                      style: FontStyles.font12Regular.copyWith(
-                          color: AppColors.blueColor,
-                          fontSize: mobile ? 12 : null)),
-                  const SizedBox(height: 12),
-                  CTAButton(title: "Contact Us", onTap: () {}, radius: 50),
+                  const Header(mobile: true),
+                  Visibility(
+                    visible: _viewModel.getBanners.isNotEmpty,
+                    child: BannerSlides(
+                      mobile: true,
+                      height: 250,
+                      bannerDetails: _viewModel.getBanners,
+                    ),
+                  ),
+                  Services(height: 0, category: _viewModel.getCategories),
+                  _frequentlyUsedServices(300, mobile: true),
+                  // _newsAndUpdates(800),
+                  Center(child: _generalStats(300, mobile: true)),
+                  Visibility(
+                    visible: _viewModel.getReviews.isNotEmpty,
+                    child: CustomerReviewSlides(
+                        customerReviews: _viewModel.getReviews,
+                        height: MediaQuery.of(context).size.width,
+                        mobile: true),
+                  ),
+                  const ContactUs(height: 250, mobile: true),
+                  const Footer(),
+                ],
+              ),
+              desktop: (context) => ListView(
+                children: [
+                  const Header(mobile: false),
+                  Visibility(
+                    visible: _viewModel.getBanners.isNotEmpty,
+                    child: BannerSlides(
+                      mobile: false,
+                      height: 700,
+                      bannerDetails: _viewModel.getBanners,
+                    ),
+                  ),
+                  Services(height: 700, category: _viewModel.getCategories),
+                  _frequentlyUsedServices(350),
+                  // _newsAndUpdates(800),
+                  Center(child: _generalStats(300)),
+                  Visibility(
+                      visible: _viewModel.getReviews.isNotEmpty,
+                      child: CustomerReviewSlides(
+                          customerReviews: _viewModel.getReviews, height: 700)),
+                  const ContactUs(height: 250),
+                  ContactUsCard(
+                      contactDetails: _viewModel.getContacts, height: 200),
+                  const Footer(),
                 ],
               ),
             ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -507,13 +266,6 @@ class _LandingPageState extends ConsumerState<LandingPage> {
               ],
             ),
           ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //   children: _category
-          //       .map((category) =>
-          //           ServiceContainer(category: category, width: height * 1.6))
-          //       .toList(),
-          // ),
         ],
       ),
     );

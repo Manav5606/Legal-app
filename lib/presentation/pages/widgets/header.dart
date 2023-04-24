@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
@@ -6,7 +5,6 @@ import 'package:admin/core/enum/admin_menu.dart';
 import 'package:admin/core/enum/role.dart';
 import 'package:admin/core/provider.dart';
 import 'package:admin/data/models/models.dart';
-import 'package:admin/legal_app.dart';
 import 'package:admin/presentation/pages/authentication/index.dart';
 import 'package:admin/presentation/pages/home/home_view_model.dart';
 import 'package:admin/presentation/pages/landing/landing_page.dart';

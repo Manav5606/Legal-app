@@ -1,4 +1,3 @@
-import 'package:admin/core/enum/qualification.dart';
 import 'package:admin/data/models/associate_detail.dart';
 import 'package:admin/data/models/bank_info.dart';
 import 'package:admin/data/models/working_hour.dart';

@@ -5,3 +5,6 @@ export 'order.dart';
 export 'service_request.dart';
 export 'service.dart';
 export 'banner.dart';
+export 'transaction.dart';
+export 'vendor.dart';
+export 'customer_review.dart';

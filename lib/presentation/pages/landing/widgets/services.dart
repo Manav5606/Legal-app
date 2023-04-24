@@ -8,45 +8,8 @@ import 'package:responsive_builder/responsive_builder.dart';
 
 class Services extends StatelessWidget {
   final double height;
-  Services({super.key, required this.height});
-  final _category = [
-    Category(
-      id: "b",
-      name: "Business",
-      iconUrl: "",
-      description:
-          "I have used multiple offline & online CAs/ Lawyers. LegalRaasta clearly provided the best service and fast. Their team helped me protect my brand with trademark registration.",
-      addedAt: DateTime.now().millisecondsSinceEpoch,
-      addedBy: "",
-    ),
-    Category(
-      id: "f",
-      name: "finance",
-      iconUrl: "",
-      description:
-          "I have used multiple offline & online CAs/ Lawyers. LegalRaasta clearly provided the best service and fast. Their team helped me protect my brand with trademark registration.",
-      addedAt: DateTime.now().millisecondsSinceEpoch,
-      addedBy: "",
-    ),
-    Category(
-      id: "l",
-      name: "legal",
-      iconUrl: "",
-      description:
-          "I have used multiple offline & online CAs/ Lawyers. LegalRaasta clearly provided the best service and fast. Their team helped me protect my brand with trademark registration.",
-      addedAt: DateTime.now().millisecondsSinceEpoch,
-      addedBy: "",
-    ),
-    Category(
-      id: "a",
-      name: "Advertisment",
-      iconUrl: "",
-      description:
-          "I have used multiple offline & online CAs/ Lawyers. LegalRaasta clearly provided the best service and fast. Their team helped me protect my brand with trademark registration.",
-      addedAt: DateTime.now().millisecondsSinceEpoch,
-      addedBy: "",
-    ),
-  ];
+  final List<Category> category;
+  const Services({super.key, required this.height, required this.category});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +43,7 @@ class Services extends StatelessWidget {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: _category
+                      children: category
                           .map((category) => ServiceContainer(
                               category: category, width: height * 1.6))
                           .toList(),
@@ -106,7 +69,7 @@ class Services extends StatelessWidget {
               const SizedBox(height: 8),
               _subtitle(mobile: true),
               const SizedBox(height: 14),
-              ..._category
+              ...category
                   .map((category) => Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: ServiceContainer(
