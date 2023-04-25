@@ -80,43 +80,69 @@ class _CategoryClientPageState extends ConsumerState<CategoryClientPage> {
           ? const Center(child: CircularProgressIndicator.adaptive())
           : ScreenTypeLayout.builder(
               mobile: (context) => ListView(
-                children: [
-                  const Header(mobile: true),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 14),
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    decoration: BoxDecoration(
-                      color: AppColors.blueColor,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: [
-                        Center(
-                            child: Text(_viewModel.selectedCategory!.name,
-                                style: FontStyles.font24Semibold
-                                    .copyWith(color: AppColors.yellowColor))),
-                        const SizedBox(height: 12),
-                        ..._viewModel.getServices.map(expandServices).toList(),
-                      ],
-                    ),
-                  ),
-                  const ContactUs(height: 250, mobile: true),
-                  const Footer(),
+                children: const [
+                  Header(mobile: true),
+                  CategoryContainer(mobile: true),
+                  ContactUs(height: 250, mobile: true),
+                  Footer(),
                 ],
               ),
               desktop: (context) => ListView(
                 children: [
                   const Header(mobile: false),
-                  //
+                  const CategoryContainer(mobile: false),
                   const ContactUs(height: 250),
                   ContactUsCard(contactDetails: _contactDetails, height: 200),
                   const Footer(),
                 ],
               ),
             ),
+    );
+  }
+}
+
+class CategoryContainer extends ConsumerStatefulWidget {
+  const CategoryContainer({
+    super.key,
+    this.mobile = false,
+  });
+  final bool mobile;
+
+  @override
+  ConsumerState<CategoryContainer> createState() => _CategoryContainerState();
+}
+
+class _CategoryContainerState extends ConsumerState<CategoryContainer> {
+  late final CategoryClientPageViewModel _viewModel;
+
+  @override
+  void initState() {
+    _viewModel = ref.read(CategoryClientPageViewModel.provider);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.watch(CategoryClientPageViewModel.provider);
+    return Container(
+      width: MediaQuery.of(context).size.width * (widget.mobile ? 0.8 : 0.5),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: AppColors.blueColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          Center(
+              child: Text(_viewModel.selectedCategory!.name,
+                  style: FontStyles.font24Semibold
+                      .copyWith(color: AppColors.yellowColor))),
+          const SizedBox(height: 12),
+          ..._viewModel.getServices.map(expandServices).toList(),
+        ],
+      ),
     );
   }
 
