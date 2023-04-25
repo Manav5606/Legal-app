@@ -2,8 +2,13 @@ import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/presentation/pages/home/tabs/widgets/stats_box.dart';
 import 'package:admin/presentation/utils/web_scroll.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
+
+import '../../../orders_admin_page/order_page.dart';
+import '../../../profile/profile_page.dart';
 
 class DashboardTab extends ConsumerStatefulWidget {
   const DashboardTab({super.key});
@@ -35,6 +40,7 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
     return Center(
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.8,
+<<<<<<< Updated upstream
         child: LayoutBuilder(builder: (context, constraints) {
           return ScrollConfiguration(
             behavior: WebScrollBehavior(),
@@ -150,6 +156,128 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
             ),
           );
         }),
+=======
+        child: _viewModel.isLoading
+            ? const Center(child: CircularProgressIndicator.adaptive())
+            : _viewModel.error != null
+                ? Center(child: Text("⚠️ ${_viewModel.error}"))
+                : LayoutBuilder(builder: (context, constraints) {
+                    return ScrollConfiguration(
+                      behavior: WebScrollBehavior(),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: ConstrainedBox(
+                            constraints:
+                                BoxConstraints(minWidth: constraints.minWidth),
+                            child: DataTable(
+                                clipBehavior: Clip.antiAlias,
+                                border: TableBorder.symmetric(
+                                    outside:
+                                        BorderSide(color: AppColors.greyColor)),
+                                sortAscending: !_viewModel.sortAscending,
+                                sortColumnIndex: _viewModel.sortIndex,
+                                dataRowColor: MaterialStateProperty.all(
+                                    AppColors.lightGreyColor),
+                                headingRowColor: MaterialStateProperty.all(
+                                    AppColors.whiteColor),
+                                dataTextStyle: FontStyles.font14Semibold
+                                    .copyWith(color: AppColors.blueColor),
+                                headingTextStyle: FontStyles.font16Semibold
+                                    .copyWith(color: AppColors.blackColor),
+                                columns: [
+                                  DataColumn(
+                                      label: const Text("Order ID"),
+                                      onSort: (_, __) {}),
+                                  const DataColumn(label: Text("Date")),
+                                  const DataColumn(label: Text("Username")),
+                                  const DataColumn(label: Text("Name")),
+                                  const DataColumn(label: Text("Status")),
+                                  const DataColumn(label: Text("Details")),
+                                ],
+                                rows: _viewModel.getOrders.map(
+                                  (data) {
+                                    Color statusColor = AppColors.blueColor;
+                                    switch (data.status) {
+                                      case OrderStatus.completed:
+                                        statusColor = AppColors.greenColor;
+                                        break;
+                                      case OrderStatus.assignedToClient:
+                                        statusColor = AppColors.orangeColor;
+                                        break;
+                                      case OrderStatus.created:
+                                        statusColor =
+                                            AppColors.lightOrangeColor;
+
+                                        break;
+                                      case OrderStatus.approved:
+                                        statusColor = AppColors.lightGreenColor;
+
+                                        break;
+                                      case OrderStatus.rejected:
+                                        statusColor = AppColors.redColor;
+
+                                        break;
+                                    }
+                                    return DataRow(
+                                      cells: [
+                                        DataCell(Text(data.id ?? "")),
+                                        DataCell(Text(
+                                            data.createdAt?.formatToDate() ??
+                                                "-")),
+                                        DataCell(Text(data.userID)),
+                                        DataCell(
+                                          Container(
+                                            child: FutureBuilder<String?>(
+                                              future:
+                                                  getNameFromOtherCollection(
+                                                      data.userID ?? ""),
+                                              builder: (BuildContext context,
+                                                  AsyncSnapshot<String?>
+                                                      snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return const CircularProgressIndicator();
+                                                } else if (snapshot.hasError) {
+                                                  return const Text("Error");
+                                                } else {
+                                                  final String name =
+                                                      snapshot.data ?? "-";
+                                                  return Container(
+                                                    child: Text(name),
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ),
+
+                                        // DataCell(Text("name")),
+                                        DataCell(Text(data.status.name,
+                                            style:
+                                                TextStyle(color: statusColor))),
+                                        DataCell(TextButton(
+                                            child: const Text("View"),
+                                            onPressed: () {
+                                              if (data.id != null) {
+                                                  Routemaster.of(context).push(
+                                                      OrderPage.routeName,
+                                                      queryParameters: {
+                                                        "orderID": data.id!
+                                                      });
+                                                }
+                                            })),
+                                      ],
+                                    );
+                                  },
+                                ).toList()),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+>>>>>>> Stashed changes
       ),
     );
   }
@@ -216,5 +344,18 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
         ],
       ),
     );
+  }
+
+  Future<String?> getNameFromOtherCollection(String id) async {
+    final collection = FirebaseFirestore.instance.collection('user');
+    final docSnapshot = await collection.doc(id).get();
+    final data = docSnapshot.data();
+    print(id);
+    if (data != null) {
+      return data['name'];
+      // print(object)
+    } else {
+      return null;
+    }
   }
 }

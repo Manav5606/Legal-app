@@ -4,7 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Order {
   String? id;
+<<<<<<< Updated upstream
   final String userID;
+=======
+  final String  userID;
+  final int? createdAt;
+>>>>>>> Stashed changes
   final OrderStatus status;
   final String? clientID;
   final String serviceID;
