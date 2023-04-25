@@ -2,7 +2,6 @@ import 'package:admin/presentation/pages/authentication/index.dart';
 import 'package:admin/presentation/pages/category_client/category_client_page.dart';
 import 'package:admin/presentation/pages/home/home_page.dart';
 import 'package:admin/presentation/pages/landing/landing_page.dart';
-import 'package:admin/presentation/pages/orders_admin_page/order_page.dart';
 import 'package:admin/presentation/pages/profile/profile_page.dart';
 import 'package:admin/presentation/pages/service_info/service_info_page.dart';
 import 'package:flutter/material.dart';
@@ -56,11 +55,7 @@ final routeAdminLoggedIn = RouteMap(
             child: ProfilePage(
           userID: data.queryParameters['userID'] ?? "",
         )),
-<<<<<<< Updated upstream
-    OrderPage.routeName: (data) => MaterialPage(
-=======
          OrderPage.routeName: (data) => MaterialPage(
->>>>>>> Stashed changes
             child: OrderPage(
           orderID: data.queryParameters['orderID'] ?? "",
         )),

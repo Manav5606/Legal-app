@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/enum/role.dart';
@@ -1325,16 +1323,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                           myList
                                                               .add(service.id!);
                                                           print(myList);
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-                                                          print(widget.userID);
->>>>>>> Stashed changes
-=======
 
                                                           print(widget.userID);
 
->>>>>>> Stashed changes
                                                           final CollectionReference
                                                               usersRef =
                                                               FirebaseFirestore
@@ -1376,21 +1367,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                       .arrayUnion(
                                                                           myList),
                                                             });
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-                                                          } else {
-=======
-                                                          }
-
-                                                          if (userSnapshot
-                                                              .docs.isEmpty) {
->>>>>>> Stashed changes
-=======
                                                           } else {}
 
                                                           if (userSnapshot
                                                               .docs.isEmpty) {
->>>>>>> Stashed changes
                                                             final result =
                                                                 await usersRef
                                                                     .add({
@@ -1516,10 +1496,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                   _viewModel
                                                       .validityDateOfPracticeCertificateLoading,
                                               onTap: () async {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
                                                 // if (_viewModel.validate()) {
                                                 //   _viewModel.saveProfileData();
                                                 // }
@@ -1557,12 +1533,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                     'vendor_id': widget.userID,
                                                     'service_id': serviceIds,
                                                   });
-<<<<<<< Updated upstream
-=======
-                                                if (_viewModel.validate()) {
-                                                  _viewModel.saveProfileData();
->>>>>>> Stashed changes
-=======
 
                                                   if (_viewModel.validate()) {
                                                     _viewModel
@@ -1603,43 +1573,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                   //     'service_id': serviceIds,
                                                   //   });
                                                   // }
->>>>>>> Stashed changes
                                                 }
-
-                                                // final selectedServices =
-                                                //     _viewModel
-                                                //         .getSelectedServices();
-                                                // final serviceIds =
-                                                //     selectedServices
-                                                //         .map((service) =>
-                                                //             service.id)
-                                                //         .toList();
-                                                // // Check if the "users" collection exists
-                                                // final usersRef =
-                                                //     FirebaseFirestore.instance
-                                                //         .collection(
-                                                //             'vendor service');
-                                                // final userSnapshot =
-                                                //     await usersRef
-                                                //         .where('vendor_id',
-                                                //             isEqualTo:
-                                                //                 widget.userID)
-                                                //         .get();
-                                                // if (userSnapshot.docs.isEmpty) {
-                                                //   // Collection doesn't exist, create document with "service" field
-                                                //   final DocumentReference
-                                                //       docRef = userSnapshot
-                                                //           .docs.first.reference;
-                                                //   await docRef.update({
-                                                //     // 'vendor_id': widget.userID,
-                                                //     'service_id': serviceIds,
-                                                //   });
-                                                // } else {
-                                                //   await usersRef.add({
-                                                //     'vendor_id': widget.userID,
-                                                //     'service_id': serviceIds,
-                                                //   });
-                                                // }
                                               },
                                               color: AppColors.darkGreenColor,
                                               fullWidth: false,

@@ -817,8 +817,6 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           model.AppError(message: "Unkown Error, Plese try again later."));
     }
   }
-<<<<<<< Updated upstream
-=======
 
 
   @override
@@ -863,9 +861,5 @@ class DatabaseRepositoryImpl extends DatabaseRepository
   }
 
 
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
 
->>>>>>> Stashed changes
 }
