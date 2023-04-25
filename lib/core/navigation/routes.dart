@@ -8,6 +8,8 @@ import 'package:admin/presentation/pages/service_info/service_info_page.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../../presentation/pages/orders_admin_page/order_page.dart';
+
 abstract class AppRoutes {
   static String get login => LoginPage.routeName;
   static String get register => RegisterPage.routeName;
@@ -54,7 +56,11 @@ final routeAdminLoggedIn = RouteMap(
             child: ProfilePage(
           userID: data.queryParameters['userID'] ?? "",
         )),
+<<<<<<< Updated upstream
     OrderPage.routeName: (data) => MaterialPage(
+=======
+         OrderPage.routeName: (data) => MaterialPage(
+>>>>>>> Stashed changes
             child: OrderPage(
           orderID: data.queryParameters['orderID'] ?? "",
         )),

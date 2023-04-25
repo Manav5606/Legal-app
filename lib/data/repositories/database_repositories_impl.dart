@@ -820,6 +820,7 @@ class DatabaseRepositoryImpl extends DatabaseRepository
 <<<<<<< Updated upstream
 =======
 
+
   @override
   Future<Either<model.AppError, List<model.Order>>> fetchOrders() async {
     try {
@@ -861,6 +862,10 @@ class DatabaseRepositoryImpl extends DatabaseRepository
     }
   }
 
+
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 
 >>>>>>> Stashed changes
 }

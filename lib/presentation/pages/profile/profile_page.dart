@@ -1326,8 +1326,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                               .add(service.id!);
                                                           print(myList);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
                                                           print(widget.userID);
+>>>>>>> Stashed changes
+=======
+
+                                                          print(widget.userID);
+
 >>>>>>> Stashed changes
                                                           final CollectionReference
                                                               usersRef =
@@ -1371,9 +1377,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                           myList),
                                                             });
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                                                           } else {
 =======
                                                           }
+
+                                                          if (userSnapshot
+                                                              .docs.isEmpty) {
+>>>>>>> Stashed changes
+=======
+                                                          } else {}
 
                                                           if (userSnapshot
                                                               .docs.isEmpty) {
@@ -1504,6 +1517,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                       .validityDateOfPracticeCertificateLoading,
                                               onTap: () async {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
                                                 // if (_viewModel.validate()) {
                                                 //   _viewModel.saveProfileData();
                                                 // }
@@ -1541,9 +1557,52 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                     'vendor_id': widget.userID,
                                                     'service_id': serviceIds,
                                                   });
+<<<<<<< Updated upstream
 =======
                                                 if (_viewModel.validate()) {
                                                   _viewModel.saveProfileData();
+>>>>>>> Stashed changes
+=======
+
+                                                  if (_viewModel.validate()) {
+                                                    _viewModel
+                                                        .saveProfileData();
+                                                  }
+
+                                                  // final selectedServices =
+                                                  //     _viewModel
+                                                  //         .getSelectedServices();
+                                                  // final serviceIds =
+                                                  //     selectedServices
+                                                  //         .map((service) =>
+                                                  //             service.id)
+                                                  //         .toList();
+                                                  // // Check if the "users" collection exists
+                                                  // final usersRef =
+                                                  //     FirebaseFirestore.instance
+                                                  //         .collection(
+                                                  //             'vendor service');
+                                                  // final userSnapshot =
+                                                  //     await usersRef
+                                                  //         .where('vendor_id',
+                                                  //             isEqualTo:
+                                                  //                 widget.userID)
+                                                  //         .get();
+                                                  // if (userSnapshot.docs.isEmpty) {
+                                                  //   // Collection doesn't exist, create document with "service" field
+                                                  //   final DocumentReference
+                                                  //       docRef = userSnapshot
+                                                  //           .docs.first.reference;
+                                                  //   await docRef.update({
+                                                  //     // 'vendor_id': widget.userID,
+                                                  //     'service_id': serviceIds,
+                                                  //   });
+                                                  // } else {
+                                                  //   await usersRef.add({
+                                                  //     'vendor_id': widget.userID,
+                                                  //     'service_id': serviceIds,
+                                                  //   });
+                                                  // }
 >>>>>>> Stashed changes
                                                 }
 

@@ -1,12 +1,21 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
+<<<<<<< Updated upstream
+=======
+import 'package:admin/presentation/pages/home/tabs/dashboard/dashboard_view_model.dart';
+>>>>>>> Stashed changes
 import 'package:admin/presentation/pages/home/tabs/widgets/stats_box.dart';
 import 'package:admin/presentation/utils/web_scroll.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
+<<<<<<< Updated upstream
 
+=======
+import 'package:admin/core/extension/date.dart';
+import '../../../../../core/enum/order_status.dart';
+>>>>>>> Stashed changes
 import '../../../orders_admin_page/order_page.dart';
 import '../../../profile/profile_page.dart';
 
@@ -18,6 +27,16 @@ class DashboardTab extends ConsumerStatefulWidget {
 }
 
 class _DashboardTabState extends ConsumerState<DashboardTab> {
+<<<<<<< Updated upstream
+=======
+  late final DashboardViewModel _viewModel;
+  @override
+  void initState() {
+    _viewModel = ref.read(DashboardViewModel.provider);
+    super.initState();
+  }
+
+>>>>>>> Stashed changes
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -38,6 +57,7 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
 
   Widget _dataTable() {
     return Center(
+<<<<<<< Updated upstream
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.8,
 <<<<<<< Updated upstream
@@ -157,6 +177,127 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
           );
         }),
 =======
+=======
+        //   child: SizedBox(
+        //     width: MediaQuery.of(context).size.width * 0.8,
+
+        //     child: LayoutBuilder(builder: (context, constraints) {
+        //       return ScrollConfiguration(
+        //         behavior: WebScrollBehavior(),
+        //         child: SingleChildScrollView(
+        //           scrollDirection: Axis.vertical,
+        //           child: SingleChildScrollView(
+        //             scrollDirection: Axis.horizontal,
+        //             child: ConstrainedBox(
+        //               constraints: BoxConstraints(minWidth: constraints.minWidth),
+        //               child: DataTable(
+        //                   clipBehavior: Clip.antiAlias,
+        //                   border: TableBorder.symmetric(
+        //                       outside: BorderSide(color: AppColors.greyColor)),
+        //                   sortAscending: true,
+        //                   sortColumnIndex: 0,
+        //                   dataRowColor:
+        //                       MaterialStateProperty.all(AppColors.lightGreyColor),
+        //                   headingRowColor:
+        //                       MaterialStateProperty.all(AppColors.whiteColor),
+        //                   dataTextStyle: FontStyles.font14Semibold
+        //                       .copyWith(color: AppColors.blueColor),
+        //                   headingTextStyle: FontStyles.font16Semibold
+        //                       .copyWith(color: AppColors.blackColor),
+        //                   columns: [
+        //                     DataColumn(
+        //                         label: const Text("Order ID"), onSort: (_, __) {}),
+        //                     const DataColumn(label: Text("Date")),
+        //                     const DataColumn(label: Text("Username")),
+        //                     const DataColumn(label: Text("Status")),
+        //                     const DataColumn(label: Text("Details")),
+        //                   ],
+        //                   rows: [
+        //                     {
+        //                       "id": "#123456",
+        //                       "date": DateTime.now(),
+        //                       "name": "Vipin Chandra",
+        //                       "status": "Current"
+        //                     },
+        //                     {
+        //                       "id": "#123456",
+        //                       "date": DateTime.now(),
+        //                       "name": "Vipin Chandra",
+        //                       "status": "Ongoing"
+        //                     },
+        //                     {
+        //                       "id": "#123456",
+        //                       "date": DateTime.now(),
+        //                       "name": "Vipin Chandra",
+        //                       "status": "Completed"
+        //                     },
+        //                     {
+        //                       "id": "#123456",
+        //                       "date": DateTime.now(),
+        //                       "name": "Vipin Chandra",
+        //                       "status": "Completed"
+        //                     },
+        //                     {
+        //                       "id": "#123456",
+        //                       "date": DateTime.now(),
+        //                       "name": "Vipin Chandra",
+        //                       "status": "Completed"
+        //                     },
+        //                     {
+        //                       "id": "#123456",
+        //                       "date": DateTime.now(),
+        //                       "name": "Vipin Chandra",
+        //                       "status": "Completed"
+        //                     },
+        //                     {
+        //                       "id": "#123456",
+        //                       "date": DateTime.now(),
+        //                       "name": "Vipin Chandra",
+        //                       "status": "Current"
+        //                     },
+        //                     {
+        //                       "id": "#123456",
+        //                       "date": DateTime.now(),
+        //                       "name": "Vipin Chandra",
+        //                       "status": "Current"
+        //                     },
+        //                     {
+        //                       "id": "#123456",
+        //                       "date": DateTime.now(),
+        //                       "name": "Vipin Chandra",
+        //                       "status": "Current"
+        //                     },
+        //                   ].map(
+        //                     (data) {
+        //                       Color statusColor = AppColors.blueColor;
+        //                       switch (data['status'].toString()) {
+        //                         case "Completed":
+        //                           statusColor = AppColors.greenColor;
+        //                           break;
+        //                         case "Ongoing":
+        //                           statusColor = AppColors.orangeColor;
+        //                           break;
+        //                       }
+        //                       return DataRow(
+        //                         cells: [
+        //                           DataCell(Text(data['id'].toString())),
+        //                           DataCell(Text(data['date'].toString())),
+        //                           DataCell(Text(data['name'].toString())),
+        //                           DataCell(Text(data['status'].toString(),
+        //                               style: TextStyle(color: statusColor))),
+        //                           DataCell(TextButton(
+        //                               child: const Text("View"), onPressed: () {})),
+        //                         ],
+        //                       );
+        //                     },
+        //                   ).toList()),
+        //             ),
+        //           ),
+        //         ),
+        //       );
+        //     }),
+
+>>>>>>> Stashed changes
         child: _viewModel.isLoading
             ? const Center(child: CircularProgressIndicator.adaptive())
             : _viewModel.error != null
@@ -261,12 +402,21 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
                                             child: const Text("View"),
                                             onPressed: () {
                                               if (data.id != null) {
+<<<<<<< Updated upstream
                                                   Routemaster.of(context).push(
                                                       OrderPage.routeName,
                                                       queryParameters: {
                                                         "orderID": data.id!
                                                       });
                                                 }
+=======
+                                                Routemaster.of(context).push(
+                                                    OrderPage.routeName,
+                                                    queryParameters: {
+                                                      "orderID": data.id!
+                                                    });
+                                              }
+>>>>>>> Stashed changes
                                             })),
                                       ],
                                     );
@@ -276,10 +426,14 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
                         ),
                       ),
                     );
+<<<<<<< Updated upstream
                   }),
 >>>>>>> Stashed changes
       ),
     );
+=======
+                  }));
+>>>>>>> Stashed changes
   }
 
   Widget _heading() {
