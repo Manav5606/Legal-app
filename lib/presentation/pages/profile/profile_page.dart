@@ -46,7 +46,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   Widget build(BuildContext context) {
     ref.watch(ProfileViewModel.provider);
     final CollectionReference usersRef =
-        FirebaseFirestore.instance.collection('vendor service');
+        FirebaseFirestore.instance.collection('vendor-service');
 
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
@@ -1331,7 +1331,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                               FirebaseFirestore
                                                                   .instance
                                                                   .collection(
-                                                                      'vendor service');
+                                                                      'vendor-service');
 
                                                           final QuerySnapshot
                                                               userSnapshot =
@@ -1512,7 +1512,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                 final usersRef =
                                                     FirebaseFirestore.instance
                                                         .collection(
-                                                            'vendor service');
+                                                            'vendor-service');
                                                 final userSnapshot =
                                                     await usersRef
                                                         .where('vendor_id',
@@ -1551,7 +1551,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                   // final usersRef =
                                                   //     FirebaseFirestore.instance
                                                   //         .collection(
-                                                  //             'vendor service');
+                                                  //             'vendor-service');
                                                   // final userSnapshot =
                                                   //     await usersRef
                                                   //         .where('vendor_id',
