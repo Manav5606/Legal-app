@@ -28,6 +28,12 @@ class ProfileViewModel extends BaseViewModel {
 
   User? _user;
   Vendor? _vendor;
+  
+  List<Service> _service = [];
+  List<Service> get getService => _service;
+  List<Service> getSelectedServices() {
+  return _service.toList();
+}
 
   User? get getUser => _user;
   Vendor? get getVendor => _vendor;
@@ -41,6 +47,23 @@ class ProfileViewModel extends BaseViewModel {
 
   List<String> get getQualificationDegree => _qualificationDegree;
   List<String> get getQualificationUniversity => _qualificationUniversity;
+
+   bool isSelected(Service service) {
+    return _service.contains(service);
+  }
+
+  void selectService(Service service) {
+    _service.add(service);
+    
+  }
+
+  void deselectService(Service service) {
+    _service.remove(service);
+  }
+
+  void clearSelectedServices() {
+    _service.clear();
+  }
 
   void addQualificationDegree(String value) {
     _qualificationDegree.add(value);
@@ -396,6 +419,21 @@ class ProfileViewModel extends BaseViewModel {
     });
     toggleLoadingOn(false);
     preFillData();
+    fetchService();
+  }
+
+  Future<void> fetchService() async {
+    toggleLoadingOn(true);
+    final res = await _databaseRepositoryImpl.fetchServices();
+    res.fold((l) {
+      error = l.message;
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+    }, (r) {
+      clearErrors();
+      _service = r;
+      toggleLoadingOn(false);
+    });
   }
 
   Future<void> saveProfileData() async {

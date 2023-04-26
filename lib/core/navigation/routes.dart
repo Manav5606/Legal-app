@@ -7,10 +7,13 @@ import 'package:admin/presentation/pages/service_info/service_info_page.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../../presentation/pages/orders_admin_page/order_page.dart';
+
 abstract class AppRoutes {
   static String get login => LoginPage.routeName;
   static String get register => RegisterPage.routeName;
   static String get home => HomePage.routeName;
+  static String get order => OrderPage.routeName;
 }
 
 final routeLoggedOut = RouteMap(
@@ -51,6 +54,10 @@ final routeAdminLoggedIn = RouteMap(
     ProfilePage.routeName: (data) => MaterialPage(
             child: ProfilePage(
           userID: data.queryParameters['userID'] ?? "",
+        )),
+         OrderPage.routeName: (data) => MaterialPage(
+            child: OrderPage(
+          orderID: data.queryParameters['orderID'] ?? "",
         )),
   },
 );
