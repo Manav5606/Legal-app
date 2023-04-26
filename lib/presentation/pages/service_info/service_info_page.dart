@@ -80,85 +80,106 @@ class _ServiceInfoPageState extends ConsumerState<ServiceInfoPage> {
           ? const Center(child: CircularProgressIndicator.adaptive())
           : ScreenTypeLayout.builder(
               mobile: (context) => ListView(
-                children: [
-                  const Header(mobile: true),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(_viewModel.selectedService!.shortDescription,
-                            style: FontStyles.font14Semibold
-                                .copyWith(color: AppColors.blueColor)),
-                        Text(_viewModel.selectedService!.aboutDescription,
-                            style: FontStyles.font12Regular
-                                .copyWith(color: AppColors.blueColor)),
-                        Text("Documents Required",
-                            style: FontStyles.font14Semibold
-                                .copyWith(color: AppColors.blueColor)),
-                        // TODO fieldDescription can be a better option here.
-                        ..._viewModel.getRequiredDataFields
-                            .map((e) => Text("- ${e.fieldName}",
-                                style: FontStyles.font12Regular
-                                    .copyWith(color: AppColors.blueColor)))
-                            .toList(),
-                        const Divider(),
-                        RichText(
-                          text: TextSpan(
-                              text: "Final Price  ",
-                              style: FontStyles.font14Semibold
-                                  .copyWith(color: AppColors.blueColor),
-                              children: [
-                                TextSpan(
-                                    text:
-                                        "${_viewModel.selectedService?.marketPrice}",
-                                    style: FontStyles.font14Semibold.copyWith(
-                                        decoration:
-                                            TextDecoration.lineThrough)),
-                                TextSpan(
-                                    text:
-                                        "   ${_viewModel.selectedService?.ourPrice}",
-                                    style: FontStyles.font16Semibold),
-                              ]),
-                        ),
-                        Row(
-                          children: [
-                            TextButton(
-                                onPressed: () {
-                                  Routemaster.of(context).pop();
-                                },
-                                child: const Text("Cancel")),
-                            CTAButton(
-                                title: "Buy Now",
-                                color: AppColors.greenColor,
-                                fullWidth: false,
-                                mobile: true,
-                                loading: _viewModel.isLoading,
-                                onTap: () async {
-                                  // await _viewModel.createPurchase();
-                                  _viewModel.createTransaction(rpData: {});
-                                },
-                                radius: 4),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const ContactUs(height: 250, mobile: true),
-                  const Footer(),
+                children: const [
+                  Header(mobile: true),
+                  ServiceInfo(),
+                  ContactUs(height: 250, mobile: true),
+                  Footer(),
                 ],
               ),
               desktop: (context) => ListView(
                 children: [
                   const Header(mobile: false),
-                  //
+                  const ServiceInfo(),
                   const ContactUs(height: 250),
                   ContactUsCard(contactDetails: _contactDetails, height: 200),
                   const Footer(),
                 ],
               ),
             ),
+    );
+  }
+}
+
+class ServiceInfo extends ConsumerStatefulWidget {
+  const ServiceInfo({
+    super.key,
+  });
+
+  @override
+  ConsumerState<ServiceInfo> createState() => _ServiceInfoState();
+}
+
+class _ServiceInfoState extends ConsumerState<ServiceInfo> {
+  late final ServiceInfoPageViewModel _viewModel;
+
+  @override
+  void initState() {
+    _viewModel = ref.read(ServiceInfoPageViewModel.provider);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.watch(ServiceInfoPageViewModel.provider);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(_viewModel.selectedService!.shortDescription,
+              style: FontStyles.font14Semibold
+                  .copyWith(color: AppColors.blueColor)),
+          Text(_viewModel.selectedService!.aboutDescription,
+              style: FontStyles.font12Regular
+                  .copyWith(color: AppColors.blueColor)),
+          Text("Documents Required",
+              style: FontStyles.font14Semibold
+                  .copyWith(color: AppColors.blueColor)),
+          // TODO fieldDescription can be a better option here.
+          ..._viewModel.getRequiredDataFields
+              .map((e) => Text("- ${e.fieldName}",
+                  style: FontStyles.font12Regular
+                      .copyWith(color: AppColors.blueColor)))
+              .toList(),
+          const Divider(),
+          RichText(
+            text: TextSpan(
+                text: "Final Price  ",
+                style: FontStyles.font14Semibold
+                    .copyWith(color: AppColors.blueColor),
+                children: [
+                  TextSpan(
+                      text: "${_viewModel.selectedService?.marketPrice}",
+                      style: FontStyles.font14Semibold
+                          .copyWith(decoration: TextDecoration.lineThrough)),
+                  TextSpan(
+                      text: "   ${_viewModel.selectedService?.ourPrice}",
+                      style: FontStyles.font16Semibold),
+                ]),
+          ),
+          Row(
+            children: [
+              TextButton(
+                  onPressed: () {
+                    Routemaster.of(context).pop();
+                  },
+                  child: const Text("Cancel")),
+              CTAButton(
+                  title: "Buy Now",
+                  color: AppColors.greenColor,
+                  fullWidth: false,
+                  mobile: true,
+                  loading: _viewModel.isLoading,
+                  onTap: () async {
+                    // await _viewModel.createPurchase();
+                    _viewModel.createTransaction(rpData: {});
+                  },
+                  radius: 4),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

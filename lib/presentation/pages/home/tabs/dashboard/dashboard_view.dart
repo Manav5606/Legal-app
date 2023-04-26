@@ -309,44 +309,45 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
             lightColor: AppColors.lightBlueColor,
             regColor: AppColors.blueColor,
             title: "Total Orders",
-            value: "200",
+            value: _viewModel.getOrders.length.toString(),
             selected: true,
-            onTap: () {
-              // TODO
-            },
+            onTap: null,
           ),
           StatsBox(
             darkColor: AppColors.darkRedColor,
             lightColor: AppColors.lightRedColor,
             regColor: AppColors.redColor,
             title: "New Orders",
-            value: "50",
+            value: _viewModel.getOrders
+                .where((order) => order.status == OrderStatus.created)
+                .length
+                .toString(),
             selected: false,
-            onTap: () {
-              // TODO
-            },
+            onTap: null,
           ),
           StatsBox(
             darkColor: AppColors.darkOrangeColor,
             lightColor: AppColors.lightOrangeColor,
             regColor: AppColors.orangeColor,
             title: "Ongoing",
-            value: "80",
+            value: _viewModel.getOrders
+                .where((order) => order.status == OrderStatus.assignedToClient)
+                .length
+                .toString(),
             selected: false,
-            onTap: () {
-              // TODO
-            },
+            onTap: null,
           ),
           StatsBox(
             darkColor: AppColors.darkGreenColor,
             lightColor: AppColors.lightGreenColor,
             regColor: AppColors.greenColor,
             title: "Completed",
-            value: "70",
+            value: _viewModel.getOrders
+                .where((order) => order.status == OrderStatus.completed)
+                .length
+                .toString(),
             selected: false,
-            onTap: () {
-              // TODO
-            },
+            onTap: null,
           ),
         ],
       ),

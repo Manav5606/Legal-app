@@ -221,8 +221,6 @@ class DatabaseRepositoryImpl extends DatabaseRepository
     }
   }
 
-  
-
   @override
   Future<Either<model.AppError, model.Category>> updateCategory(
       {required model.Category category}) async {
@@ -558,7 +556,7 @@ class DatabaseRepositoryImpl extends DatabaseRepository
       {required model.Order order}) async {
     try {
       final response = await _firebaseFirestore
-          .collection(FirebaseConfig.transactionCollection)
+          .collection(FirebaseConfig.orderCollection)
           .add(order.toJson());
 
       return Right(model.Order.fromSnapshot(await response.get()));
@@ -818,7 +816,6 @@ class DatabaseRepositoryImpl extends DatabaseRepository
     }
   }
 
-
   @override
   Future<Either<model.AppError, List<model.Order>>> fetchOrders() async {
     try {
@@ -840,8 +837,7 @@ class DatabaseRepositoryImpl extends DatabaseRepository
   }
 
   @override
-  Future<Either<model.AppError, model.Order>> fetchOrderByID(
-      String uid) async {
+  Future<Either<model.AppError, model.Order>> fetchOrderByID(String uid) async {
     try {
       final response = await _firebaseFirestore
           .collection(FirebaseConfig.orderCollection)
@@ -859,7 +855,4 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           model.AppError(message: "Unkown Error, Plese try again later."));
     }
   }
-
-
-
 }
