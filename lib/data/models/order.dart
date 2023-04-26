@@ -4,10 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Order {
   String? id;
-  final String? userID;
+  final String? clientID;
   final int? createdAt;
   final OrderStatus? status;
-  String? clientID;
+  String? vendorID;
   final String? serviceID;
   final List<ServiceRequest>? orderServiceRequest;
   final String? transactionID;
@@ -15,9 +15,9 @@ class Order {
   Order({
     this.id,
     this.createdAt,
-    this.userID,
-    this.status,
     this.clientID,
+    this.status,
+    this.vendorID,
     this.serviceID,
     this.orderServiceRequest,
     this.transactionID,
@@ -30,11 +30,11 @@ class Order {
     return Order(
       id: documentSnapshot.id,
       createdAt: data['created_at'],
-      userID: data['user_id'],
+      clientID: data['client_id'],
       status: OrderStatus.values.firstWhere(
           (element) => element.name == data['status'],
           orElse: () => OrderStatus.created),
-      clientID: data['client_id'],
+      vendorID: data['vendor_id'],
       serviceID: data['service_id'],
       orderServiceRequest: data['order_service_request'] == null
           ? []
@@ -50,14 +50,14 @@ class Order {
   //   String? client_id
   // }) =>
   //     Order(
-  //       clientID: clientID,
+  //       vendorID: vendorID,
   //       status: status ?? this.status, id: id
   //     );
 
   Map<String, dynamic> toJson() => {
-        "user_id": userID,
-        "status": status?.name,
         "client_id": clientID,
+        "status": status?.name,
+        "vendor_id": vendorID,
         "service_id": serviceID,
         "order_service_request":
             orderServiceRequest?.map((e) => e.toJson()).toList(),

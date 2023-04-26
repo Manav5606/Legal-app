@@ -236,13 +236,13 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
                                         DataCell(Text(
                                             data.createdAt?.formatToDate() ??
                                                 "-")),
-                                        DataCell(Text(data.userID!)),
+                                        DataCell(Text(data.clientID!)),
                                         DataCell(
                                           Container(
                                             child: FutureBuilder<String?>(
                                               future:
                                                   getNameFromOtherCollection(
-                                                      data.userID ?? ""),
+                                                      data.clientID ?? ""),
                                               builder: (BuildContext context,
                                                   AsyncSnapshot<String?>
                                                       snapshot) {

@@ -382,7 +382,8 @@ class OrderPageModel extends BaseViewModel {
       _Order = r;
 
       // if (_user?.userType == UserType.vendor) {
-      final vendorRes = await _databaseRepositoryImpl.fetchUserByID(r.userID!);
+      final vendorRes =
+          await _databaseRepositoryImpl.fetchUserByID(r.clientID!);
       vendorRes.fold((l) {
         error = l.message;
         Messenger.showSnackbar(l.message);

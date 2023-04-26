@@ -1,3 +1,4 @@
+import 'package:admin/core/enum/order_status.dart';
 import 'package:admin/core/enum/role.dart';
 import 'package:admin/core/provider.dart';
 import 'package:admin/core/utils/messenger.dart';
@@ -10,19 +11,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constant/firebase_config.dart';
 
 final _provider = ChangeNotifierProvider.autoDispose(
-    (ref) => AssignOrderToVendorModel(ref.read(Repository.database)));
+    (ref) => AssignOrderToVendorViewModel(ref.read(Repository.database)));
 
-class AssignOrderToVendorModel extends BaseViewModel {
+class AssignOrderToVendorViewModel extends BaseViewModel {
   final DatabaseRepositoryImpl _databaseRepositoryImpl;
 
   bool sortAscending = false;
   int sortIndex = 0;
 
-  AssignOrderToVendorModel(this._databaseRepositoryImpl) {
+  AssignOrderToVendorViewModel(this._databaseRepositoryImpl) {
     fetchVendors();
   }
 
-  static AutoDisposeChangeNotifierProvider<AssignOrderToVendorModel>
+  static AutoDisposeChangeNotifierProvider<AssignOrderToVendorViewModel>
       get provider => _provider;
 
   String? error;
@@ -55,53 +56,47 @@ class AssignOrderToVendorModel extends BaseViewModel {
     });
   }
 
-Future<void> updateOrder(String orderId, String newClientName) async {
-  toggleLoadingOn(true);
+  Future<void> updateOrder(String orderId, String newClientName) async {
+    toggleLoadingOn(true);
 
-  try {
-    // Update the 'client' field in Firestore
-    final orderRef = FirebaseFirestore.instance
-        .collection(FirebaseConfig.orderCollection)
-        .doc(orderId);
-    await orderRef.update({'client_id': newClientName});
+    try {
+      // Update the 'client' field in Firestore
+      final orderRef = FirebaseFirestore.instance
+          .collection(FirebaseConfig.orderCollection)
+          .doc(orderId);
+      await orderRef.update({'client_id': newClientName});
 
-    // Update the 'client' field in the local order object as well
-  
-    clearErrors();
-    toggleLoadingOn(false);
-    Messenger.showSnackbar('cleint_id updated successfully.');
-  
-  } catch (e) {
-    
-    toggleLoadingOn(false);
-    Messenger.showSnackbar('Unknown Error, Please try again later.');
+      // Update the 'client' field in the local order object as well
+
+      clearErrors();
+      toggleLoadingOn(false);
+      Messenger.showSnackbar('cleint_id updated successfully.');
+    } catch (e) {
+      toggleLoadingOn(false);
+      Messenger.showSnackbar('Unknown Error, Please try again later.');
+    }
   }
-}
 
-Future<void> updateOrderStatus(String orderId, String status) async {
-  toggleLoadingOn(true);
+  Future<void> updateOrderStatus(String orderId, OrderStatus status) async {
+    toggleLoadingOn(true);
 
-  try {
-    // Update the 'client' field in Firestore
-    final orderRef = FirebaseFirestore.instance
-        .collection(FirebaseConfig.orderCollection)
-        .doc(orderId);
-    await orderRef.update({'status': status});
+    try {
+      // Update the 'client' field in Firestore
+      final orderRef = FirebaseFirestore.instance
+          .collection(FirebaseConfig.orderCollection)
+          .doc(orderId);
+      await orderRef.update({'status': status.name});
 
-    // Update the 'client' field in the local order object as well
-  
-    clearErrors();
-    toggleLoadingOn(false);
-    Messenger.showSnackbar('status name updated successfully.');
-  
-  } catch (e) {
-    
-    toggleLoadingOn(false);
-    Messenger.showSnackbar('Unknown Error, Please try again later.');
+      // Update the 'client' field in the local order object as well
+
+      clearErrors();
+      toggleLoadingOn(false);
+      Messenger.showSnackbar('status name updated successfully.');
+    } catch (e) {
+      toggleLoadingOn(false);
+      Messenger.showSnackbar('Unknown Error, Please try again later.');
+    }
   }
-}
-
-
 
   void sortVendors(int index, bool ascending) {
     switch (index) {
