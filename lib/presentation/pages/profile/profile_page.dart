@@ -1319,75 +1319,87 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                         children: [
                                                           Text(service
                                                               .aboutDescription),
-                                                          SizedBox(
-                                                            width: 20,
+                                                          SizedBox(width: 20),
+                                                          FutureBuilder<
+                                                              DocumentSnapshot>(
+                                                            future: usersRef
+                                                                .where(
+                                                                    'vendor_id',
+                                                                    isEqualTo: widget
+                                                                        .userID)
+                                                                .get()
+                                                                .then((snapshot) => snapshot
+                                                                        .docs
+                                                                        .isNotEmpty
+                                                                    ? snapshot
+                                                                        .docs
+                                                                        .first
+                                                                        .reference
+                                                                        .get()
+                                                                    : Future.value(
+                                                                        null)),
+                                                            builder: (BuildContext
+                                                                    context,
+                                                                AsyncSnapshot<
+                                                                        DocumentSnapshot>
+                                                                    snapshot) {
+                                                              if (snapshot
+                                                                      .connectionState ==
+                                                                  ConnectionState
+                                                                      .done) {
+                                                                final docRef =
+                                                                    snapshot
+                                                                        .data;
+                                                                if (docRef !=
+                                                                        null &&
+                                                                    docRef
+                                                                        .get(
+                                                                            'service_id')
+                                                                        .contains(
+                                                                            service.id)) {
+                                                                  return Text(
+                                                                      "Already Added");
+                                                                } else {
+                                                                  return ElevatedButton(
+                                                                    onPressed:
+                                                                        () async {
+                                                                      final myList =
+                                                                          [
+                                                                        service
+                                                                            .id!
+                                                                      ];
+                                                                      await _viewModel.addService(
+                                                                          myList,
+                                                                          widget
+                                                                              .userID);
+                                                                    },
+                                                                    child: Text(
+                                                                        "Add"),
+                                                                  );
+                                                                }
+                                                              } else {
+                                                                return Text(
+                                                                    "Loading...");
+                                                              }
+                                                            },
                                                           ),
-                                                          ElevatedButton(
-                                                            onPressed:
-                                                                () async {
-                                                              List<String>
-                                                                  myList = [];
-
-                                                              myList.add(
-                                                                  service.id!);
-
-                                                              _viewModel
-                                                                  .addService(
+                                                          InkWell(
+                                                            onTap: () async {
+                                                              final myList = [
+                                                                service.id!
+                                                              ];
+                                                              await _viewModel
+                                                                  .removeServicesFromVendor(
                                                                       myList,
                                                                       widget
                                                                           .userID);
                                                             },
-                                                            child: docRefId !=
-                                                                    null
-                                                                ? FutureBuilder<
-                                                                    DocumentSnapshot>(
-                                                                    future: usersRef
-                                                                        .doc(
-                                                                            docRefId)
-                                                                        .get(),
-                                                                    builder: (BuildContext
-                                                                            context,
-                                                                        AsyncSnapshot<DocumentSnapshot>
-                                                                            snapshot) {
-                                                                      if (snapshot
-                                                                              .connectionState ==
-                                                                          ConnectionState
-                                                                              .done) {
-                                                                        final data =
-                                                                            snapshot.data!;
-                                                                        if (data
-                                                                            .get('service_id')
-                                                                            .contains(service.id)) {
-                                                                          return Text(
-                                                                              "Already Added");
-                                                                        } else {
-                                                                          return Text(
-                                                                              "Add");
-                                                                        }
-                                                                      } else {
-                                                                        return Text(
-                                                                            "Loading...");
-                                                                      }
-                                                                    },
-                                                                  )
-                                                                : Text("Add"),
+                                                            child: Text(
+                                                              "Remove",
+                                                              style: FontStyles
+                                                                  .font14Semibold,
+                                                            ),
                                                           ),
-                                                          ElevatedButton(
-                                                              onPressed:
-                                                                  () async {
-                                                                final List<
-                                                                        String>
-                                                                    myList = [
-                                                                  service.id!
-                                                                ];
-                                                                _viewModel
-                                                                    .removeServicesFromVendor(
-                                                                        myList,
-                                                                        widget
-                                                                            .userID);
-                                                              },
-                                                              child: Text(
-                                                                  "Remove"))
                                                         ],
                                                       );
                                                     },
