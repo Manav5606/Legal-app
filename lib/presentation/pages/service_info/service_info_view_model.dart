@@ -1,7 +1,6 @@
 import 'package:admin/core/enum/order_status.dart';
 import 'package:admin/core/enum/transaction_status.dart';
 import 'package:admin/core/provider.dart';
-import 'package:admin/core/state/auth_state.dart';
 import 'package:admin/core/utils/messenger.dart';
 import 'package:admin/data/models/models.dart';
 import 'package:admin/data/repositories/index.dart';
@@ -10,17 +9,15 @@ import 'package:admin/presentation/base_view_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _provider = ChangeNotifierProvider((ref) => ServiceInfoPageViewModel(
-    ref.read(Repository.database),
-    ref.read(RazorpayHandler.provider),
-    ref.read(AppState.auth)));
+    ref.read(Repository.database), ref.read(RazorpayHandler.provider), ref));
 
 class ServiceInfoPageViewModel extends BaseViewModel {
   final DatabaseRepositoryImpl _databaseRepositoryImpl;
   final RazorpayHandler _razorpayHandler;
-  final AuthState _authState;
+  final Ref _ref;
 
   ServiceInfoPageViewModel(
-      this._databaseRepositoryImpl, this._razorpayHandler, this._authState);
+      this._databaseRepositoryImpl, this._razorpayHandler, this._ref);
 
   static ChangeNotifierProvider<ServiceInfoPageViewModel> get provider =>
       _provider;
@@ -66,10 +63,15 @@ class ServiceInfoPageViewModel extends BaseViewModel {
       return;
     }
     toggleLoadingOn(true);
+    final user = _ref.read(AppState.auth).user;
+    if (user == null) {
+      Messenger.showSnackbar("User is not authenticated");
+      return;
+    }
     final res = await _razorpayHandler.openCheckoutPage(
       amount: ((selectedService!.ourPrice ?? 0) * 100).toInt(),
-      contact: "91${_authState.user!.phoneNumber}",
-      email: _authState.user!.email,
+      contact: "91${user.phoneNumber}",
+      email: user.email,
       description: selectedService!.shortDescription,
     );
 
@@ -80,8 +82,13 @@ class ServiceInfoPageViewModel extends BaseViewModel {
 
   Future<void> createTransaction({required Map<String, dynamic> rpData}) async {
     toggleLoadingOn(true);
+    final user = _ref.read(AppState.auth).user;
+    if (user == null) {
+      Messenger.showSnackbar("User is not authenticated");
+      return;
+    }
     final Transaction transaction = Transaction(
-      userID: _authState.user!.id!,
+      userID: user.id!,
       amount: (selectedService!.ourPrice!) * 100,
       createdAt: DateTime.now().millisecondsSinceEpoch,
       successDetails: rpData,
@@ -107,9 +114,14 @@ class ServiceInfoPageViewModel extends BaseViewModel {
     required String transactionId,
   }) async {
     toggleLoadingOn(true);
+    final user = _ref.read(AppState.auth).user;
+    if (user == null) {
+      Messenger.showSnackbar("User is not authenticated");
+      return;
+    }
     final Order order = Order(
       id: orderId,
-      clientID: _authState.user!.id!,
+      clientID: user.id!,
       status: OrderStatus.created,
       vendorID: null,
       serviceID: selectedService!.id!,

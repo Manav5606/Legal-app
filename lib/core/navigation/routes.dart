@@ -20,8 +20,14 @@ final routeLoggedOut = RouteMap(
   onUnknownRoute: (_) => const Redirect(LandingPage.routeName),
   routes: {
     LandingPage.routeName: (_) => const MaterialPage(child: LandingPage()),
-    LoginPage.routeName: (_) => const MaterialPage(child: LoginPage()),
-    RegisterPage.routeName: (_) => const MaterialPage(child: RegisterPage()),
+    LoginPage.routeName: (data) => MaterialPage(
+        child: LoginPage(
+            navigateBack:
+                data.queryParameters['navigateBack'] == "true" ? true : false)),
+    RegisterPage.routeName: (data) => MaterialPage(
+        child: RegisterPage(
+            navigateBack:
+                data.queryParameters['navigateBack'] == "true" ? true : false)),
     CategoryClientPage.routeName: (data) => MaterialPage(
         child: CategoryClientPage(
             categoryId: data.queryParameters['categoryId'] ?? "")),
@@ -55,7 +61,7 @@ final routeAdminLoggedIn = RouteMap(
             child: ProfilePage(
           userID: data.queryParameters['userID'] ?? "",
         )),
-         OrderPage.routeName: (data) => MaterialPage(
+    OrderPage.routeName: (data) => MaterialPage(
             child: OrderPage(
           orderID: data.queryParameters['orderID'] ?? "",
         )),
