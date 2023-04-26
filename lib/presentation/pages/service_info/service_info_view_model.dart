@@ -109,9 +109,9 @@ class ServiceInfoPageViewModel extends BaseViewModel {
     toggleLoadingOn(true);
     final Order order = Order(
       id: orderId,
-      userID: _authState.user!.id!,
+      clientID: _authState.user!.id!,
       status: OrderStatus.created,
-      clientID: null,
+      vendorID: null,
       serviceID: selectedService!.id!,
       orderServiceRequest: [],
       transactionID: transactionId,
