@@ -2,6 +2,7 @@ import 'package:admin/presentation/pages/authentication/index.dart';
 import 'package:admin/presentation/pages/category_client/category_client_page.dart';
 import 'package:admin/presentation/pages/home/home_page.dart';
 import 'package:admin/presentation/pages/landing/landing_page.dart';
+import 'package:admin/presentation/pages/my_orders/my_orders_page.dart';
 import 'package:admin/presentation/pages/profile/profile_page.dart';
 import 'package:admin/presentation/pages/service_info/service_info_page.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,7 @@ final routeLoggedIn = RouteMap(
   routes: {
     LandingPage.routeName: (_) => const MaterialPage(child: LandingPage()),
     HomePage.routeName: (_) => const MaterialPage(child: HomePage()),
+    MyOrdersPage.routeName: (_) => const MaterialPage(child: MyOrdersPage()),
     CategoryClientPage.routeName: (data) => MaterialPage(
         child: CategoryClientPage(
             categoryId: data.queryParameters['categoryId'] ?? "")),
@@ -57,6 +59,7 @@ final routeAdminLoggedIn = RouteMap(
   onUnknownRoute: (_) => const Redirect(HomePage.routeName),
   routes: {
     HomePage.routeName: (_) => const MaterialPage(child: HomePage()),
+    MyOrdersPage.routeName: (_) => const MaterialPage(child: MyOrdersPage()),
     ProfilePage.routeName: (data) => MaterialPage(
             child: ProfilePage(
           userID: data.queryParameters['userID'] ?? "",

@@ -3,6 +3,7 @@ import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/provider.dart';
 import 'package:admin/data/models/models.dart';
 import 'package:admin/presentation/pages/authentication/index.dart';
+import 'package:admin/presentation/pages/my_orders/my_orders_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
@@ -68,6 +69,16 @@ class _CustomMobileDrawerState extends ConsumerState<CustomMobileDrawer> {
               //         style: FontStyles.font14Semibold.copyWith(
               //             fontSize: 18, color: AppColors.blackColor))),
               Divider(color: AppColors.lightGreyColor, thickness: 2),
+              Visibility(
+                visible: isAuthenticated,
+                child: ListTile(
+                    onTap: () {
+                      Routemaster.of(context).push(MyOrdersPage.routeName);
+                    },
+                    title: Text("My Orders",
+                        style: FontStyles.font12Regular.copyWith(
+                            fontSize: 16, color: AppColors.blackColor))),
+              ),
               ListTile(
                   title: Text("FAQs",
                       style: FontStyles.font12Regular.copyWith(

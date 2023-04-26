@@ -54,9 +54,9 @@ abstract class DatabaseRepository {
       {required model.Transaction transaction});
   Future<Either<model.AppError, model.Order>> createOrder(
       {required model.Order order});
-      Future<Either<model.AppError, model.Order>> updateOrder(
+  Future<Either<model.AppError, model.Order>> updateOrder(
       {required model.Order order});
-      Future<Either<model.AppError, model.Order>> fetchOrderByID(String uid);
+  Future<Either<model.AppError, model.Order>> fetchOrderByID(String uid);
   Future<Either<model.AppError, model.BannerDetail>> createBanner(
       {required model.BannerDetail banner});
   Future<Either<model.AppError, model.BannerDetail>> updateBanner(
@@ -78,4 +78,8 @@ abstract class DatabaseRepository {
   Future<Either<model.AppError, bool>> deleteContact(
       {required model.Category contact});
   Future<Either<model.AppError, List<model.Category>>> getContactDetails();
+  Future<Either<model.AppError, List<model.Order>>> getAllOrdersOfClient(
+      {required String clientId});
+  Future<Either<model.AppError, List<model.Order>>> getAllOrdersOfVendor(
+      {required String vendorId});
 }
