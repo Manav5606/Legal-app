@@ -21,7 +21,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+<<<<<<< Updated upstream
 import '../Assign_order_dialog/vendor_admin/assign_order_page.dart';
+=======
+import '../../../core/utils/messenger.dart';
+import '../assign_order_dialog/vendor_admin/assign_order_page.dart';
+>>>>>>> Stashed changes
 import 'order_page_model.dart';
 
 class OrderPage extends ConsumerStatefulWidget {
@@ -272,17 +277,27 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                                             color: Color.fromARGB(
                                                 255, 0, 71, 130)),
                                       ),
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          barrierDismissible: false,
-                                          builder: (_) => Dialog(
-                                            insetPadding:
-                                                const EdgeInsets.all(24),
-                                            child: AssignOrderToVendor(
-                                                widget.orderID),
-                                          ),
-                                        );
+                                      onPressed: () async {
+                                        final status = await _viewModel
+                                            .getOrderStatus(widget.orderID);
+
+                                        if (status !=
+                                            OrderStatus.approved.name) {
+                                          Messenger.showSnackbar(
+                                              'Please Approve the order.');
+                                        } else {
+                                          // ignore: use_build_context_synchronously
+                                          showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (_) => Dialog(
+                                              insetPadding:
+                                                  const EdgeInsets.all(24),
+                                              child: AssignOrderToVendor(
+                                                  widget.orderID),
+                                            ),
+                                          );
+                                        }
                                       }),
                                   const SizedBox(width: 8),
                                 ],
@@ -295,16 +310,37 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                                         "Reject",
                                         style: TextStyle(color: Colors.red),
                                       ),
+<<<<<<< Updated upstream
                                       onPressed: () {
                                         _assignOrderModel.updateOrderStatus(
                                             widget.orderID,
                                             OrderStatus.rejected.toString());
+=======
+                                      onPressed: () async {
+                                        await _viewModel
+                                            .updateOrderStatus(
+                                              widget.orderID,
+                                              OrderStatus.rejected,
+                                            )
+                                            .then((value) =>
+                                                Routemaster.of(context).pop());
+>>>>>>> Stashed changes
                                       }),
                                   const SizedBox(width: 8),
                                   CTAButton(
                                     title: "Accept",
                                     onTap: () async {
+<<<<<<< Updated upstream
                                       // _viewModel.saveProfileDataa();
+=======
+                                      await _viewModel
+                                          .updateOrderStatus(
+                                            widget.orderID,
+                                            OrderStatus.approved,
+                                          )
+                                          .then((value) =>
+                                              Routemaster.of(context).pop());
+>>>>>>> Stashed changes
                                     },
                                     color: AppColors.darkGreenColor,
                                     fullWidth: false,

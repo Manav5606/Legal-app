@@ -1291,179 +1291,108 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                 ),
                                               ),
                                               const SizedBox(height: 8),
-                                              ListView.builder(
-                                                shrinkWrap: true,
-                                                itemCount: _viewModel
-                                                    .getService.length,
-                                                itemBuilder:
-                                                    (BuildContext context,
-                                                        int index) {
-                                                  final service = _viewModel
-                                                      .getService[index];
+                                              ExpansionTile(
+                                                title: Text('Select services:',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    )),
+                                                children: [
+                                                  ListView.builder(
+                                                    shrinkWrap: true,
+                                                    itemCount: _viewModel
+                                                        .getService.length,
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int index) {
+                                                      final service = _viewModel
+                                                          .getService[index];
 
-                                                  return Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(service
-                                                          .aboutDescription),
-                                                      SizedBox(
-                                                        width: 20,
-                                                      ),
-                                                      ElevatedButton(
-                                                        onPressed: () async {
-                                                          // Check if the "users" collection exists
-                                                          List<String> myList =
-                                                              [];
+                                                      return Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(service
+                                                              .aboutDescription),
+                                                          SizedBox(
+                                                            width: 20,
+                                                          ),
+                                                          ElevatedButton(
+                                                            onPressed:
+                                                                () async {
+                                                              List<String>
+                                                                  myList = [];
 
-                                                          myList
-                                                              .add(service.id!);
-                                                          print(myList);
+                                                              myList.add(
+                                                                  service.id!);
 
-                                                          print(widget.userID);
-
-                                                          final CollectionReference
-                                                              usersRef =
-                                                              FirebaseFirestore
-                                                                  .instance
-                                                                  .collection(
-                                                                      'vendor-service');
-
-                                                          final QuerySnapshot
-                                                              userSnapshot =
-                                                              await usersRef
-                                                                  .where(
-                                                                      'vendor_id',
-                                                                      isEqualTo:
-                                                                          widget
-                                                                              .userID)
-                                                                  .get();
-                                                          // if (userSnapshot
-                                                          //     .docs.isEmpty) {
-                                                          // Collection doesn't exist, create document with "service" field
-                                                          final DocumentReference
-                                                              docRef =
-                                                              userSnapshot
-                                                                  .docs
-                                                                  .first
-                                                                  .reference;
-
-                                                          if (userSnapshot.docs
-                                                              .isNotEmpty) {
-                                                            docRefId =
-                                                                userSnapshot
-                                                                    .docs
-                                                                    .first
-                                                                    .id;
-                                                            await docRef
-                                                                .update({
-                                                              // 'vendor_id': widget.userID,
-                                                              'service_id':
-                                                                  FieldValue
-                                                                      .arrayUnion(
-                                                                          myList),
-                                                            });
-                                                          } else {}
-
-                                                          if (userSnapshot
-                                                              .docs.isEmpty) {
-                                                            final result =
-                                                                await usersRef
-                                                                    .add({
-                                                              'vendor_id':
-                                                                  widget.userID,
-                                                              'service_id':
-                                                                  FieldValue
-                                                                      .arrayUnion(
-                                                                          myList),
-                                                            });
-                                                            docRefId =
-                                                                result.id;
-                                                          }
-                                                          // }
-                                                          setState(() {});
-                                                        },
-                                                        child: docRefId != null
-                                                            ? FutureBuilder<
-                                                                DocumentSnapshot>(
-                                                                future: usersRef
-                                                                    .doc(
-                                                                        docRefId)
-                                                                    .get(),
-                                                                builder: (BuildContext
-                                                                        context,
-                                                                    AsyncSnapshot<
-                                                                            DocumentSnapshot>
-                                                                        snapshot) {
-                                                                  if (snapshot
-                                                                          .connectionState ==
-                                                                      ConnectionState
-                                                                          .done) {
-                                                                    final data =
-                                                                        snapshot
-                                                                            .data!;
-                                                                    if (data
-                                                                        .get(
-                                                                            'service_id')
-                                                                        .contains(
-                                                                            service.id)) {
-                                                                      return Text(
-                                                                          "Already Added");
-                                                                    } else {
-                                                                      return Text(
-                                                                          "Add");
-                                                                    }
-                                                                  } else {
-                                                                    return Text(
-                                                                        "Loading...");
-                                                                  }
-                                                                },
-                                                              )
-                                                            : Text("Add"),
-                                                      ),
-                                                      ElevatedButton(
-                                                          onPressed: () async {
-                                                            final List<String>
-                                                                myList = [
-                                                              service.id!
-                                                            ];
-
-                                                            final QuerySnapshot
-                                                                userSnapshot =
-                                                                await usersRef
-                                                                    .where(
-                                                                        'vendor_id',
-                                                                        isEqualTo:
-                                                                            widget.userID)
-                                                                    .get();
-                                                            final DocumentReference
-                                                                docRef =
-                                                                userSnapshot
-                                                                    .docs
-                                                                    .first
-                                                                    .reference;
-
-                                                            if (docRef.id !=
-                                                                null) {
-                                                              await docRef
-                                                                  .update({
-                                                                'service_id': FieldValue
-                                                                    .arrayRemove(
-                                                                        myList),
-                                                              });
-                                                            }
-
-                                                            setState(
-                                                                () {}); // Update the UI to show the updated text
-                                                          },
-                                                          child: Text("Remove"))
-                                                    ],
-                                                  );
-                                                },
+                                                              _viewModel
+                                                                  .addService(
+                                                                      myList,
+                                                                      widget
+                                                                          .userID);
+                                                            },
+                                                            child: docRefId !=
+                                                                    null
+                                                                ? FutureBuilder<
+                                                                    DocumentSnapshot>(
+                                                                    future: usersRef
+                                                                        .doc(
+                                                                            docRefId)
+                                                                        .get(),
+                                                                    builder: (BuildContext
+                                                                            context,
+                                                                        AsyncSnapshot<DocumentSnapshot>
+                                                                            snapshot) {
+                                                                      if (snapshot
+                                                                              .connectionState ==
+                                                                          ConnectionState
+                                                                              .done) {
+                                                                        final data =
+                                                                            snapshot.data!;
+                                                                        if (data
+                                                                            .get('service_id')
+                                                                            .contains(service.id)) {
+                                                                          return Text(
+                                                                              "Already Added");
+                                                                        } else {
+                                                                          return Text(
+                                                                              "Add");
+                                                                        }
+                                                                      } else {
+                                                                        return Text(
+                                                                            "Loading...");
+                                                                      }
+                                                                    },
+                                                                  )
+                                                                : Text("Add"),
+                                                          ),
+                                                          ElevatedButton(
+                                                              onPressed:
+                                                                  () async {
+                                                                final List<
+                                                                        String>
+                                                                    myList = [
+                                                                  service.id!
+                                                                ];
+                                                                _viewModel
+                                                                    .removeServicesFromVendor(
+                                                                        myList,
+                                                                        widget
+                                                                            .userID);
+                                                              },
+                                                              child: Text(
+                                                                  "Remove"))
+                                                        ],
+                                                      );
+                                                    },
+                                                  ),
+                                                ],
                                               ),
                                               const SizedBox(height: 16),
                                             ],
@@ -1496,84 +1425,83 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                   _viewModel
                                                       .validityDateOfPracticeCertificateLoading,
                                               onTap: () async {
-                                                // if (_viewModel.validate()) {
-                                                //   _viewModel.saveProfileData();
-                                                // }
-
-                                                final selectedServices =
-                                                    _viewModel
-                                                        .getSelectedServices();
-                                                final serviceIds =
-                                                    selectedServices
-                                                        .map((service) =>
-                                                            service.id)
-                                                        .toList();
-                                                // Check if the "users" collection exists
-                                                final usersRef =
-                                                    FirebaseFirestore.instance
-                                                        .collection(
-                                                            'vendor-service');
-                                                final userSnapshot =
-                                                    await usersRef
-                                                        .where('vendor_id',
-                                                            isEqualTo:
-                                                                widget.userID)
-                                                        .get();
-                                                if (userSnapshot.docs.isEmpty) {
-                                                  // Collection doesn't exist, create document with "service" field
-                                                  final DocumentReference
-                                                      docRef = userSnapshot
-                                                          .docs.first.reference;
-                                                  await docRef.update({
-                                                    // 'vendor_id': widget.userID,
-                                                    'service_id': serviceIds,
-                                                  });
-                                                } else {
-                                                  await usersRef.add({
-                                                    'vendor_id': widget.userID,
-                                                    'service_id': serviceIds,
-                                                  });
-
-                                                  if (_viewModel.validate()) {
-                                                    _viewModel
-                                                        .saveProfileData();
-                                                  }
-
-                                                  // final selectedServices =
-                                                  //     _viewModel
-                                                  //         .getSelectedServices();
-                                                  // final serviceIds =
-                                                  //     selectedServices
-                                                  //         .map((service) =>
-                                                  //             service.id)
-                                                  //         .toList();
-                                                  // // Check if the "users" collection exists
-                                                  // final usersRef =
-                                                  //     FirebaseFirestore.instance
-                                                  //         .collection(
-                                                  //             'vendor-service');
-                                                  // final userSnapshot =
-                                                  //     await usersRef
-                                                  //         .where('vendor_id',
-                                                  //             isEqualTo:
-                                                  //                 widget.userID)
-                                                  //         .get();
-                                                  // if (userSnapshot.docs.isEmpty) {
-                                                  //   // Collection doesn't exist, create document with "service" field
-                                                  //   final DocumentReference
-                                                  //       docRef = userSnapshot
-                                                  //           .docs.first.reference;
-                                                  //   await docRef.update({
-                                                  //     // 'vendor_id': widget.userID,
-                                                  //     'service_id': serviceIds,
-                                                  //   });
-                                                  // } else {
-                                                  //   await usersRef.add({
-                                                  //     'vendor_id': widget.userID,
-                                                  //     'service_id': serviceIds,
-                                                  //   });
-                                                  // }
+                                                if (_viewModel.validate()) {
+                                                  _viewModel.saveProfileData();
                                                 }
+
+                                                // final selectedServices =
+                                                //     _viewModel
+                                                //         .getSelectedServices();
+                                                // final serviceIds =
+                                                //     selectedServices
+                                                //         .map((service) =>
+                                                //             service.id)
+                                                //         .toList();
+                                                // // Check if the "users" collection exists
+                                                // final usersRef =
+                                                //     FirebaseFirestore.instance
+                                                //         .collection(
+                                                //             'vendor-service');
+                                                // final userSnapshot =
+                                                //     await usersRef
+                                                //         .where('vendor_id',
+                                                //             isEqualTo:
+                                                //                 widget.userID)
+                                                //         .get();
+                                                // if (userSnapshot.docs.isEmpty) {
+                                                //   // Collection doesn't exist, create document with "service" field
+                                                //   final DocumentReference
+                                                //       docRef = userSnapshot
+                                                //           .docs.first.reference;
+                                                //   await docRef.update({
+                                                //     // 'vendor_id': widget.userID,
+                                                //     'service_id': serviceIds,
+                                                //   });
+                                                // } else {
+                                                //   await usersRef.add({
+                                                //     'vendor_id': widget.userID,
+                                                //     'service_id': serviceIds,
+                                                //   });
+
+                                                //   if (_viewModel.validate()) {
+                                                //     _viewModel
+                                                //         .saveProfileData();
+                                                //   }
+
+                                                // final selectedServices =
+                                                //     _viewModel
+                                                //         .getSelectedServices();
+                                                // final serviceIds =
+                                                //     selectedServices
+                                                //         .map((service) =>
+                                                //             service.id)
+                                                //         .toList();
+                                                // // Check if the "users" collection exists
+                                                // final usersRef =
+                                                //     FirebaseFirestore.instance
+                                                //         .collection(
+                                                //             'vendor-service');
+                                                // final userSnapshot =
+                                                //     await usersRef
+                                                //         .where('vendor_id',
+                                                //             isEqualTo:
+                                                //                 widget.userID)
+                                                //         .get();
+                                                // if (userSnapshot.docs.isEmpty) {
+                                                //   // Collection doesn't exist, create document with "service" field
+                                                //   final DocumentReference
+                                                //       docRef = userSnapshot
+                                                //           .docs.first.reference;
+                                                //   await docRef.update({
+                                                //     // 'vendor_id': widget.userID,
+                                                //     'service_id': serviceIds,
+                                                //   });
+                                                // } else {
+                                                //   await usersRef.add({
+                                                //     'vendor_id': widget.userID,
+                                                //     'service_id': serviceIds,
+                                                //   });
+                                                // }
                                               },
                                               color: AppColors.darkGreenColor,
                                               fullWidth: false,

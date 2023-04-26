@@ -81,12 +81,21 @@ Future<void> updateOrder(String orderId, String newClientName) async {
 Future<void> updateOrderStatus(String orderId, String status) async {
   toggleLoadingOn(true);
 
+<<<<<<< Updated upstream
   try {
     // Update the 'client' field in Firestore
     final orderRef = FirebaseFirestore.instance
         .collection(FirebaseConfig.orderCollection)
         .doc(orderId);
     await orderRef.update({'status': status});
+=======
+    try {
+      // Update the 'client' field in Firestore
+      final orderRef = FirebaseFirestore.instance
+          .collection(FirebaseConfig.orderCollection)
+          .doc(orderId);
+      await orderRef.update({'status': status});
+>>>>>>> Stashed changes
 
     // Update the 'client' field in the local order object as well
   

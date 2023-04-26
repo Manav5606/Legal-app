@@ -209,7 +209,7 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
                                 rows: _viewModel.getOrders.map(
                                   (data) {
                                     Color statusColor = AppColors.blueColor;
-                                    switch (data.status) {
+                                    switch (data.status!) {
                                       case OrderStatus.completed:
                                         statusColor = AppColors.greenColor;
                                         break;

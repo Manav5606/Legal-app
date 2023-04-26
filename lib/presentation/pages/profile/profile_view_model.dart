@@ -9,6 +9,7 @@ import 'package:admin/data/models/models.dart';
 import 'package:admin/data/models/working_hour.dart';
 import 'package:admin/data/repositories/index.dart';
 import 'package:admin/presentation/base_view_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:cross_file/cross_file.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -435,6 +436,56 @@ class ProfileViewModel extends BaseViewModel {
       toggleLoadingOn(false);
     });
   }
+
+    Future<void> addService(List myList, String vendorId) async {
+    toggleLoadingOn(true);
+
+    try {
+      // Add the order ID to the vendor's list of assigned orders
+      final firestore.CollectionReference vendorServiceRef =
+          firestore.FirebaseFirestore.instance.collection('vendor-service');
+      final firestore.QuerySnapshot vendorSnapshot =
+          await vendorServiceRef.where('vendor_id', isEqualTo: vendorId).get();
+      if (vendorSnapshot.docs.isNotEmpty) {
+        final String docRefId = vendorSnapshot.docs.first.id;
+        await vendorServiceRef.doc(docRefId).update({
+          'service_id': firestore.FieldValue.arrayUnion(myList),
+        });
+      } else {
+        await vendorServiceRef.add({
+          'vendor_id': vendorId,
+          'service_id': myList,
+        });
+      }
+
+      toggleLoadingOn(false);
+      Messenger.showSnackbar('Order assigned to vendor successfully.');
+    } catch (e) {
+      toggleLoadingOn(false);
+      Messenger.showSnackbar('Unknown Error, Please try again later.');
+    }
+  }
+
+  Future<void> removeServicesFromVendor(List serviceIds, String vendorId) async {
+  toggleLoadingOn(true);
+  try {
+    final firestore.CollectionReference vendorServiceRef = firestore.FirebaseFirestore.instance.collection('vendor-service');
+    final firestore.QuerySnapshot vendorSnapshot = await vendorServiceRef.where('vendor_id', isEqualTo: vendorId).get();
+
+    if (vendorSnapshot.docs.isNotEmpty) {
+      final String docRefId = vendorSnapshot.docs.first.id;
+      await vendorServiceRef.doc(docRefId).update({
+        'service_id': firestore.FieldValue.arrayRemove(serviceIds),
+      });
+    }
+
+    toggleLoadingOn(false);
+    Messenger.showSnackbar('Services removed successfully.');
+  } catch (e) {
+    toggleLoadingOn(false);
+    Messenger.showSnackbar('Unknown Error, Please try again later.');
+  }
+}
 
   Future<void> saveProfileData() async {
     try {

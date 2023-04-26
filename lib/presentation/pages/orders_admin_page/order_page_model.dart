@@ -10,10 +10,14 @@ import 'package:admin/data/models/models.dart';
 import 'package:admin/data/models/working_hour.dart';
 import 'package:admin/data/repositories/index.dart';
 import 'package:admin/presentation/base_view_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
+
 import 'package:cross_file/cross_file.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../core/constant/firebase_config.dart' as config;
 
 final _provider = ChangeNotifierProvider.autoDispose(
     (ref) => OrderPageModel(ref.read(Repository.database)));
@@ -410,6 +414,48 @@ class OrderPageModel extends BaseViewModel {
       toggleLoadingOn(false);
     });
   }
+
+  Future<void> updateOrderStatus(String orderId, OrderStatus status) async {
+    toggleLoadingOn(true);
+
+    try {
+      // Update the 'client' field in Firestore
+      final orderRef = firestore.FirebaseFirestore.instance
+          .collection(config.FirebaseConfig.orderCollection)
+          .doc(orderId);
+      await orderRef.update({'status': status.name});
+
+      // Update the 'client' field in the local order object as well
+
+      clearErrors();
+      toggleLoadingOn(false);
+      Messenger.showSnackbar('status updated successfully.');
+    } catch (e) {
+      toggleLoadingOn(false);
+      Messenger.showSnackbar('Unknown Error, Please try again later.');
+    }
+  }
+
+  Future<String> getOrderStatus(String orderId) async {
+    toggleLoadingOn(true);
+    try {
+      final orderRef = firestore.FirebaseFirestore.instance
+          .collection(config.FirebaseConfig.orderCollection)
+          .doc(orderId);
+      final orderDoc = await orderRef.get();
+      final status = orderDoc.data()!['status'];
+      // toggleLoadingOn(false);
+      print(status);
+      return status;
+    } catch (e) {
+      // handle error
+      toggleLoadingOn(false);
+
+      return Messenger.showSnackbar('Unknown Error, Please try again later.');
+    }
+  }
+
+
 
   //   Future<void> updateOrder() async {
   //   try {
