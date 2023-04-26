@@ -1,17 +1,11 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/extension/date.dart';
-import 'package:admin/data/repositories/index.dart';
-import 'package:admin/presentation/pages/Assign_order_dialog/vendor_admin/assign_order_view_model.dart';
-import 'package:admin/presentation/pages/home/home_view_model.dart';
-import 'package:admin/presentation/pages/profile/profile_page.dart';
-import 'package:admin/presentation/pages/vendor_admin/vendor_view_model.dart';
-import 'package:admin/presentation/pages/vendor_admin/dialog/add_vendor_dialog.dart';
+import 'package:admin/presentation/pages/assign_order_dialog/vendor_admin/assign_order_view_model.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/utils/web_scroll.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:routemaster/routemaster.dart';
 
 class AssignOrderToVendor extends ConsumerStatefulWidget {
   static const String routeName = "/assign_order";
@@ -25,18 +19,18 @@ class AssignOrderToVendor extends ConsumerStatefulWidget {
 }
 
 class _AssignOrderToVendorState extends ConsumerState<AssignOrderToVendor> {
-  late final AssignOrderToVendorModel _viewModel;
+  late final AssignOrderToVendorViewModel _viewModel;
 
   @override
   void initState() {
-    _viewModel = ref.read(AssignOrderToVendorModel.provider);
+    _viewModel = ref.read(AssignOrderToVendorViewModel.provider);
     super.initState();
   }
 
   int? _selectedRadio;
   @override
   Widget build(BuildContext context) {
-    ref.watch(AssignOrderToVendorModel.provider);
+    ref.watch(AssignOrderToVendorViewModel.provider);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
       decoration: const BoxDecoration(),
@@ -130,11 +124,11 @@ class _AssignOrderToVendorState extends ConsumerState<AssignOrderToVendor> {
                                           children: [
                                             InkWell(
                                                 onTap: () async {
-                                                  print(data.id);
                                                   _viewModel.updateOrder(
                                                       widget.orderID, data.id!);
                                                 },
-                                                child: Text("Assign Order")),
+                                                child:
+                                                    const Text("Assign Order")),
                                           ],
                                         ),
                                       ),
@@ -195,7 +189,7 @@ class _AssignOrderToVendorState extends ConsumerState<AssignOrderToVendor> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("Vendor", style: FontStyles.font24Semibold),
-            Text("Your list of client is here",
+            Text("Your list of vendor is here",
                 style: FontStyles.font14Semibold),
           ],
         ),
@@ -226,7 +220,7 @@ class _AssignOrderToVendorState extends ConsumerState<AssignOrderToVendor> {
               "Back",
               style: TextStyle(color: AppColors.blueColor, fontSize: 20),
             )),
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
         CTAButton(

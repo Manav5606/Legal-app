@@ -4,7 +4,7 @@ import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/enum/order_status.dart';
 import 'package:admin/core/enum/role.dart';
-import 'package:admin/presentation/pages/Assign_order_dialog/vendor_admin/assign_order_view_model.dart';
+import 'package:admin/presentation/pages/assign_order_dialog/vendor_admin/assign_order_view_model.dart';
 import 'package:admin/presentation/pages/profile/profile_view_model.dart';
 import 'package:admin/presentation/pages/profile/widget/add_qualification_degree.dart';
 import 'package:admin/presentation/pages/profile/widget/add_qualification_university.dart';
@@ -21,12 +21,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-<<<<<<< Updated upstream
-import '../Assign_order_dialog/vendor_admin/assign_order_page.dart';
-=======
 import '../../../core/utils/messenger.dart';
 import '../assign_order_dialog/vendor_admin/assign_order_page.dart';
->>>>>>> Stashed changes
 import 'order_page_model.dart';
 
 class OrderPage extends ConsumerStatefulWidget {
@@ -40,10 +36,11 @@ class OrderPage extends ConsumerStatefulWidget {
 
 class _OrderPageState extends ConsumerState<OrderPage> {
   late final OrderPageModel _viewModel;
-  late final AssignOrderToVendorModel _assignOrderModel;
+  late final AssignOrderToVendorViewModel _assignOrderModel;
   @override
   void initState() {
     _viewModel = ref.read(OrderPageModel.provider);
+    _assignOrderModel = ref.read(AssignOrderToVendorViewModel.provider);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _viewModel.fetchUser(widget.orderID);
       _viewModel.clearSelectedServices();
@@ -272,7 +269,7 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                                 children: [
                                   TextButton(
                                       child: const Text(
-                                        "Share with the Client",
+                                        "Assign to Vendor",
                                         style: TextStyle(
                                             color: Color.fromARGB(
                                                 255, 0, 71, 130)),
@@ -310,12 +307,6 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                                         "Reject",
                                         style: TextStyle(color: Colors.red),
                                       ),
-<<<<<<< Updated upstream
-                                      onPressed: () {
-                                        _assignOrderModel.updateOrderStatus(
-                                            widget.orderID,
-                                            OrderStatus.rejected.toString());
-=======
                                       onPressed: () async {
                                         await _viewModel
                                             .updateOrderStatus(
@@ -324,15 +315,11 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                                             )
                                             .then((value) =>
                                                 Routemaster.of(context).pop());
->>>>>>> Stashed changes
                                       }),
                                   const SizedBox(width: 8),
                                   CTAButton(
                                     title: "Accept",
                                     onTap: () async {
-<<<<<<< Updated upstream
-                                      // _viewModel.saveProfileDataa();
-=======
                                       await _viewModel
                                           .updateOrderStatus(
                                             widget.orderID,
@@ -340,7 +327,6 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                                           )
                                           .then((value) =>
                                               Routemaster.of(context).pop());
->>>>>>> Stashed changes
                                     },
                                     color: AppColors.darkGreenColor,
                                     fullWidth: false,
