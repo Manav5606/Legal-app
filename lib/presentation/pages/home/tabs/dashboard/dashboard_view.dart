@@ -236,7 +236,7 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
                                         DataCell(Text(
                                             data.createdAt?.formatToDate() ??
                                                 "-")),
-                                        DataCell(Text(data.userID)),
+                                        DataCell(Text(data.userID!)),
                                         DataCell(
                                           Container(
                                             child: FutureBuilder<String?>(
@@ -264,7 +264,7 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
                                         ),
 
                                         // DataCell(Text("name")),
-                                        DataCell(Text(data.status.name,
+                                        DataCell(Text(data.status!.name,
                                             style:
                                                 TextStyle(color: statusColor))),
                                         DataCell(TextButton(

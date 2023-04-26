@@ -1,6 +1,8 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/extension/date.dart';
+import 'package:admin/data/repositories/index.dart';
+import 'package:admin/presentation/pages/Assign_order_dialog/vendor_admin/assign_order_view_model.dart';
 import 'package:admin/presentation/pages/home/home_view_model.dart';
 import 'package:admin/presentation/pages/profile/profile_page.dart';
 import 'package:admin/presentation/pages/vendor_admin/vendor_view_model.dart';
@@ -11,28 +13,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 
-class VendorPage extends ConsumerStatefulWidget {
-  static const String routeName = "/vendor";
+class AssignOrderToVendor extends ConsumerStatefulWidget {
+  static const String routeName = "/assign_order";
 
-  const VendorPage({super.key});
+  const AssignOrderToVendor(this.orderID, {super.key});
+  final String orderID;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _VendorPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _AssignOrderToVendorState();
 }
 
-class _VendorPageState extends ConsumerState<VendorPage> {
-  late final VendorViewModel _viewModel;
+class _AssignOrderToVendorState extends ConsumerState<AssignOrderToVendor> {
+  late final AssignOrderToVendorModel _viewModel;
 
   @override
   void initState() {
-    _viewModel = ref.read(VendorViewModel.provider);
+    _viewModel = ref.read(AssignOrderToVendorModel.provider);
     super.initState();
   }
 
   int? _selectedRadio;
   @override
   Widget build(BuildContext context) {
-    ref.watch(VendorViewModel.provider);
+    ref.watch(AssignOrderToVendorModel.provider);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
       decoration: const BoxDecoration(),
@@ -42,6 +46,10 @@ class _VendorPageState extends ConsumerState<VendorPage> {
           _heading(),
           const SizedBox(height: 28),
           Expanded(child: _dataTable()),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [_button()],
+          ),
           const SizedBox(height: 4),
         ],
       ),
@@ -81,7 +89,10 @@ class _VendorPageState extends ConsumerState<VendorPage> {
                               headingTextStyle: FontStyles.font16Semibold
                                   .copyWith(color: AppColors.blackColor),
                               columns: [
-                                
+                                DataColumn(
+                                  label: const Text(""),
+                                  onSort: _viewModel.sortVendors,
+                                ),
                                 DataColumn(
                                   label: const Text("Vendor ID"),
                                   onSort: _viewModel.sortVendors,
@@ -104,7 +115,7 @@ class _VendorPageState extends ConsumerState<VendorPage> {
                                   label: const Text("Email"),
                                   onSort: _viewModel.sortVendors,
                                 ),
-                                const DataColumn(label: Text("Action")),
+                                // const DataColumn(label: Text("Action")),
                               ],
                               rows: _viewModel.getVendors.map(
                                 (data) {
@@ -114,7 +125,19 @@ class _VendorPageState extends ConsumerState<VendorPage> {
                                             AppColors.lightRedColor)
                                         : null,
                                     cells: [
-                                     
+                                      DataCell(
+                                        Row(
+                                          children: [
+                                            InkWell(
+                                                onTap: () async {
+                                                  print(data.id);
+                                                  _viewModel.updateOrder(
+                                                      widget.orderID, data.id!);
+                                                },
+                                                child: Text("Assign Order")),
+                                          ],
+                                        ),
+                                      ),
                                       DataCell(Text(data.id.toString())),
                                       DataCell(
                                           Text(data.createdAt!.formatToDate())),
@@ -122,36 +145,36 @@ class _VendorPageState extends ConsumerState<VendorPage> {
                                       DataCell(
                                           Text(data.phoneNumber.toString())),
                                       DataCell(Text(data.email.toString())),
-                                      DataCell(Row(
-                                        children: [
-                                          TextButton(
-                                              child: const Text("Edit"),
-                                              onPressed: () {
-                                                showDialog(
-                                                  context: context,
-                                                  barrierDismissible: false,
-                                                  builder: (_) => Dialog(
-                                                    insetPadding:
-                                                        const EdgeInsets.all(
-                                                            24),
-                                                    child: AddVendorDialog(
-                                                        vendorUser: data),
-                                                  ),
-                                                );
-                                              }),
-                                          TextButton(
-                                              child: const Text("View"),
-                                              onPressed: () {
-                                                if (data.id != null) {
-                                                  Routemaster.of(context).push(
-                                                      ProfilePage.routeName,
-                                                      queryParameters: {
-                                                        "userID": data.id!
-                                                      });
-                                                }
-                                              }),
-                                        ],
-                                      )),
+                                      // DataCell(Row(
+                                      //   children: [
+                                      //     TextButton(
+                                      //         child: const Text("Edit"),
+                                      //         onPressed: () {
+                                      //           showDialog(
+                                      //             context: context,
+                                      //             barrierDismissible: false,
+                                      //             builder: (_) => Dialog(
+                                      //               insetPadding:
+                                      //                   const EdgeInsets.all(
+                                      //                       24),
+                                      //               child: AddVendorDialog(
+                                      //                   vendorUser: data),
+                                      //             ),
+                                      //           );
+                                      //         }),
+                                      //     TextButton(
+                                      //         child: const Text("View"),
+                                      //         onPressed: () {
+                                      //           if (data.id != null) {
+                                      //             Routemaster.of(context).push(
+                                      //                 ProfilePage.routeName,
+                                      //                 queryParameters: {
+                                      //                   "userID": data.id!
+                                      //                 });
+                                      //           }
+                                      //         }),
+                                      //   ],
+                                      // )),
                                     ],
                                   );
                                 },
@@ -176,17 +199,41 @@ class _VendorPageState extends ConsumerState<VendorPage> {
                 style: FontStyles.font14Semibold),
           ],
         ),
-        CTAButton(
-            title: "Add Vendor",
+        // CTAButton(
+        //     title: "Add Vendor",
+        //     onTap: () {
+        //       showDialog(
+        //         context: context,
+        //         barrierDismissible: false,
+        //         builder: (_) => const Dialog(
+        //           insetPadding: EdgeInsets.all(24),
+        //           child: AddVendorDialog(),
+        //         ),
+        //       );
+        //     }),
+      ],
+    );
+  }
+
+  Widget _button() {
+    return Row(
+      children: [
+        GestureDetector(
             onTap: () {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (_) => const Dialog(
-                  insetPadding: EdgeInsets.all(24),
-                  child: AddVendorDialog(),
-                ),
-              );
+              Navigator.pop(context);
+            },
+            child: Text(
+              "Back",
+              style: TextStyle(color: AppColors.blueColor, fontSize: 20),
+            )),
+        SizedBox(
+          width: 10,
+        ),
+        CTAButton(
+            color: AppColors.blueColor,
+            title: "Share",
+            onTap: () {
+              Navigator.pop(context);
             }),
       ],
     );

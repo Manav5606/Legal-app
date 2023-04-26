@@ -571,6 +571,26 @@ class DatabaseRepositoryImpl extends DatabaseRepository
     }
   }
 
+   @override
+  Future<Either<model.AppError, model.Order>> updateOrder(
+      {required model.Order order}) async {
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseConfig.orderCollection)
+          .doc(order.id)
+          .update(order.toJson());
+      return Right(order);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
   @override
   Future<Either<model.AppError, model.BannerDetail>> createBanner(
       {required model.BannerDetail banner}) async {

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:admin/core/enum/order_status.dart';
 import 'package:admin/core/enum/role.dart';
 import 'package:admin/core/extension/validator.dart';
 import 'package:admin/core/provider.dart';
@@ -381,7 +382,7 @@ class OrderPageModel extends BaseViewModel {
       _Order = r;
 
       // if (_user?.userType == UserType.vendor) {
-      final vendorRes = await _databaseRepositoryImpl.fetchUserByID(r.userID);
+      final vendorRes = await _databaseRepositoryImpl.fetchUserByID(r.userID!);
       vendorRes.fold((l) {
         error = l.message;
         Messenger.showSnackbar(l.message);
@@ -409,6 +410,23 @@ class OrderPageModel extends BaseViewModel {
       toggleLoadingOn(false);
     });
   }
+
+  //   Future<void> updateOrder() async {
+  //   try {
+  //     toggleLoadingOn(true);
+  //     final updatedUser = _Order!.copyWith(
+  //      status: OrderStatus.approved,
+
+  //     );
+  //     await _databaseRepositoryImpl.updateOrder(order: updatedUser);
+
+  //     Messenger.showSnackbar("Profile Updated ✅");
+  //   } catch (e) {
+  //     log("Failed to save profile:: ${e.toString()}");
+  //   } finally {
+  //     toggleLoadingOn(false);
+  //   }
+  // }
 
   // Future<void> saveProfileData() async {
   //   try {

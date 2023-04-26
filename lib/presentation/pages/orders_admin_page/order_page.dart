@@ -2,10 +2,13 @@ import 'dart:html';
 
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
+import 'package:admin/core/enum/order_status.dart';
 import 'package:admin/core/enum/role.dart';
+import 'package:admin/presentation/pages/Assign_order_dialog/vendor_admin/assign_order_view_model.dart';
 import 'package:admin/presentation/pages/profile/profile_view_model.dart';
 import 'package:admin/presentation/pages/profile/widget/add_qualification_degree.dart';
 import 'package:admin/presentation/pages/profile/widget/add_qualification_university.dart';
+import 'package:admin/presentation/pages/vendor_admin/vendor_page.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/pages/widgets/custom_textfield.dart';
 import 'package:admin/presentation/pages/widgets/footer.dart';
@@ -18,6 +21,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import '../Assign_order_dialog/vendor_admin/assign_order_page.dart';
 import 'order_page_model.dart';
 
 class OrderPage extends ConsumerStatefulWidget {
@@ -31,6 +35,7 @@ class OrderPage extends ConsumerStatefulWidget {
 
 class _OrderPageState extends ConsumerState<OrderPage> {
   late final OrderPageModel _viewModel;
+  late final AssignOrderToVendorModel _assignOrderModel;
   @override
   void initState() {
     _viewModel = ref.read(OrderPageModel.provider);
@@ -267,7 +272,18 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                                             color: Color.fromARGB(
                                                 255, 0, 71, 130)),
                                       ),
-                                      onPressed: () => {}),
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (_) => Dialog(
+                                            insetPadding:
+                                                const EdgeInsets.all(24),
+                                            child: AssignOrderToVendor(
+                                                widget.orderID),
+                                          ),
+                                        );
+                                      }),
                                   const SizedBox(width: 8),
                                 ],
                               ),
@@ -279,45 +295,16 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                                         "Reject",
                                         style: TextStyle(color: Colors.red),
                                       ),
-                                      onPressed: () => {}),
+                                      onPressed: () {
+                                        _assignOrderModel.updateOrderStatus(
+                                            widget.orderID,
+                                            OrderStatus.rejected.toString());
+                                      }),
                                   const SizedBox(width: 8),
                                   CTAButton(
                                     title: "Accept",
                                     onTap: () async {
-                                      // final selectedServices =
-                                      //     _viewModel
-                                      //         .getSelectedServices();
-                                      // final serviceIds =
-                                      //     selectedServices
-                                      //         .map((service) =>
-                                      //             service.id)
-                                      //         .toList();
-                                      // // Check if the "users" collection exists
-                                      // final usersRef =
-                                      //     FirebaseFirestore.instance
-                                      //         .collection(
-                                      //             'vendor service');
-                                      // final userSnapshot =
-                                      //     await usersRef
-                                      //         .where('vendor_id',
-                                      //             isEqualTo:
-                                      //                 widget.userID)
-                                      //         .get();
-                                      // if (userSnapshot.docs.isEmpty) {
-                                      //   // Collection doesn't exist, create document with "service" field
-                                      //   final DocumentReference
-                                      //       docRef = userSnapshot
-                                      //           .docs.first.reference;
-                                      //   await docRef.update({
-                                      //     // 'vendor_id': widget.userID,
-                                      //     'service_id': serviceIds,
-                                      //   });
-                                      // } else {
-                                      //   await usersRef.add({
-                                      //     'vendor_id': widget.userID,
-                                      //     'service_id': serviceIds,
-                                      //   });
-                                      // }
+                                      // _viewModel.saveProfileDataa();
                                     },
                                     color: AppColors.darkGreenColor,
                                     fullWidth: false,

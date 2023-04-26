@@ -4,23 +4,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Order {
   String? id;
-  final String userID;
+  final String? userID;
   final int? createdAt;
-  final OrderStatus status;
-  final String? clientID;
-  final String serviceID;
-  final List<ServiceRequest> orderServiceRequest;
-  final String transactionID;
+  final OrderStatus? status;
+  String? clientID;
+  final String? serviceID;
+  final List<ServiceRequest>? orderServiceRequest;
+  final String? transactionID;
 
   Order({
     this.id,
     this.createdAt,
-    required this.userID,
-    required this.status,
-    required this.clientID,
-    required this.serviceID,
-    required this.orderServiceRequest,
-    required this.transactionID,
+    this.userID,
+    this.status,
+    this.clientID,
+    this.serviceID,
+    this.orderServiceRequest,
+    this.transactionID,
   });
 
   factory Order.fromSnapshot(DocumentSnapshot documentSnapshot) {
@@ -45,13 +45,22 @@ class Order {
     );
   }
 
+  // Order copyWith({
+  //   OrderStatus? status,
+  //   String? client_id
+  // }) =>
+  //     Order(
+  //       clientID: clientID,
+  //       status: status ?? this.status, id: id
+  //     );
+
   Map<String, dynamic> toJson() => {
         "user_id": userID,
-        "status": status.name,
+        "status": status?.name,
         "client_id": clientID,
         "service_id": serviceID,
         "order_service_request":
-            orderServiceRequest.map((e) => e.toJson()).toList(),
+            orderServiceRequest?.map((e) => e.toJson()).toList(),
         "transaction_id": transactionID,
         "created_at": createdAt ?? DateTime.now().millisecondsSinceEpoch,
       };
