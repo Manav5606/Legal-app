@@ -58,6 +58,8 @@ final routeAdminLoggedIn = RouteMap(
          OrderPage.routeName: (data) => MaterialPage(
             child: OrderPage(
           orderID: data.queryParameters['orderID'] ?? "",
+          serviceID: data.queryParameters['serviceId'] ?? "",
+          
         )),
   },
 );

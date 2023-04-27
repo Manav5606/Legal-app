@@ -16,8 +16,10 @@ import 'order_page_model.dart';
 
 class OrderPage extends ConsumerStatefulWidget {
   static const String routeName = "/order_page";
-  const OrderPage({super.key, required this.orderID});
+  const OrderPage({super.key, required this.orderID, required this.serviceID});
   final String orderID;
+  final String serviceID;
+
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _OrderPageState();
@@ -280,7 +282,7 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                                               insetPadding:
                                                   const EdgeInsets.all(24),
                                               child: AssignOrderToVendor(
-                                                  widget.orderID),
+                                                  widget.orderID,widget.serviceID),
                                             ),
                                           );
                                         }

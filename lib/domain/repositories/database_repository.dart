@@ -19,6 +19,8 @@ abstract class DatabaseRepository {
   Future<Either<model.AppError, bool>> activateUser({required model.User user});
   Future<Either<model.AppError, List<model.User>>> fetchUsersByType(
       UserType type);
+  Future<Either<model.AppError, List<model.User>>> fetchAvailabelServiceVendors(
+      UserType type,List<String> myList);
   Future<Either<model.AppError, model.Vendor>> fetchVendorByID(String uid);
   Future<Either<model.AppError, model.User>> fetchUserByID(String uid);
   Future<Either<model.AppError, List<model.Order>>> fetchOrders();

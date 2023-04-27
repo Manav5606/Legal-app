@@ -274,7 +274,8 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
                                                 Routemaster.of(context).push(
                                                     OrderPage.routeName,
                                                     queryParameters: {
-                                                      "orderID": data.id!
+                                                      "orderID": data.id!,
+                                                      "serviceId": data.serviceID!
                                                     });
                                               }
                                             })),
