@@ -9,7 +9,6 @@ import 'package:admin/presentation/pages/authentication/index.dart';
 import 'package:admin/presentation/pages/authentication/login/login_view_model.dart';
 import 'package:admin/presentation/pages/home/home_page.dart';
 import 'package:admin/presentation/pages/landing/landing_page.dart';
-import 'package:admin/presentation/pages/service_info/service_info_page.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/pages/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';

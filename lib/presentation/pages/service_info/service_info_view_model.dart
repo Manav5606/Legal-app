@@ -125,7 +125,7 @@ class ServiceInfoPageViewModel extends BaseViewModel {
       status: OrderStatus.created,
       vendorID: null,
       serviceID: selectedService!.id!,
-      orderServiceRequest: [],
+      orderServiceRequest: getRequiredDataFields,
       transactionID: transactionId,
     );
     final res = await _databaseRepositoryImpl.createOrder(order: order);

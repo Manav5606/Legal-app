@@ -82,4 +82,8 @@ abstract class DatabaseRepository {
       {required String clientId});
   Future<Either<model.AppError, List<model.Order>>> getAllOrdersOfVendor(
       {required String vendorId});
+  Future<Either<model.AppError, model.Order>> getOrderById(
+      {required String orderId});
+  Future<Either<model.AppError, model.Vendor>> getVendorById(
+      {required String vendorId});
 }

@@ -226,7 +226,6 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
                                         break;
                                       case OrderStatus.rejected:
                                         statusColor = AppColors.redColor;
-
                                         break;
                                     }
                                     return DataRow(
