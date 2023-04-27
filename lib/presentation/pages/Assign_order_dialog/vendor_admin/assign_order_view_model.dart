@@ -96,7 +96,7 @@ class AssignOrderToVendorViewModel extends BaseViewModel {
         .doc(orderId);
 
     final orderDoc = await orderRef.get();
-    final vendorId = orderDoc.data()?['client_id'];
+    final vendorId = orderDoc.data()?['vendor_id'];
 
     if (vendorId != null) {
       vendorIds.remove(vendorId);
@@ -158,7 +158,7 @@ class AssignOrderToVendorViewModel extends BaseViewModel {
           .collection(FirebaseConfig.orderCollection)
           .doc(orderId);
       final orderDoc = await orderRef.get();
-      final status = orderDoc.data()!['clinet_id'];
+      final status = orderDoc.data()!['vendor_id'];
       // toggleLoadingOn(false);
       print(status);
       return status;
@@ -178,7 +178,7 @@ class AssignOrderToVendorViewModel extends BaseViewModel {
       final orderRef = FirebaseFirestore.instance
           .collection(FirebaseConfig.orderCollection)
           .doc(orderId);
-      await orderRef.update({'client_id': newClientName});
+      await orderRef.update({'vendor_id': newClientName});
 
       // Update the 'client' field in the local order object as well
 
