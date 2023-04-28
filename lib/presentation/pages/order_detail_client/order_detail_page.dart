@@ -3,14 +3,21 @@ import 'package:admin/core/extension/date.dart';
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/enum/field_type.dart';
 import 'package:admin/core/enum/order_status.dart';
+import 'package:admin/core/state/auth_state.dart';
+import 'package:admin/core/utils/messenger.dart';
 import 'package:admin/data/models/models.dart';
+import 'package:admin/data/repositories/index.dart';
 import 'package:admin/presentation/pages/order_detail_client/order_detail_view_model.dart';
 import 'package:admin/presentation/pages/widgets/contact_us.dart';
 import 'package:admin/presentation/pages/widgets/footer.dart';
 import 'package:admin/presentation/pages/widgets/header.dart';
+import 'package:cross_file/cross_file.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class OrderDetailPage extends ConsumerStatefulWidget {
   static const String routeName = "/order_detail_page";
@@ -85,6 +92,8 @@ class _OrderDetailPageState extends ConsumerState<OrderDetailPage> {
         statusColor = AppColors.redColor;
         break;
     }
+    final list = _viewModel.order?.orderServiceRequest ?? [];
+    list.sort((a, b) => a.fieldName.compareTo(b.fieldName));
     return ListView(
       shrinkWrap: true,
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -98,9 +107,7 @@ class _OrderDetailPageState extends ConsumerState<OrderDetailPage> {
             key: _formKey,
             child: ListView(
                 shrinkWrap: true,
-                children: (_viewModel.order?.orderServiceRequest ?? [])
-                    .map((e) => renderInputWidget(e))
-                    .toList())),
+                children: list.map((e) => renderInputWidget(e)).toList())),
         OutlinedButton(
             onPressed: () {
               if (_formKey.currentState?.validate() == true) {
@@ -121,11 +128,146 @@ class _OrderDetailPageState extends ConsumerState<OrderDetailPage> {
       case ServiceFieldType.date:
         return OrderDateField(serviceRequest: serviceRequest);
       case ServiceFieldType.file:
-        return const SizedBox.shrink();
+        return OrderFileField(serviceRequest: serviceRequest);
       case ServiceFieldType.image:
-        return const SizedBox.shrink();
+        return OrderFileField(serviceRequest: serviceRequest);
       default:
         return const SizedBox.shrink();
+    }
+  }
+}
+
+class OrderFileField extends ConsumerStatefulWidget {
+  final ServiceRequest serviceRequest;
+  const OrderFileField({super.key, required this.serviceRequest});
+
+  @override
+  ConsumerState<OrderFileField> createState() => _OrderFileFieldState();
+}
+
+class _OrderFileFieldState extends ConsumerState<OrderFileField> {
+  String? fileUrl;
+
+  bool uploading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextEditingController controller = TextEditingController();
+    // ignore: prefer_conditional_assignment
+    if (fileUrl == null) {
+      fileUrl = widget.serviceRequest.value;
+      controller.text = widget.serviceRequest.value ?? "";
+    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(widget.serviceRequest.fieldName),
+        Row(
+          children: [
+            uploading
+                ? const CircularProgressIndicator.adaptive()
+                : OutlinedButton(
+                    onPressed: fileUrl == null
+                        ? () async {
+                            final file = await pickFile(
+                                await FilePicker.platform.pickFiles(
+                              type: widget.serviceRequest.fieldType ==
+                                      ServiceFieldType.image
+                                  ? FileType.image
+                                  : FileType.any,
+                            ));
+                            if (file == null) {
+                              Messenger.showSnackbar("Please pick a file");
+                              return;
+                            }
+                            fileUrl = await uploadFile(file: file);
+                            if (fileUrl != null) {
+                              final service = widget.serviceRequest
+                                  .copyWith(value: fileUrl);
+                              log(service.toOrderJson().toString());
+                              await ref
+                                  .read(OrderDetailViewModel.provider)
+                                  .saveServiceRequestData(
+                                      service: service,
+                                      oldService: widget.serviceRequest);
+                              Messenger.showSnackbar(
+                                  "${widget.serviceRequest.fieldName} Uploaded.");
+                            }
+                            setState(() {});
+                          }
+                        : () {
+                            launchUrlString(fileUrl ?? "");
+                          },
+                    child: Text(fileUrl == null ? "Upload" : "View"),
+                  ),
+            Visibility(
+                visible: fileUrl != null, child: const SizedBox(width: 8)),
+            Visibility(
+              visible: fileUrl != null && !uploading,
+              child: OutlinedButton(
+                onPressed: () async {
+                  final file =
+                      await pickFile(await FilePicker.platform.pickFiles(
+                    type: widget.serviceRequest.fieldType ==
+                            ServiceFieldType.image
+                        ? FileType.image
+                        : FileType.any,
+                  ));
+                  if (file == null) {
+                    Messenger.showSnackbar("Please pick a file to replace.");
+                    return;
+                  }
+                  fileUrl = await uploadFile(file: file);
+                  if (fileUrl != null) {
+                    final service =
+                        widget.serviceRequest.copyWith(value: fileUrl);
+                    log(service.toOrderJson().toString());
+                    await ref
+                        .read(OrderDetailViewModel.provider)
+                        .saveServiceRequestData(
+                            service: service,
+                            oldService: widget.serviceRequest);
+                    Messenger.showSnackbar(
+                        "${widget.serviceRequest.fieldName} Uploaded.");
+                  }
+                  setState(() {});
+                },
+                child: const Text("Replace"),
+              ),
+            )
+          ],
+        ),
+      ],
+    );
+  }
+
+  Future<XFile?> pickFile(FilePickerResult? result) async {
+    if (result != null) {
+      final choosenFile = result.files.first;
+      return kIsWeb
+          ? XFile.fromData(choosenFile.bytes!, name: choosenFile.name)
+          : XFile(choosenFile.path ?? "", name: choosenFile.name);
+    }
+    return null;
+  }
+
+  Future<String?> uploadFile({required XFile file}) async {
+    setState(() {
+      uploading = true;
+    });
+    try {
+      final downloadUrl =
+          await ref.read(DatabaseRepositoryImpl.provider).uploadToFirestore(
+                file: file,
+                userID: ref.read(AuthService.provider).user?.id ?? "",
+              );
+      return downloadUrl;
+    } catch (_) {
+      return null;
+    } finally {
+      setState(() {
+        uploading = false;
+      });
     }
   }
 }
