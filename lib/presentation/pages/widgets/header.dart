@@ -56,7 +56,7 @@ class Header extends StatelessWidget {
           mobile
               ? IconButton(
                   onPressed: () {
-                    landingScaffold.currentState!.openEndDrawer();
+                    landingScaffold.currentState?.openEndDrawer();
                   },
                   icon: const Icon(Icons.menu))
               : Container(
@@ -97,7 +97,7 @@ class TopBar extends ConsumerStatefulWidget {
 class _TopBarState extends ConsumerState<TopBar> {
   late bool isAuthenticated;
   late User? user;
-  
+
   @override
   void initState() {
     super.initState();

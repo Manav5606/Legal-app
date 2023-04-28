@@ -1,25 +1,14 @@
-import 'dart:html';
-
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/enum/order_status.dart';
-import 'package:admin/core/enum/role.dart';
 import 'package:admin/presentation/pages/assign_order_dialog/vendor_admin/assign_order_view_model.dart';
-import 'package:admin/presentation/pages/profile/profile_view_model.dart';
-import 'package:admin/presentation/pages/profile/widget/add_qualification_degree.dart';
-import 'package:admin/presentation/pages/profile/widget/add_qualification_university.dart';
-import 'package:admin/presentation/pages/vendor_admin/vendor_page.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/pages/widgets/custom_textfield.dart';
 import 'package:admin/presentation/pages/widgets/footer.dart';
 import 'package:admin/presentation/pages/widgets/header.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 import '../assign_order_dialog/vendor_admin/assign_order_page.dart';
 import 'order_page_model.dart';
