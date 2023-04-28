@@ -16,8 +16,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../../../data/models/service.dart';
-
 class ProfilePage extends ConsumerStatefulWidget {
   static const String routeName = "/profile";
   const ProfilePage({super.key, required this.userID});

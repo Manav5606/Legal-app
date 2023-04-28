@@ -45,22 +45,13 @@ class Order {
     );
   }
 
-  // Order copyWith({
-  //   OrderStatus? status,
-  //   String? client_id
-  // }) =>
-  //     Order(
-  //       vendorID: vendorID,
-  //       status: status ?? this.status, id: id
-  //     );
-
   Map<String, dynamic> toJson() => {
         "client_id": clientID,
         "status": status?.name,
         "vendor_id": vendorID,
         "service_id": serviceID,
         "order_service_request":
-            orderServiceRequest?.map((e) => e.toJson()).toList(),
+            orderServiceRequest?.map((e) => e.toOrderJson()).toList(),
         "transaction_id": transactionID,
         "created_at": createdAt ?? DateTime.now().millisecondsSinceEpoch,
       };

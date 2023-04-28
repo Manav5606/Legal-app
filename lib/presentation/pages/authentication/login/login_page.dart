@@ -19,7 +19,8 @@ import 'package:routemaster/routemaster.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   static const String routeName = "/login";
-  const LoginPage({super.key});
+  final bool navigateBack;
+  const LoginPage({super.key, this.navigateBack = false});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _LoginPageState();
@@ -131,6 +132,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             : () async {
                                 final user = await _viewModel.login();
                                 if (user != null) {
+                                  if (widget.navigateBack) {
+                                    Routemaster.of(context).history.back();
+                                    return;
+                                  }
                                   switch (user.userType) {
                                     case UserType.client:
                                       Routemaster.of(context)
@@ -159,8 +164,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 .copyWith(color: AppColors.whiteColor)),
                         const SizedBox(width: 4),
                         InkWell(
-                          onTap: () => Routemaster.of(context)
-                              .push(RegisterPage.routeName),
+                          onTap: () => Routemaster.of(context).replace(
+                            RegisterPage.routeName,
+                            queryParameters: {
+                              "navigateBack": widget.navigateBack.toString()
+                            },
+                          ),
                           child: Text("Register",
                               style: FontStyles.font14Bold
                                   .copyWith(color: AppColors.yellowColor)),

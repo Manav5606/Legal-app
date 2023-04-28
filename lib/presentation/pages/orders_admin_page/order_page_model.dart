@@ -1,13 +1,7 @@
-import 'dart:developer';
-import 'package:admin/core/enum/order_status.dart';
-import 'package:admin/core/enum/role.dart';
 import 'package:admin/core/extension/validator.dart';
 import 'package:admin/core/provider.dart';
 import 'package:admin/core/utils/messenger.dart';
-import 'package:admin/data/models/associate_detail.dart';
-import 'package:admin/data/models/bank_info.dart';
 import 'package:admin/data/models/models.dart';
-import 'package:admin/data/models/working_hour.dart';
 import 'package:admin/data/repositories/index.dart';
 import 'package:admin/presentation/base_view_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;

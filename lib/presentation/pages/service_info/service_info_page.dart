@@ -1,9 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/provider.dart';
 import 'package:admin/data/models/models.dart';
+import 'package:admin/presentation/pages/authentication/index.dart';
+import 'package:admin/presentation/pages/landing/landing_page.dart';
+import 'package:admin/presentation/pages/order_detail_client/order_detail_page.dart';
 import 'package:admin/presentation/pages/service_info/service_info_view_model.dart';
 import 'package:admin/presentation/pages/widgets/contact_us.dart';
 import 'package:admin/presentation/pages/widgets/contact_us_card.dart';
@@ -69,11 +74,8 @@ class _ServiceInfoPageState extends ConsumerState<ServiceInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    isAuthenticated = ref.watch(AppState.auth).isAuthenticated;
     ref.watch(ServiceInfoPageViewModel.provider);
-    if (!isAuthenticated) {
-      log("User is not authenticated");
-    }
+
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       body: _viewModel.isLoading || _viewModel.selectedService == null
@@ -112,7 +114,7 @@ class ServiceInfo extends ConsumerStatefulWidget {
 
 class _ServiceInfoState extends ConsumerState<ServiceInfo> {
   late final ServiceInfoPageViewModel _viewModel;
-
+  late bool isAuthenticated;
   @override
   void initState() {
     _viewModel = ref.read(ServiceInfoPageViewModel.provider);
@@ -122,6 +124,10 @@ class _ServiceInfoState extends ConsumerState<ServiceInfo> {
   @override
   Widget build(BuildContext context) {
     ref.watch(ServiceInfoPageViewModel.provider);
+    isAuthenticated = ref.watch(AppState.auth).isAuthenticated;
+    if (!isAuthenticated) {
+      log("User is not authenticated");
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       child: Column(
@@ -161,8 +167,8 @@ class _ServiceInfoState extends ConsumerState<ServiceInfo> {
           Row(
             children: [
               TextButton(
-                  onPressed: () {
-                    Routemaster.of(context).pop();
+                  onPressed: () async {
+                    Routemaster.of(context).history.back();
                   },
                   child: const Text("Cancel")),
               CTAButton(
@@ -172,8 +178,20 @@ class _ServiceInfoState extends ConsumerState<ServiceInfo> {
                   mobile: true,
                   loading: _viewModel.isLoading,
                   onTap: () async {
-                    // await _viewModel.createPurchase();
-                    _viewModel.createTransaction(rpData: {});
+                    if (isAuthenticated) {
+                      // await _viewModel.createPurchase();
+                      final orderId =
+                          await _viewModel.createTransaction(rpData: {});
+                      if (orderId != null) {
+                        Routemaster.of(context).popUntil((routeData) =>
+                            routeData.path == LandingPage.routeName);
+                        Routemaster.of(context).push(OrderDetailPage.routeName,
+                            queryParameters: {"orderID": orderId});
+                      }
+                    } else {
+                      Routemaster.of(context).push(LoginPage.routeName,
+                          queryParameters: {"navigateBack": true.toString()});
+                    }
                   },
                   radius: 4),
             ],

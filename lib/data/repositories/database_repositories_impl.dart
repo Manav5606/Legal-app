@@ -918,4 +918,123 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           model.AppError(message: "Unkown Error, Plese try again later."));
     }
   }
+
+  @override
+  Future<Either<model.AppError, List<model.Order>>> getAllOrdersOfClient(
+      {required String clientId}) async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.orderCollection)
+          .where("client_id", isEqualTo: clientId)
+          .get();
+
+      return Right(
+          response.docs.map((doc) => model.Order.fromSnapshot(doc)).toList());
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<model.AppError, List<model.Order>>> getAllOrdersOfVendor(
+      {required String vendorId}) async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.orderCollection)
+          .where("vendor_id", isEqualTo: vendorId)
+          .get();
+
+      return Right(
+          response.docs.map((doc) => model.Order.fromSnapshot(doc)).toList());
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<model.AppError, model.Order>> getOrderById(
+      {required String orderId}) async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.orderCollection)
+          .doc(orderId)
+          .get();
+
+      return Right(model.Order.fromSnapshot(response));
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<model.AppError, model.Vendor>> getVendorById(
+      {required String vendorId}) async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.vendorCollection)
+          .doc(vendorId)
+          .get();
+
+      return Right(model.Vendor.fromSnapshot(response));
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<model.AppError, bool>> saveOrderServiceRequestData(
+      {required model.ServiceRequest newService,
+      required model.ServiceRequest oldService,
+      required String orderId}) async {
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseConfig.orderCollection)
+          .doc(orderId)
+          .update({
+        "order_service_request":
+            FieldValue.arrayRemove([oldService.toOrderJson()])
+      });
+      await _firebaseFirestore
+          .collection(FirebaseConfig.orderCollection)
+          .doc(orderId)
+          .update({
+        "order_service_request":
+            FieldValue.arrayUnion([newService.toOrderJson()])
+      });
+
+      return const Right(true);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
 }

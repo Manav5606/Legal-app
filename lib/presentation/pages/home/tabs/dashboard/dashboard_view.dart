@@ -10,7 +10,6 @@ import 'package:routemaster/routemaster.dart';
 import 'package:admin/core/extension/date.dart';
 import '../../../../../core/enum/order_status.dart';
 import '../../../orders_admin_page/order_page.dart';
-import '../../../profile/profile_page.dart';
 
 class DashboardTab extends ConsumerStatefulWidget {
   const DashboardTab({super.key});
@@ -227,7 +226,6 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
                                         break;
                                       case OrderStatus.rejected:
                                         statusColor = AppColors.redColor;
-
                                         break;
                                     }
                                     return DataRow(

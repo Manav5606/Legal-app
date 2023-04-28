@@ -69,6 +69,13 @@ class ServiceRequest {
         "field_type": fieldType.name,
         "created_by": createdBy,
         "created_at": createdAt ?? DateTime.now().millisecondsSinceEpoch,
+      };
+  Map<String, dynamic> toOrderJson() => {
+        "service_id": serviceID,
+        "field_name": fieldName,
+        "field_type": fieldType.name,
+        "created_by": createdBy,
+        "created_at": createdAt ?? DateTime.now().millisecondsSinceEpoch,
         "value": value,
       };
 }

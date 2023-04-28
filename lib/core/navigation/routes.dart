@@ -2,6 +2,8 @@ import 'package:admin/presentation/pages/authentication/index.dart';
 import 'package:admin/presentation/pages/category_client/category_client_page.dart';
 import 'package:admin/presentation/pages/home/home_page.dart';
 import 'package:admin/presentation/pages/landing/landing_page.dart';
+import 'package:admin/presentation/pages/my_orders/my_orders_page.dart';
+import 'package:admin/presentation/pages/order_detail_client/order_detail_page.dart';
 import 'package:admin/presentation/pages/profile/profile_page.dart';
 import 'package:admin/presentation/pages/service_info/service_info_page.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +22,14 @@ final routeLoggedOut = RouteMap(
   onUnknownRoute: (_) => const Redirect(LandingPage.routeName),
   routes: {
     LandingPage.routeName: (_) => const MaterialPage(child: LandingPage()),
-    LoginPage.routeName: (_) => const MaterialPage(child: LoginPage()),
-    RegisterPage.routeName: (_) => const MaterialPage(child: RegisterPage()),
+    LoginPage.routeName: (data) => MaterialPage(
+        child: LoginPage(
+            navigateBack:
+                data.queryParameters['navigateBack'] == "true" ? true : false)),
+    RegisterPage.routeName: (data) => MaterialPage(
+        child: RegisterPage(
+            navigateBack:
+                data.queryParameters['navigateBack'] == "true" ? true : false)),
     CategoryClientPage.routeName: (data) => MaterialPage(
         child: CategoryClientPage(
             categoryId: data.queryParameters['categoryId'] ?? "")),
@@ -35,6 +43,9 @@ final routeLoggedIn = RouteMap(
   routes: {
     LandingPage.routeName: (_) => const MaterialPage(child: LandingPage()),
     HomePage.routeName: (_) => const MaterialPage(child: HomePage()),
+    MyOrdersPage.routeName: (_) => const MaterialPage(child: MyOrdersPage()),
+    OrderDetailPage.routeName: (data) => MaterialPage(
+        child: OrderDetailPage(orderID: data.queryParameters['orderID'] ?? "")),
     CategoryClientPage.routeName: (data) => MaterialPage(
         child: CategoryClientPage(
             categoryId: data.queryParameters['categoryId'] ?? "")),
@@ -51,11 +62,12 @@ final routeAdminLoggedIn = RouteMap(
   onUnknownRoute: (_) => const Redirect(HomePage.routeName),
   routes: {
     HomePage.routeName: (_) => const MaterialPage(child: HomePage()),
+    MyOrdersPage.routeName: (_) => const MaterialPage(child: MyOrdersPage()),
     ProfilePage.routeName: (data) => MaterialPage(
             child: ProfilePage(
           userID: data.queryParameters['userID'] ?? "",
         )),
-         OrderPage.routeName: (data) => MaterialPage(
+    OrderPage.routeName: (data) => MaterialPage(
             child: OrderPage(
           orderID: data.queryParameters['orderID'] ?? "",
           serviceID: data.queryParameters['serviceId'] ?? "",
