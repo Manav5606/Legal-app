@@ -75,6 +75,49 @@ class DatabaseRepositoryImpl extends DatabaseRepository
   }
 
   @override
+  Future<Either<model.AppError, List<model.User>>> fetchAvailabelServiceVendors(
+      UserType type, List<String> myList) async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.userCollection)
+          .where(FieldPath.documentId, whereIn: myList)
+          // .where("user_type", isEqualTo: type.name)
+          .get();
+
+      return Right(
+          response.docs.map((doc) => model.User.fromSnapshot(doc)).toList());
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "No vendor Found With This Service."));
+    }
+  }
+
+  Future<List> getVendorIdsByService(String serviceName) async {
+    // Get a reference to the "vendor-service" collection
+    CollectionReference vendorsRef =
+        FirebaseFirestore.instance.collection('vendor-service');
+
+    // Query for vendors with the specified service in their array of services
+    QuerySnapshot querySnapshot =
+        await vendorsRef.where('service_id', arrayContains: serviceName).get();
+
+    // Extract the vendor IDs from the query results
+    List<String> vendorIds = [];
+    querySnapshot.docs.forEach((doc) {
+      vendorIds.add(doc['vendor_id']);
+    });
+
+    // Return the list of vendor IDs
+    print(vendorIds);
+    return vendorIds;
+  }
+
+  @override
   Future<Either<model.AppError, model.User>> fetchUserByID(String uid) async {
     try {
       final response = await _firebaseFirestore

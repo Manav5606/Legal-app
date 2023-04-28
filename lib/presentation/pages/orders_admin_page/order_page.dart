@@ -10,13 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../../../core/utils/messenger.dart';
 import '../assign_order_dialog/vendor_admin/assign_order_page.dart';
 import 'order_page_model.dart';
 
 class OrderPage extends ConsumerStatefulWidget {
   static const String routeName = "/order_page";
-  const OrderPage({super.key, required this.orderID});
+  const OrderPage({super.key, required this.orderID, required this.serviceID});
   final String orderID;
+  final String serviceID;
+
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _OrderPageState();
@@ -262,17 +265,27 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                                             color: Color.fromARGB(
                                                 255, 0, 71, 130)),
                                       ),
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          barrierDismissible: false,
-                                          builder: (_) => Dialog(
-                                            insetPadding:
-                                                const EdgeInsets.all(24),
-                                            child: AssignOrderToVendor(
-                                                widget.orderID),
-                                          ),
-                                        );
+                                      onPressed: () async {
+                                        final status = await _viewModel
+                                            .getOrderStatus(widget.orderID);
+
+                                        if (status !=
+                                            OrderStatus.approved.name) {
+                                          Messenger.showSnackbar(
+                                              'Please Approve the order.');
+                                        } else {
+                                          // ignore: use_build_context_synchronously
+                                          showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (_) => Dialog(
+                                              insetPadding:
+                                                  const EdgeInsets.all(24),
+                                              child: AssignOrderToVendor(
+                                                  widget.orderID,widget.serviceID),
+                                            ),
+                                          );
+                                        }
                                       }),
                                   const SizedBox(width: 8),
                                 ],
@@ -286,7 +299,7 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                                         style: TextStyle(color: Colors.red),
                                       ),
                                       onPressed: () async {
-                                        await _assignOrderModel
+                                        await _viewModel
                                             .updateOrderStatus(
                                               widget.orderID,
                                               OrderStatus.rejected,
@@ -298,7 +311,7 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                                   CTAButton(
                                     title: "Accept",
                                     onTap: () async {
-                                      await _assignOrderModel
+                                      await _viewModel
                                           .updateOrderStatus(
                                             widget.orderID,
                                             OrderStatus.approved,

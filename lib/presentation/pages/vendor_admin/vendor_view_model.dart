@@ -46,6 +46,7 @@ class VendorViewModel extends BaseViewModel {
       toggleLoadingOn(false);
     });
   }
+  
 
   void sortVendors(int index, bool ascending) {
     switch (index) {
