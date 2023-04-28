@@ -4,6 +4,7 @@ import 'package:admin/core/enum/order_status.dart';
 import 'package:admin/core/extension/date.dart';
 import 'package:admin/data/models/models.dart';
 import 'package:admin/presentation/pages/my_orders/my_orders_view_model.dart';
+import 'package:admin/presentation/pages/order_detail_client/order_detail_page.dart';
 import 'package:admin/presentation/pages/widgets/contact_us.dart';
 import 'package:admin/presentation/pages/widgets/contact_us_card.dart';
 import 'package:admin/presentation/pages/widgets/footer.dart';
@@ -197,11 +198,11 @@ class _MyOrdersListState extends ConsumerState<MyOrdersList> {
                                     child: const Text("View"),
                                     onPressed: () {
                                       if (data.id != null) {
-                                        // Routemaster.of(context).push(
-                                        //     OrderPage.routeName,
-                                        //     queryParameters: {
-                                        //       "orderID": data.id!
-                                        //     });
+                                        Routemaster.of(context).push(
+                                            OrderDetailPage.routeName,
+                                            queryParameters: {
+                                              "orderID": data.id!
+                                            });
                                       }
                                     })),
                               ],

@@ -20,8 +20,8 @@ class OrderDetailViewModel extends BaseViewModel {
 
   Order? order;
   Vendor? vendor;
-  late User user;
-  late Service service;
+  User? user;
+  Service? service;
 
   Future<void> initOrderDetails({required String orderId}) async {
     toggleLoadingOn(true);
@@ -29,7 +29,7 @@ class OrderDetailViewModel extends BaseViewModel {
 
     await res.fold((l) => null, (r) async {
       order = r;
-      user = _authState.user!;
+      user = _authState.user;
       if (order?.vendorID != null) {
         final res = await _databaseRepositoryImpl.getVendorById(
             vendorId: order!.vendorID!);
@@ -44,6 +44,22 @@ class OrderDetailViewModel extends BaseViewModel {
           service = r;
         });
       }
+    });
+    toggleLoadingOn(false);
+  }
+
+  Future<void> saveServiceRequestData(
+      {required ServiceRequest service,
+      required ServiceRequest oldService}) async {
+    toggleLoadingOn(true);
+    final res = await _databaseRepositoryImpl.saveOrderServiceRequestData(
+      orderId: order!.id!,
+      newService: service,
+      oldService: oldService,
+    );
+
+    res.fold((l) => null, (r) {
+      initOrderDetails(orderId: order!.id!);
     });
     toggleLoadingOn(false);
   }

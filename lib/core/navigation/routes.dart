@@ -3,6 +3,7 @@ import 'package:admin/presentation/pages/category_client/category_client_page.da
 import 'package:admin/presentation/pages/home/home_page.dart';
 import 'package:admin/presentation/pages/landing/landing_page.dart';
 import 'package:admin/presentation/pages/my_orders/my_orders_page.dart';
+import 'package:admin/presentation/pages/order_detail_client/order_detail_page.dart';
 import 'package:admin/presentation/pages/profile/profile_page.dart';
 import 'package:admin/presentation/pages/service_info/service_info_page.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,8 @@ final routeLoggedIn = RouteMap(
     LandingPage.routeName: (_) => const MaterialPage(child: LandingPage()),
     HomePage.routeName: (_) => const MaterialPage(child: HomePage()),
     MyOrdersPage.routeName: (_) => const MaterialPage(child: MyOrdersPage()),
+    OrderDetailPage.routeName: (data) => MaterialPage(
+        child: OrderDetailPage(orderID: data.queryParameters['orderID'] ?? "")),
     CategoryClientPage.routeName: (data) => MaterialPage(
         child: CategoryClientPage(
             categoryId: data.queryParameters['categoryId'] ?? "")),

@@ -961,4 +961,37 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           model.AppError(message: "Unkown Error, Plese try again later."));
     }
   }
+
+  @override
+  Future<Either<model.AppError, bool>> saveOrderServiceRequestData(
+      {required model.ServiceRequest newService,
+      required model.ServiceRequest oldService,
+      required String orderId}) async {
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseConfig.orderCollection)
+          .doc(orderId)
+          .update({
+        "order_service_request":
+            FieldValue.arrayRemove([oldService.toOrderJson()])
+      });
+      await _firebaseFirestore
+          .collection(FirebaseConfig.orderCollection)
+          .doc(orderId)
+          .update({
+        "order_service_request":
+            FieldValue.arrayUnion([newService.toOrderJson()])
+      });
+
+      return const Right(true);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
 }

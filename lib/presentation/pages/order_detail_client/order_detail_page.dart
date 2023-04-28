@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/enum/field_type.dart';
 import 'package:admin/core/enum/order_status.dart';
@@ -23,6 +25,8 @@ class OrderDetailPage extends ConsumerStatefulWidget {
 class _OrderDetailPageState extends ConsumerState<OrderDetailPage> {
   late final OrderDetailViewModel _viewModel;
 
+  final GlobalKey<FormState> _formKey = GlobalKey();
+
   @override
   void initState() {
     _viewModel = ref.read(OrderDetailViewModel.provider);
@@ -34,6 +38,7 @@ class _OrderDetailPageState extends ConsumerState<OrderDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(OrderDetailViewModel.provider);
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       body: _viewModel.isLoading || _viewModel.order == null
@@ -81,15 +86,28 @@ class _OrderDetailPageState extends ConsumerState<OrderDetailPage> {
         break;
     }
     return ListView(
+      shrinkWrap: true,
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       children: [
         ListTile(
-            title: Text(_viewModel.service.shortDescription),
-            subtitle: Text(_viewModel.service.ourPrice.toString()),
+            title: Text(_viewModel.service?.shortDescription ?? ""),
+            subtitle: Text(_viewModel.service?.ourPrice.toString() ?? ""),
             trailing: Text(_viewModel.order!.status!.name,
                 style: TextStyle(color: statusColor))),
-        ...(_viewModel.order?.orderServiceRequest ?? [])
-            .map((e) => renderInputWidget(e))
-            .toList()
+        Form(
+            key: _formKey,
+            child: ListView(
+                shrinkWrap: true,
+                children: (_viewModel.order?.orderServiceRequest ?? [])
+                    .map((e) => renderInputWidget(e))
+                    .toList())),
+        OutlinedButton(
+            onPressed: () {
+              if (_formKey.currentState?.validate() == true) {
+                _formKey.currentState?.save();
+              }
+            },
+            child: const Text("Save")),
       ],
     );
   }
@@ -97,32 +115,62 @@ class _OrderDetailPageState extends ConsumerState<OrderDetailPage> {
   Widget renderInputWidget(ServiceRequest serviceRequest) {
     switch (serviceRequest.fieldType) {
       case ServiceFieldType.text:
-        return TextFormField(
-          decoration: InputDecoration(
-            labelText: serviceRequest.fieldName,
-          ),
-          onChanged: (value) {},
-        );
+        return OrderFormField(serviceRequest: serviceRequest);
       case ServiceFieldType.number:
-        return TextFormField(
-          decoration: InputDecoration(
-            labelText: serviceRequest.fieldName,
-          ),
-          onChanged: (value) {},
-        );
+        return OrderFormField(serviceRequest: serviceRequest);
       case ServiceFieldType.date:
         return const SizedBox.shrink();
-
-        break;
       case ServiceFieldType.file:
         return const SizedBox.shrink();
-
-        break;
       case ServiceFieldType.image:
         return const SizedBox.shrink();
-        break;
       default:
         return const SizedBox.shrink();
     }
+  }
+}
+
+class OrderFormField extends ConsumerStatefulWidget {
+  final ServiceRequest serviceRequest;
+  const OrderFormField({super.key, required this.serviceRequest});
+
+  @override
+  ConsumerState<OrderFormField> createState() => _OrderFormFieldState();
+}
+
+class _OrderFormFieldState extends ConsumerState<OrderFormField> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    _controller = TextEditingController(text: widget.serviceRequest.value);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _controller.text = widget.serviceRequest.value ?? _controller.text;
+    return TextFormField(
+      controller: _controller,
+      decoration: InputDecoration(labelText: widget.serviceRequest.fieldName),
+      onSaved: (value) {
+        final service = widget.serviceRequest.copyWith(value: value);
+        log(service.toOrderJson().toString());
+        ref.read(OrderDetailViewModel.provider).saveServiceRequestData(
+            service: service, oldService: widget.serviceRequest);
+      },
+      validator: (value) {
+        if (widget.serviceRequest.fieldType == ServiceFieldType.number) {
+          if (value == null || value.isEmpty || num.tryParse(value) == null) {
+            return "Please enter a valid number";
+          }
+        } else {
+          if (value == null || value.isEmpty) {
+            return "This field is required";
+          }
+        }
+        return null;
+      },
+    );
   }
 }

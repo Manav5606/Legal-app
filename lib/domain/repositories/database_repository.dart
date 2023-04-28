@@ -86,4 +86,8 @@ abstract class DatabaseRepository {
       {required String orderId});
   Future<Either<model.AppError, model.Vendor>> getVendorById(
       {required String vendorId});
+  Future<Either<model.AppError, bool>> saveOrderServiceRequestData(
+      {required model.ServiceRequest newService,
+      required model.ServiceRequest oldService,
+      required String orderId});
 }
