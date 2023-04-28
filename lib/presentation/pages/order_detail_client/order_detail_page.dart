@@ -116,12 +116,7 @@ class _OrderDetailPageState extends ConsumerState<OrderDetailPage> {
             key: _formKey,
             child: ListView(
                 shrinkWrap: true,
-                children: list
-                    .map((e) => AbsorbPointer(
-                        absorbing:
-                            _viewModel.order?.status != OrderStatus.created,
-                        child: renderInputWidget(e)))
-                    .toList())),
+                children: list.map((e) => renderInputWidget(e)).toList())),
         OutlinedButton(
             onPressed: () {
               if (_formKey.currentState?.validate() == true) {
