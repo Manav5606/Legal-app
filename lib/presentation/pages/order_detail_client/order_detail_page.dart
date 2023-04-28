@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:admin/core/extension/date.dart';
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/enum/field_type.dart';
 import 'package:admin/core/enum/order_status.dart';
@@ -119,7 +119,7 @@ class _OrderDetailPageState extends ConsumerState<OrderDetailPage> {
       case ServiceFieldType.number:
         return OrderFormField(serviceRequest: serviceRequest);
       case ServiceFieldType.date:
-        return const SizedBox.shrink();
+        return OrderDateField(serviceRequest: serviceRequest);
       case ServiceFieldType.file:
         return const SizedBox.shrink();
       case ServiceFieldType.image:
@@ -127,6 +127,76 @@ class _OrderDetailPageState extends ConsumerState<OrderDetailPage> {
       default:
         return const SizedBox.shrink();
     }
+  }
+}
+
+class OrderDateField extends ConsumerStatefulWidget {
+  final ServiceRequest serviceRequest;
+  const OrderDateField({super.key, required this.serviceRequest});
+
+  @override
+  ConsumerState<OrderDateField> createState() => _OrderDateFieldState();
+}
+
+class _OrderDateFieldState extends ConsumerState<OrderDateField> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    _controller = TextEditingController(
+        text: int.tryParse(widget.serviceRequest.value ?? "")?.formatToDate());
+    super.initState();
+  }
+
+  DateTime? selectedDate;
+
+  @override
+  Widget build(BuildContext context) {
+    // ignore: prefer_conditional_assignment
+    if (selectedDate == null) {
+      selectedDate = int.tryParse(widget.serviceRequest.value ?? "") == null
+          ? DateTime.now()
+          : DateTime.fromMillisecondsSinceEpoch(
+              int.parse(widget.serviceRequest.value!));
+    }
+    _controller.text = selectedDate!.millisecondsSinceEpoch.formatToDate();
+    return InkWell(
+      onTap: () async {
+        final date = await showDatePicker(
+          context: context,
+          initialDate: selectedDate!,
+          firstDate: DateTime(1900),
+          lastDate: DateTime(2100),
+        );
+
+        if (date != null) {
+          setState(() {
+            selectedDate = date;
+          });
+        }
+      },
+      child: AbsorbPointer(
+        absorbing: true,
+        child: TextFormField(
+          controller: _controller,
+          decoration:
+              InputDecoration(labelText: widget.serviceRequest.fieldName),
+          onSaved: (_) {
+            final service = widget.serviceRequest.copyWith(
+                value: selectedDate!.millisecondsSinceEpoch.toString());
+            log(service.toOrderJson().toString());
+            ref.read(OrderDetailViewModel.provider).saveServiceRequestData(
+                service: service, oldService: widget.serviceRequest);
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "This field is required";
+            }
+            return null;
+          },
+        ),
+      ),
+    );
   }
 }
 
