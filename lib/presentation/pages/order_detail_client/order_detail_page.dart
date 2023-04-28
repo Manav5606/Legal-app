@@ -103,11 +103,25 @@ class _OrderDetailPageState extends ConsumerState<OrderDetailPage> {
             subtitle: Text(_viewModel.service?.ourPrice.toString() ?? ""),
             trailing: Text(_viewModel.order!.status!.name,
                 style: TextStyle(color: statusColor))),
+        Visibility(
+            visible: _viewModel.vendor != null,
+            child: ListTile(
+                title: Text("Assigned to ${_viewModel.vendor?.companyName}"),
+                subtitle: InkWell(
+                    child: Text("Contact: ${_viewModel.vendor?.mobile}"),
+                    onTap: () {
+                      launchUrlString("tel:${_viewModel.vendor?.mobile}");
+                    }))),
         Form(
             key: _formKey,
             child: ListView(
                 shrinkWrap: true,
-                children: list.map((e) => renderInputWidget(e)).toList())),
+                children: list
+                    .map((e) => AbsorbPointer(
+                        absorbing:
+                            _viewModel.order?.status != OrderStatus.created,
+                        child: renderInputWidget(e)))
+                    .toList())),
         OutlinedButton(
             onPressed: () {
               if (_formKey.currentState?.validate() == true) {

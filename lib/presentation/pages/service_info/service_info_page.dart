@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:admin/core/constant/colors.dart';
@@ -5,6 +7,8 @@ import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/provider.dart';
 import 'package:admin/data/models/models.dart';
 import 'package:admin/presentation/pages/authentication/index.dart';
+import 'package:admin/presentation/pages/landing/landing_page.dart';
+import 'package:admin/presentation/pages/order_detail_client/order_detail_page.dart';
 import 'package:admin/presentation/pages/service_info/service_info_view_model.dart';
 import 'package:admin/presentation/pages/widgets/contact_us.dart';
 import 'package:admin/presentation/pages/widgets/contact_us_card.dart';
@@ -176,7 +180,14 @@ class _ServiceInfoState extends ConsumerState<ServiceInfo> {
                   onTap: () async {
                     if (isAuthenticated) {
                       // await _viewModel.createPurchase();
-                      _viewModel.createTransaction(rpData: {});
+                      final orderId =
+                          await _viewModel.createTransaction(rpData: {});
+                      if (orderId != null) {
+                        Routemaster.of(context).popUntil((routeData) =>
+                            routeData.path == LandingPage.routeName);
+                        Routemaster.of(context).push(OrderDetailPage.routeName,
+                            queryParameters: {"orderID": orderId});
+                      }
                     } else {
                       Routemaster.of(context).push(LoginPage.routeName,
                           queryParameters: {"navigateBack": true.toString()});

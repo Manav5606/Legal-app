@@ -80,12 +80,13 @@ class ServiceInfoPageViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> createTransaction({required Map<String, dynamic> rpData}) async {
+  Future<String?> createTransaction(
+      {required Map<String, dynamic> rpData}) async {
     toggleLoadingOn(true);
     final user = _ref.read(AppState.auth).user;
     if (user == null) {
       Messenger.showSnackbar("User is not authenticated");
-      return;
+      return null;
     }
     final Transaction transaction = Transaction(
       userID: user.id!,
@@ -102,11 +103,14 @@ class ServiceInfoPageViewModel extends BaseViewModel {
       toggleLoadingOn(false);
     }, (r) async {
       // TODO orderId is received from RazorPay
+      final String orderId = DateTime.now().millisecondsSinceEpoch.toString();
       await createOrderOnServer(
-        orderId: DateTime.now().millisecondsSinceEpoch.toString(),
+        orderId: orderId,
         transactionId: r.id!,
       );
+      return orderId;
     });
+    return null;
   }
 
   Future<void> createOrderOnServer({
