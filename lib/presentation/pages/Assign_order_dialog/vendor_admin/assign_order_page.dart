@@ -2,6 +2,7 @@ import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/extension/date.dart';
 import 'package:admin/presentation/pages/assign_order_dialog/vendor_admin/assign_order_view_model.dart';
+import 'package:admin/presentation/pages/home/home_page.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/utils/web_scroll.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../data/models/user.dart';
 import '../../../../data/repositories/database_repositories_impl.dart';
+import '../../../successfull_order/successfull_order.dart';
 
 class AssignOrderToVendor extends ConsumerStatefulWidget {
   static const String routeName = "/assign_order";
@@ -409,10 +411,23 @@ class _AssignOrderToVendorState extends ConsumerState<AssignOrderToVendor> {
         CTAButton(
             color: AppColors.blueColor,
             title: "Share",
-            onTap: () {
-              final List<String> vendorIdss = [];
-              final vendorIds =
-                  _viewModel.getVendorIdsByService("n6T7diwwWtQ2qxy5t0vr");
+            onTap: () async {
+               Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const HomePage(
+                                   )),
+                          );
+              await showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (_) => const Dialog(
+                    insetPadding: EdgeInsets.all(24),
+                    child: SuccessfullOrder()),
+              );
+              // final List<String> vendorIdss = [];
+              // final vendorIds =
+              //     _viewModel.getVendorIdsByService("n6T7diwwWtQ2qxy5t0vr");
               // Navigator.pop(context);
             }),
       ],

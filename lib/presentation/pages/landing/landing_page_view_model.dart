@@ -16,6 +16,7 @@ class LandingPageViewModel extends BaseViewModel {
     fetchContacts();
     fetchBanners();
     fetchReviews();
+    fetchStats();
   }
 
   static ChangeNotifierProvider<LandingPageViewModel> get provider => _provider;
@@ -24,11 +25,13 @@ class LandingPageViewModel extends BaseViewModel {
   final List<Category> _contacts = [];
   final List<BannerDetail> _banners = [];
   final List<CustomerReview> _reviews = [];
+  final List<Stats> _stats = [];
 
   List<Category> get getCategories => _categories;
   List<Category> get getContacts => _contacts;
   List<BannerDetail> get getBanners => _banners;
   List<CustomerReview> get getReviews => _reviews;
+  List<Stats> get getStats => _stats;
 
   Future<void> fetchCategories() async {
     toggleLoadingOn(true);
@@ -67,6 +70,19 @@ class LandingPageViewModel extends BaseViewModel {
     }, (r) {
       _banners.clear();
       _banners.addAll(r);
+    });
+    toggleLoadingOn(false);
+  }
+
+  Future<void> fetchStats() async {
+    toggleLoadingOn(true);
+    final res = await _databaseRepositoryImpl.getStats();
+    res.fold((l) {
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+    }, (r) {
+      _stats.clear();
+      _stats.addAll(r);
     });
     toggleLoadingOn(false);
   }

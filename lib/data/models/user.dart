@@ -13,6 +13,7 @@ class User {
   bool isDeactivated;
   String? profilePic;
   Vendor? vendor;
+  String? pushToken;
 
   User({
     this.id,
@@ -25,6 +26,7 @@ class User {
     required this.phoneNumber,
     this.vendor,
     this.profilePic,
+    this.pushToken,
   });
 
   factory User.fromSnapshot(DocumentSnapshot snapshot) {
@@ -41,6 +43,7 @@ class User {
       email: data['email'],
       phoneNumber: data['phone_number'],
       isDeactivated: data['is_deactivated'] ?? false,
+      pushToken: data['pushToken'],
     );
   }
 
@@ -52,6 +55,7 @@ class User {
     String? profilePic,
     int? phoneNumber,
     bool? isDeactivated,
+    String? pushToken
   }) =>
       User(
           name: name ?? this.name,
@@ -63,6 +67,7 @@ class User {
           isDeactivated: isDeactivated ?? this.isDeactivated,
           createdAt: createdAt,
           createdBy: createdBy,
+          pushToken: pushToken,
           id: id);
 
   Map<String, dynamic> toJson() => {
@@ -74,5 +79,6 @@ class User {
         "email": email,
         "phone_number": phoneNumber,
         "is_deactivated": isDeactivated,
+        "pushToken":pushToken
       };
 }

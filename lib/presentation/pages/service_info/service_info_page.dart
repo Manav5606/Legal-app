@@ -20,6 +20,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../../successfull_order/successfull_order.dart';
+
 class ServiceInfoPage extends ConsumerStatefulWidget {
   static const String routeName = "/serviceInfo";
   final String serviceId;
@@ -84,18 +86,17 @@ class _ServiceInfoPageState extends ConsumerState<ServiceInfoPage> {
               mobile: (context) => ListView(
                 children: const [
                   Header(mobile: true),
-                  ServiceInfo(),
+                  ServiceInfo(mobile: true),
                   ContactUs(height: 250, mobile: true),
                   Footer(),
                 ],
               ),
               desktop: (context) => ListView(
-                children: [
-                  const Header(mobile: false),
-                  const ServiceInfo(),
-                  const ContactUs(height: 250),
-                  ContactUsCard(contactDetails: _contactDetails, height: 200),
-                  const Footer(),
+                children: const [
+                  Header(mobile: false),
+                  ServiceInfo(),
+                  ContactUs(height: 250),
+                  Footer(),
                 ],
               ),
             ),
@@ -104,9 +105,8 @@ class _ServiceInfoPageState extends ConsumerState<ServiceInfoPage> {
 }
 
 class ServiceInfo extends ConsumerStatefulWidget {
-  const ServiceInfo({
-    super.key,
-  });
+  final bool mobile;
+  const ServiceInfo({super.key, this.mobile = false});
 
   @override
   ConsumerState<ServiceInfo> createState() => _ServiceInfoState();
@@ -133,38 +133,93 @@ class _ServiceInfoState extends ConsumerState<ServiceInfo> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(_viewModel.selectedService!.shortDescription,
-              style: FontStyles.font14Semibold
-                  .copyWith(color: AppColors.blueColor)),
-          Text(_viewModel.selectedService!.aboutDescription,
+          Text("Service Type > ${_viewModel.selectedService!.title}",
               style: FontStyles.font12Regular
                   .copyWith(color: AppColors.blueColor)),
-          Text("Documents Required",
-              style: FontStyles.font14Semibold
-                  .copyWith(color: AppColors.blueColor)),
-          // TODO fieldDescription can be a better option here.
-          ..._viewModel.getRequiredDataFields
-              .map((e) => Text("- ${e.fieldName}",
-                  style: FontStyles.font12Regular
-                      .copyWith(color: AppColors.blueColor)))
-              .toList(),
-          const Divider(),
-          RichText(
-            text: TextSpan(
-                text: "Final Price  ",
-                style: FontStyles.font14Semibold
-                    .copyWith(color: AppColors.blueColor),
-                children: [
-                  TextSpan(
-                      text: "${_viewModel.selectedService?.marketPrice}",
-                      style: FontStyles.font14Semibold
-                          .copyWith(decoration: TextDecoration.lineThrough)),
-                  TextSpan(
-                      text: "   ${_viewModel.selectedService?.ourPrice}",
-                      style: FontStyles.font16Semibold),
-                ]),
-          ),
+          const SizedBox(height: 24),
+          Text(_viewModel.selectedService!.title,
+              style: FontStyles.font20Semibold
+                  .copyWith(color: AppColors.darkBlueColor)),
+          Text(_viewModel.selectedService!.shortDescription,
+              style: FontStyles.font12Regular
+                  .copyWith(color: AppColors.darkBlueColor, fontSize: 14)),
+          const SizedBox(height: 24),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("About the Product",
+                        style: FontStyles.font18Semibold
+                            .copyWith(color: AppColors.darkBlueColor)),
+                    Text(_viewModel.selectedService!.aboutDescription,
+                        style: FontStyles.font12Regular.copyWith(
+                            color: AppColors.blueColor, fontSize: 14)),
+                    const SizedBox(height: 24),
+                    Text("Documents Required",
+                        style: FontStyles.font18Semibold
+                            .copyWith(color: AppColors.darkBlueColor)),
+                    ..._viewModel.getRequiredDataFields
+                        .map((e) => Text("· ${e.fieldDescription}",
+                            style: FontStyles.font12Regular
+                                .copyWith(color: AppColors.blueColor)))
+                        .toList(),
+                    Text("(in JPEG format, maximum size 100 KB)",
+                        style: FontStyles.font11Light
+                            .copyWith(color: AppColors.blueColor)),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Visibility(
+                    visible: !widget.mobile,
+                    child: priceInfo(context, mobile: widget.mobile)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Visibility(
+              visible: widget.mobile,
+              child: priceInfo(context, mobile: widget.mobile)),
+        ],
+      ),
+    );
+  }
+
+  Container priceInfo(BuildContext context, {bool mobile = false}) {
+    return Container(
+      decoration: BoxDecoration(
+          color: AppColors.lightBlueColor,
+          borderRadius: BorderRadius.circular(24)),
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Pricing Summary",
+              style: FontStyles.font18Semibold
+                  .copyWith(color: AppColors.darkBlueColor)),
+          const SizedBox(height: 12),
+          Text(
+              "Market Price: ₹${_viewModel.selectedService?.marketPrice ?? 0.0}",
+              style: FontStyles.font12Regular
+                  .copyWith(color: AppColors.blueColor)),
+          const SizedBox(height: 12),
+          Text("Our Price: ₹${_viewModel.selectedService?.ourPrice ?? 0.0}",
+              style: FontStyles.font12Regular
+                  .copyWith(color: AppColors.blueColor)),
+          const SizedBox(height: 12),
+          Text(
+              "You Save ${(100 - ((_viewModel.selectedService?.ourPrice ?? 0.0) * 100 / (_viewModel.selectedService?.marketPrice ?? 0.0))).toStringAsFixed(2)}%",
+              style: FontStyles.font12Regular
+                  .copyWith(color: AppColors.greenColor)),
+          const SizedBox(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               TextButton(
                   onPressed: () async {
@@ -173,20 +228,52 @@ class _ServiceInfoState extends ConsumerState<ServiceInfo> {
                   child: const Text("Cancel")),
               CTAButton(
                   title: "Buy Now",
-                  color: AppColors.greenColor,
+                  color: AppColors.darkGreenColor,
                   fullWidth: false,
                   mobile: true,
                   loading: _viewModel.isLoading,
                   onTap: () async {
                     if (isAuthenticated) {
                       // await _viewModel.createPurchase();
+                      
                       final orderId =
                           await _viewModel.createTransaction(rpData: {});
                       if (orderId != null) {
-                        Routemaster.of(context).popUntil((routeData) =>
-                            routeData.path == LandingPage.routeName);
+                        await Routemaster.of(context).popUntil((routeData) {
+                          return routeData.path == LandingPage.routeName;
+                        });
                         Routemaster.of(context).push(OrderDetailPage.routeName,
                             queryParameters: {"orderID": orderId});
+                        // showDialog(
+                        //   context: context,
+                        //   barrierDismissible: false,
+                        //   builder: (_) => AlertDialog(
+                        //     title: Text("Order Placed",
+                        //         style: FontStyles.font20Semibold),
+                        //     content: Column(
+                        //       children: [
+                        //         Text("#OrderID: ${orderId}"),
+                        //         Text("Order Status: Order Created"),
+                        //         Text("Payment Status: Paid"),
+                        //         Text(
+                        //             "Paid Amount: ${_viewModel.selectedService?.ourPrice ?? 0.0}")
+                        //       ],
+                        //     ),
+                        //     actions: [
+                        //       TextButton(
+                        //           onPressed: () async {
+                        //             await Routemaster.of(context).popUntil(
+                        //                 (routeData) =>
+                        //                     routeData.path ==
+                        //                     LandingPage.routeName);
+                        //             Routemaster.of(context).push(
+                        //                 OrderDetailPage.routeName,
+                        //                 queryParameters: {"orderID": orderId});
+                        //           },
+                        //           child: const Text("View")),
+                        //     ],
+                        //   ),
+                        // );
                       }
                     } else {
                       Routemaster.of(context).push(LoginPage.routeName,

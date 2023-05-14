@@ -5,6 +5,7 @@ class ServiceRequest {
   String? id;
   final String serviceID;
   final String fieldName;
+  final String fieldDescription;
   final ServiceFieldType fieldType;
   final int? createdAt;
   final String createdBy;
@@ -13,6 +14,7 @@ class ServiceRequest {
   ServiceRequest({
     this.id,
     required this.serviceID,
+    required this.fieldDescription,
     required this.fieldName,
     required this.fieldType,
     this.createdAt,
@@ -24,6 +26,8 @@ class ServiceRequest {
     final data = documentSnapshot.data() as Map<String, dynamic>;
     return ServiceRequest(
       id: documentSnapshot.id,
+      fieldDescription: data['field_description'] ??
+          data['field_name'], // TODO remove this later
       serviceID: data['service_id'],
       fieldName: data['field_name'],
       fieldType: ServiceFieldType.values.firstWhere(
@@ -34,10 +38,13 @@ class ServiceRequest {
       value: data['value'],
     );
   }
+
   factory ServiceRequest.fromData(Map<String, dynamic> data) {
     return ServiceRequest(
       serviceID: data['service_id'],
       fieldName: data['field_name'],
+      fieldDescription: data['field_description'] ??
+          data['field_name'], // TODO remove this later
       fieldType: ServiceFieldType.values.firstWhere(
           (element) => element.name == data['field_type'],
           orElse: () => ServiceFieldType.text),
@@ -52,11 +59,13 @@ class ServiceRequest {
     String? fieldName,
     ServiceFieldType? fieldType,
     String? value,
+    String? fieldDescription,
   }) =>
       ServiceRequest(
         serviceID: serviceID ?? this.serviceID,
         fieldName: fieldName ?? this.fieldName,
         fieldType: fieldType ?? this.fieldType,
+        fieldDescription: fieldDescription ?? this.fieldDescription,
         value: value ?? this.value,
         createdBy: createdBy,
         createdAt: createdAt,
@@ -68,13 +77,16 @@ class ServiceRequest {
         "field_name": fieldName,
         "field_type": fieldType.name,
         "created_by": createdBy,
+        "field_description": fieldDescription,
         "created_at": createdAt ?? DateTime.now().millisecondsSinceEpoch,
       };
+
   Map<String, dynamic> toOrderJson() => {
         "service_id": serviceID,
         "field_name": fieldName,
         "field_type": fieldType.name,
         "created_by": createdBy,
+        "field_description": fieldDescription,
         "created_at": createdAt ?? DateTime.now().millisecondsSinceEpoch,
         "value": value,
       };

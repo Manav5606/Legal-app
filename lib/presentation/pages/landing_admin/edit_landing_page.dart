@@ -2,6 +2,7 @@ import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/presentation/pages/landing_admin/dialog/add_banner_dialog.dart';
 import 'package:admin/presentation/pages/landing_admin/dialog/add_contact_dialog.dart';
 import 'package:admin/presentation/pages/landing_admin/dialog/add_review_dialog.dart';
+import 'package:admin/presentation/pages/landing_admin/dialog/add_stats.dart';
 import 'package:admin/presentation/pages/landing_admin/edit_landing_view_model.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
   void initState() {
     _viewModel = ref.read(EditLandingViewModel.provider);
     _viewModel.initBanner();
+    _viewModel.initStats();
     _viewModel.initReview();
     _viewModel.initContactDetails();
     super.initState();
@@ -43,14 +45,6 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
           _heading(),
           const SizedBox(height: 28),
           Expanded(
-<<<<<<< Updated upstream
-            child: Column(
-              children: [
-                _editBanner(),
-                _editReview(),
-                _editContactDetail(),
-              ],
-=======
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: Column(
@@ -61,7 +55,6 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
                   _editStats()
                 ],
               ),
->>>>>>> Stashed changes
             ),
           ),
           const SizedBox(height: 4),
@@ -130,8 +123,6 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
     );
   }
 
-<<<<<<< Updated upstream
-=======
   Widget _editStats() {
     return ExpansionTile(
       title: _statsHeading(),
@@ -183,7 +174,6 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
     );
   }
 
->>>>>>> Stashed changes
   Widget _editReview() {
     return ExpansionTile(
       title: _reviewHeading(),

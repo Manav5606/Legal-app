@@ -9,4 +9,6 @@ class FirebaseConfig {
   static String landingBannerCollection = "landing-banner";
   static String reviewCollection = "review";
   static String contactCollection = "contact";
+  static String stats = "stats";
+  static String notifications = "notifications";
 }

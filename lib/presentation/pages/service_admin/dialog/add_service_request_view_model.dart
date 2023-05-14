@@ -23,14 +23,11 @@ class AddServiceRequestViewModel extends BaseViewModel {
   static AutoDisposeChangeNotifierProvider<AddServiceRequestViewModel>
       get provider => _provider;
   final TextEditingController fieldNameController = TextEditingController();
+  final TextEditingController fieldDescriptionController =
+      TextEditingController();
   ServiceFieldType _selectedFieldType = ServiceFieldType.text;
 
   ServiceFieldType get getSelectedFieldType => _selectedFieldType;
-
-  String? shortDescError;
-  String? aboutDescError;
-  String? marketPriceError;
-  String? ourPriceError;
 
   void setSelectedFieldType(ServiceFieldType type) {
     _selectedFieldType = type;
@@ -38,9 +35,11 @@ class AddServiceRequestViewModel extends BaseViewModel {
   }
 
   String? fieldNameError;
+  String? fieldDescriptionError;
 
   void clearError() {
     fieldNameError = null;
+    fieldDescriptionError = null;
     notifyListeners();
   }
 
@@ -50,8 +49,11 @@ class AddServiceRequestViewModel extends BaseViewModel {
     if (fieldNameController.text.isEmpty) {
       fieldNameError = "Field Name can't be empty.";
     }
+    if (fieldDescriptionController.text.isEmpty) {
+      fieldNameError = "Field Description can't be empty.";
+    }
 
-    return fieldNameError == null;
+    return fieldNameError == null && fieldDescriptionError == null;
   }
 
   @override
@@ -63,6 +65,7 @@ class AddServiceRequestViewModel extends BaseViewModel {
   void initServiceRequest(model.ServiceRequest? serviceRequestDetail) {
     if (serviceRequestDetail != null) {
       fieldNameController.text = serviceRequestDetail.fieldName;
+      fieldDescriptionController.text = serviceRequestDetail.fieldDescription;
       setSelectedFieldType(serviceRequestDetail.fieldType);
       notifyListeners();
     }
@@ -74,6 +77,7 @@ class AddServiceRequestViewModel extends BaseViewModel {
       late final Either<AppError, ServiceRequest> result;
 
       final serviceRequest = ServiceRequest(
+        fieldDescription: fieldDescriptionController.text,
         serviceID: serviceID,
         fieldName: fieldNameController.text,
         fieldType: _selectedFieldType,

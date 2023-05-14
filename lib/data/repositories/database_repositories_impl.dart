@@ -595,6 +595,46 @@ class DatabaseRepositoryImpl extends DatabaseRepository
   }
 
   @override
+  Future<Either<model.AppError, model.Notification>> createNotifications(
+      {required model.Notification notifications}) async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.notifications)
+          .add(notifications.toJson());
+
+      return Right(model.Notification.fromSnapshot(await response.get()));
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+    @override
+  Future<Either<model.AppError, List<model.Notification>>> fetchNotifications() async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.notifications)
+          .get();
+
+      return Right(
+          response.docs.map((doc) => model.Notification.fromSnapshot(doc)).toList());
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
   Future<Either<model.AppError, model.Order>> createOrder(
       {required model.Order order}) async {
     try {
@@ -654,6 +694,8 @@ class DatabaseRepositoryImpl extends DatabaseRepository
     }
   }
 
+ 
+
   @override
   Future<Either<model.AppError, bool>> deleteBanner(
       {required model.BannerDetail banner}) async {
@@ -700,7 +742,7 @@ class DatabaseRepositoryImpl extends DatabaseRepository
       {required model.BannerDetail banner}) async {
     try {
       await _firebaseFirestore
-          .collection(FirebaseConfig.serviceCollection)
+          .collection(FirebaseConfig.landingBannerCollection)
           .doc(banner.id)
           .update(banner.toJson());
       return Right(banner);
@@ -714,6 +756,88 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           model.AppError(message: "Unkown Error, Plese try again later."));
     }
   }
+
+    @override
+  Future<Either<model.AppError, model.Stats>> createStats(
+      {required model.Stats stats}) async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.stats)
+          .add(stats.toJson());
+
+      return Right(model.Stats.fromSnapshot(await response.get()));
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<model.AppError, bool>> deleteStats(
+      {required model.Stats stats}) async {
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseConfig.stats)
+          .doc(stats.id!)
+          .delete();
+      return const Right(true);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<model.AppError, List<model.Stats>>> getStats() async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.stats)
+          .get();
+
+      return Right(response.docs
+          .map((doc) => model.Stats.fromSnapshot(doc))
+          .toList());
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
+  Future<Either<model.AppError, model.Stats>> updateStats(
+      {required model.Stats stats}) async {
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseConfig.stats)
+          .doc(stats.id)
+          .update(stats.toJson());
+      return Right(stats);
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
 
   @override
   Future<Either<model.AppError, model.CustomerReview>> createReview(
@@ -898,6 +1022,7 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           model.AppError(message: "Unkown Error, Plese try again later."));
     }
   }
+
 
   @override
   Future<Either<model.AppError, model.Order>> fetchOrderByID(String uid) async {

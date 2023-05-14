@@ -41,8 +41,13 @@ class Services extends StatelessWidget {
                         _subtitle(),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    Wrap(
+                      alignment: WrapAlignment.start,
+                      direction: Axis.horizontal,
+                      runAlignment: WrapAlignment.start,
+                      crossAxisAlignment: WrapCrossAlignment.start,
+                      runSpacing: 8,
+                      spacing: 8,
                       children: category
                           .map((category) => ServiceContainer(
                               category: category, width: height * 1.9))

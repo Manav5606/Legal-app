@@ -1,5 +1,14 @@
+import 'package:admin/core/constant/fontstyles.dart';
+import 'package:admin/presentation/pages/home/tabs/notification/dialog/create_notification.dart';
+import 'package:admin/presentation/pages/home/tabs/notification/notification_view_model.dart';
+import 'package:admin/presentation/pages/home/tabs/widgets/notification_tile.dart';
+import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:routemaster/routemaster.dart';
+
+import '../../../orders_admin_page/order_page.dart';
 
 class NotificationTab extends ConsumerStatefulWidget {
   const NotificationTab({super.key});
@@ -10,11 +19,15 @@ class NotificationTab extends ConsumerStatefulWidget {
 }
 
 class _NotificationTabState extends ConsumerState<NotificationTab> {
+  late final NotificationviewModel _viewModel;
+  @override
+  void initState() {
+    _viewModel = ref.read(NotificationviewModel.provider);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-<<<<<<< Updated upstream
-    return Container();
-=======
     ref.watch(NotificationviewModel.provider);
     return Container(
       width: double.infinity,
@@ -90,6 +103,5 @@ class _NotificationTabState extends ConsumerState<NotificationTab> {
         Text("Your updates are here", style: FontStyles.font14Semibold),
       ],
     );
->>>>>>> Stashed changes
   }
 }

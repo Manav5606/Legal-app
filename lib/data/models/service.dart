@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Service {
   final String? id;
+  final String title;
   final String shortDescription;
   final String aboutDescription;
   final double? marketPrice;
@@ -12,9 +13,10 @@ class Service {
   final int? createdAt;
   final String createdBy;
   final bool isDeactivated;
-  
+
   Service({
     this.id,
+    required this.title,
     required this.shortDescription,
     required this.aboutDescription,
     this.marketPrice,
@@ -31,6 +33,8 @@ class Service {
     final data = documentSnapshot.data() as Map<String, dynamic>;
     return Service(
       id: documentSnapshot.id,
+      title: data['title'] ??
+          data['short_description'], // Remove this null check later
       shortDescription: data['short_description'],
       aboutDescription: data['about_description'],
       marketPrice: double.tryParse(data['market_price'].toString()),
@@ -47,6 +51,7 @@ class Service {
   Service copyWith({
     String? shortDescription,
     String? aboutDescription,
+    String? title,
     double? marketPrice,
     double? ourPrice,
     List<String>? childServices,
@@ -55,6 +60,7 @@ class Service {
   }) =>
       Service(
         isDeactivated: isDeactivated ?? this.isDeactivated,
+        title: title ?? this.title,
         shortDescription: shortDescription ?? this.shortDescription,
         aboutDescription: aboutDescription ?? this.aboutDescription,
         childServices: childServices ?? this.childServices,
@@ -68,6 +74,7 @@ class Service {
       );
 
   Map<String, dynamic> toJson() => {
+        "title": title,
         "is_deactivated": isDeactivated,
         "short_description": shortDescription,
         "about_description": aboutDescription,

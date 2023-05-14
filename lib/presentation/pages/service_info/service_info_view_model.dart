@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:admin/core/enum/order_status.dart';
+import 'package:admin/core/enum/role.dart';
 import 'package:admin/core/enum/transaction_status.dart';
 import 'package:admin/core/provider.dart';
 import 'package:admin/core/utils/messenger.dart';
@@ -6,7 +9,11 @@ import 'package:admin/data/models/models.dart';
 import 'package:admin/data/repositories/index.dart';
 import 'package:admin/domain/provider/razorpay_provider.dart';
 import 'package:admin/presentation/base_view_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
+
+import '../../../core/enum/notification.dart';
 
 final _provider = ChangeNotifierProvider((ref) => ServiceInfoPageViewModel(
     ref.read(Repository.database), ref.read(RazorpayHandler.provider), ref));
@@ -80,6 +87,70 @@ class ServiceInfoPageViewModel extends BaseViewModel {
     }
   }
 
+  Future<void> createNotification(
+      String userId, String meesage, String type, String orderId,String serviceId) async {
+    toggleLoadingOn(true);
+    final user = _ref.read(AppState.auth).user;
+    if (user == null) {
+      Messenger.showSnackbar("User is not authenticated");
+      return;
+    }
+    final Notification notification = Notification(
+      userId: userId,
+      isRead: false,
+      message: meesage,
+      type: type,
+      orderId: orderId,
+      serviceId: serviceId,
+      createdAt: firestore.Timestamp.fromDate(DateTime.now()),
+    );
+    final res = await _databaseRepositoryImpl.createNotifications(
+        notifications: notification);
+    await res.fold((l) {
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+    }, (r) async {
+      sendPushNotification(meesage);
+      Messenger.showSnackbar("Notification Sent Succesfully ✅");
+      toggleLoadingOn(false);
+    });
+  }
+
+  static Future<void> sendPushNotification(String msg) async {
+    final userRef = await firestore.FirebaseFirestore.instance
+        .collection('user')
+        .where('user_type', isEqualTo: UserType.admin.name)
+        .get();
+
+    final userData = userRef.docs.first.data();
+
+    if (userData != null) {
+      final pushToken = userData['pushToken'];
+
+      final body = {
+        // "to": users.map((user) => user.pushToken).toList(),
+        "to": pushToken,
+        "notification": {
+          "title": "You have new notfication from $msg",
+          "body": "Notification brief is written here...",
+        },
+        "data": {
+          "route": "/chat_view", // include the route name
+          "orderId": "9UdECrXq3aosqie1BdQ2",
+        }
+      };
+      final response = await http.post(
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization':
+              'key=AAAAsdVuN_0:APA91bH23hJVe9f3x_WUUiitRwWOuA9XVDSx1DTowKoZ3fZWFhQDIZ864oPwX90VHOoj_3z_6jlJp8XPiiBkOIwLBKz2pknnvWvYzvbOvFOz1HH_9S_wpePVBcVIyXGKG6CUdqcGDa3X',
+        },
+        body: json.encode(body),
+      );
+    }
+  }
+
   Future<String?> createTransaction(
       {required Map<String, dynamic> rpData}) async {
     toggleLoadingOn(true);
@@ -98,9 +169,10 @@ class ServiceInfoPageViewModel extends BaseViewModel {
     );
     final res = await _databaseRepositoryImpl.createTransaction(
         transaction: transaction);
-    await res.fold((l) {
+    return await res.fold((l) {
       Messenger.showSnackbar(l.message);
       toggleLoadingOn(false);
+      return null;
     }, (r) async {
       // TODO orderId is received from RazorPay
       final String orderId = DateTime.now().millisecondsSinceEpoch.toString();
@@ -110,7 +182,6 @@ class ServiceInfoPageViewModel extends BaseViewModel {
       );
       return orderId;
     });
-    return null;
   }
 
   Future<void> createOrderOnServer({
@@ -137,6 +208,8 @@ class ServiceInfoPageViewModel extends BaseViewModel {
       Messenger.showSnackbar(l.message);
       toggleLoadingOn(false);
     }, (r) async {
+      await createNotification(
+          user.id!, user.name, NotificationType.private.name, r.id!,r.serviceID!);
       Messenger.showSnackbar("Order Purchased and Created ✅");
       toggleLoadingOn(false);
     });

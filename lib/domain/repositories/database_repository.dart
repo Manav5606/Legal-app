@@ -54,6 +54,9 @@ abstract class DatabaseRepository {
       {required String serviceId});
   Future<Either<model.AppError, model.Transaction>> createTransaction(
       {required model.Transaction transaction});
+  Future<Either<model.AppError, model.Notification>> createNotifications(
+      {required model.Notification notifications});
+       Future<Either<model.AppError, List<model.Notification>>> fetchNotifications();
   Future<Either<model.AppError, model.Order>> createOrder(
       {required model.Order order});
   Future<Either<model.AppError, model.Order>> updateOrder(
@@ -66,6 +69,13 @@ abstract class DatabaseRepository {
   Future<Either<model.AppError, bool>> deleteBanner(
       {required model.BannerDetail banner});
   Future<Either<model.AppError, List<model.BannerDetail>>> getBanners();
+  Future<Either<model.AppError, model.Stats>> createStats(
+      {required model.Stats stats});
+  Future<Either<model.AppError, model.Stats>> updateStats(
+      {required model.Stats stats});
+  Future<Either<model.AppError, bool>> deleteStats(
+      {required model.Stats stats});
+  Future<Either<model.AppError, List<model.Stats>>> getStats();
   Future<Either<model.AppError, model.CustomerReview>> createReview(
       {required model.CustomerReview review});
   Future<Either<model.AppError, model.CustomerReview>> updateReview(

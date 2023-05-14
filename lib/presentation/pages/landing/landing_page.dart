@@ -19,9 +19,10 @@ import 'package:admin/presentation/pages/widgets/header.dart';
 import 'package:admin/presentation/pages/widgets/news_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:admin/data/models/models.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+
+import '../../../data/models/stats.dart';
 
 final landingScaffold = GlobalKey<ScaffoldState>();
 
@@ -50,11 +51,11 @@ class _LandingPageState extends ConsumerState<LandingPage> {
         createdAt: DateTime.now().millisecondsSinceEpoch),
   ];
 
-  final _generalStatsData = [
-    GeneralStat(value: "1500", title: "Orders"),
-    GeneralStat(value: "86%", title: "Successful Orders"),
-    GeneralStat(value: "15", title: "Lorem Ipsum"),
-    GeneralStat(value: "567", title: "Users"),
+  final _StatssData = [
+    Stats(title: "1500", description: "Orders"),
+    Stats(title: "86%", description: "Successful Orders"),
+    Stats(title: "15", description: "Lorem Ipsum"),
+    Stats(title: "567", description: "Users"),
   ];
 
   final _frequentlyUsedServicesList = [
@@ -104,7 +105,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                   Services(height: 0, category: _viewModel.getCategories),
                   _frequentlyUsedServices(300, mobile: true),
                   // _newsAndUpdates(800),
-                  Center(child: _generalStats(300, mobile: true)),
+                  Center(child: _Statss(300, mobile: true)),
                   Visibility(
                     visible: _viewModel.getReviews.isNotEmpty,
                     child: CustomerReviewSlides(
@@ -130,7 +131,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                   Services(height: 700, category: _viewModel.getCategories),
                   _frequentlyUsedServices(350),
                   // _newsAndUpdates(800),
-                  Center(child: _generalStats(300)),
+                  Center(child: _Statss(300)),
                   Visibility(
                       visible: _viewModel.getReviews.isNotEmpty,
                       child: CustomerReviewSlides(
@@ -192,7 +193,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
     );
   }
 
-  Widget _generalStats(double height, {bool mobile = false}) {
+  Widget _Statss(double height, {bool mobile = false}) {
     return SizedBox(
       height: height,
       child: Padding(
@@ -201,11 +202,11 @@ class _LandingPageState extends ConsumerState<LandingPage> {
           spacing: 8,
           runSpacing: 8,
           alignment: WrapAlignment.start,
-          children: _generalStatsData
-              .map((e) => GeneralStatContainer(
+          children: _viewModel.getStats
+              .map((e) => StatsContainer(
                   stat: e,
                   width: mobile ? height * 3 : height * 4,
-                  b: _generalStatsData.indexOf(e) % 2 == 0))
+                  b: _viewModel.getStats.indexOf(e) % 2 == 0))
               .toList(),
         ),
       ),

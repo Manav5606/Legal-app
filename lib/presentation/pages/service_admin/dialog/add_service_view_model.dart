@@ -22,17 +22,20 @@ class AddServiceViewModel extends BaseViewModel {
   static AutoDisposeChangeNotifierProvider<AddServiceViewModel> get provider =>
       _provider;
   final TextEditingController shortDescController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
   final TextEditingController aboutDescController = TextEditingController();
   final TextEditingController marketPriceController = TextEditingController();
   final TextEditingController ourPriceController = TextEditingController();
 
   String? shortDescError;
+  String? titleError;
   String? aboutDescError;
   String? marketPriceError;
   String? ourPriceError;
 
   void clearError() {
-    shortDescError = aboutDescError = marketPriceError = ourPriceError = null;
+    shortDescError =
+        aboutDescError = marketPriceError = ourPriceError = titleError = null;
     notifyListeners();
   }
 
@@ -41,6 +44,9 @@ class AddServiceViewModel extends BaseViewModel {
 
     if (shortDescController.text.isEmpty) {
       shortDescError = "Service description can't be empty.";
+    }
+    if (titleController.text.isEmpty) {
+      titleError = "Service title can't be empty.";
     }
     if (aboutDescController.text.isEmpty) {
       aboutDescError = "Service About can't be empty.";
@@ -57,6 +63,7 @@ class AddServiceViewModel extends BaseViewModel {
     return shortDescError == null &&
         aboutDescError == null &&
         marketPriceError == null &&
+        titleError == null &&
         ourPriceError == null;
   }
 
@@ -66,6 +73,7 @@ class AddServiceViewModel extends BaseViewModel {
     aboutDescController.dispose();
     marketPriceController.dispose();
     ourPriceController.dispose();
+    titleController.dispose();
     super.dispose();
   }
 
@@ -73,6 +81,7 @@ class AddServiceViewModel extends BaseViewModel {
     if (serviceDetail != null) {
       shortDescController.text = serviceDetail.shortDescription;
       aboutDescController.text = serviceDetail.aboutDescription;
+      titleController.text = serviceDetail.title;
       marketPriceController.text = (serviceDetail.marketPrice ?? 0).toString();
       ourPriceController.text = (serviceDetail.ourPrice ?? 0).toString();
       notifyListeners();
@@ -123,12 +132,10 @@ class AddServiceViewModel extends BaseViewModel {
       if (existingService != null) {
         final service = existingService.copyWith(
           aboutDescription: aboutDescController.text,
-          // categoryID: categoryID,
-          // childServices: existingService.childServices,
           marketPrice: double.tryParse(marketPriceController.text),
           ourPrice: double.tryParse(ourPriceController.text),
-          // isDeactivated: existingService.isDeactivated,
           shortDescription: shortDescController.text,
+          title: titleController.text,
         );
         result = await _databaseRepositoryImpl.updateService(service: service);
       } else {
@@ -136,6 +143,7 @@ class AddServiceViewModel extends BaseViewModel {
           aboutDescription: aboutDescController.text,
           categoryID: categoryID,
           childServices: [],
+          title: titleController.text,
           createdBy: _authProvider.state.user!.id!,
           shortDescription: shortDescController.text,
           marketPrice: double.tryParse(marketPriceController.text),

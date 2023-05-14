@@ -7,6 +7,7 @@ import 'package:admin/core/constant/sizes.dart';
 import 'package:admin/core/enum/role.dart';
 import 'package:admin/presentation/pages/authentication/index.dart';
 import 'package:admin/presentation/pages/authentication/login/login_view_model.dart';
+import 'package:admin/presentation/pages/authentication/vendor_register.dart/vendor_register.dart';
 import 'package:admin/presentation/pages/home/home_page.dart';
 import 'package:admin/presentation/pages/landing/landing_page.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
@@ -171,6 +172,26 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             },
                           ),
                           child: Text("Register",
+                              style: FontStyles.font14Bold
+                                  .copyWith(color: AppColors.yellowColor)),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Register as a?",
+                            style: FontStyles.font12Regular
+                                .copyWith(color: AppColors.whiteColor)),
+                        const SizedBox(width: 4),
+                        InkWell(
+                          onTap: () => Routemaster.of(context).replace(
+                            VendorRegisterPage.routeName,
+                            queryParameters: {
+                              "navigateBack": widget.navigateBack.toString()
+                            },
+                          ),
+                          child: Text("Vendor",
                               style: FontStyles.font14Bold
                                   .copyWith(color: AppColors.yellowColor)),
                         ),

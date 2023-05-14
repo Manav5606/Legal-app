@@ -5,11 +5,13 @@ import 'package:admin/data/models/general_stat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class GeneralStatContainer extends StatelessWidget {
+import '../../../data/models/stats.dart';
+
+class StatsContainer extends StatelessWidget {
   final double width;
-  final GeneralStat stat;
+  final Stats stat;
   final bool b;
-  const GeneralStatContainer({
+  const StatsContainer({
     super.key,
     required this.b,
     required this.stat,
@@ -38,12 +40,12 @@ class GeneralStatContainer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(stat.value,
+                  Text(stat.title,
                       style: FontStyles.font14Bold.copyWith(
                           color:
                               b ? AppColors.blueColor : AppColors.yellowColor,
                           fontSize: 24)),
-                  Text(stat.title,
+                  Text(stat.description,
                       textAlign: TextAlign.center,
                       style: FontStyles.font12Medium.copyWith(
                           color:

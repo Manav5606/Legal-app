@@ -18,3 +18,12 @@ enum QualificationUniversity {
   final String title;
   const QualificationUniversity(this.title);
 }
+
+enum YearsQualification {
+  year2001("2001"),
+  year2002("2002"),
+  year2003("2003");
+
+  final String title;
+  const YearsQualification(this.title);
+}

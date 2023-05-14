@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 abstract class AppColors {
   static Color get blueColor => const Color(0xFF1A548D);
   static Color get lightBlueColor => const Color(0xFFF3F9FF);
+  static Color get lighterBlueColor => const Color(0xFFCCE7FF);
   static Color get darkBlueColor => const Color(0xFF0068AC);
   static Color get redColor => const Color(0xFF650000);
   static Color get lightRedColor => const Color.fromARGB(255, 240, 215, 215);

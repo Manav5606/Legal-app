@@ -3,8 +3,12 @@ import 'package:admin/core/utils/messenger.dart';
 import 'package:admin/data/models/models.dart';
 import 'package:admin/domain/provider/auth_provider.dart';
 import 'package:admin/presentation/base_view_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../../core/constant/firebase_config.dart';
 
 final _loginViewModel = ChangeNotifierProvider.autoDispose(
     (ref) => LoginViewModel(ref.read(AppState.auth.notifier)));
@@ -14,6 +18,9 @@ class LoginViewModel extends BaseViewModel {
       _loginViewModel;
   LoginViewModel(this._authProvider);
   final AuthProvider _authProvider;
+
+  static late User me;
+  // static late FirebaseFirestore _firebaseFirestore;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -66,7 +73,8 @@ class LoginViewModel extends BaseViewModel {
         return result.fold((l) async {
           Messenger.showSnackbar(l.message);
           return null;
-        }, (r) {
+        }, (r) async{
+         await getFirebaseMessagingToken(r.id!);
           Messenger.showSnackbar("Logged In ✅");
           return r;
         });
@@ -78,5 +86,20 @@ class LoginViewModel extends BaseViewModel {
     } finally {
       toggleLoadingOn(false);
     }
+  }
+
+  FirebaseMessaging fMessaging = FirebaseMessaging.instance;
+
+  Future<void> getFirebaseMessagingToken(String id) async {
+    await fMessaging.requestPermission();
+    await fMessaging.getToken().then((t) {
+      if (t != null) {
+
+        FirebaseFirestore.instance
+            .collection(FirebaseConfig.userCollection)
+            .doc(id)
+            .update({"pushToken": t});
+      }
+    });
   }
 }

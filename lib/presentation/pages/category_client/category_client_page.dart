@@ -1,9 +1,7 @@
 import 'dart:developer';
-
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/provider.dart';
-import 'package:admin/core/utils/messenger.dart';
 import 'package:admin/data/models/models.dart';
 import 'package:admin/presentation/pages/category_client/category_client_view_model.dart';
 import 'package:admin/presentation/pages/service_info/service_info_page.dart';
@@ -90,7 +88,11 @@ class _CategoryClientPageState extends ConsumerState<CategoryClientPage> {
               desktop: (context) => ListView(
                 children: [
                   const Header(mobile: false),
-                  const CategoryContainer(mobile: false),
+                  Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: MediaQuery.of(context).size.width * 0.2,
+                          vertical: 24),
+                      child: const CategoryContainer(mobile: false)),
                   const ContactUs(height: 250),
                   ContactUsCard(contactDetails: _contactDetails, height: 200),
                   const Footer(),

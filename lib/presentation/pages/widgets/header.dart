@@ -8,18 +8,17 @@ import 'package:admin/data/models/models.dart';
 import 'package:admin/presentation/pages/authentication/index.dart';
 import 'package:admin/presentation/pages/home/home_view_model.dart';
 import 'package:admin/presentation/pages/landing/landing_page.dart';
-<<<<<<< Updated upstream
-=======
 import 'package:admin/presentation/pages/my_orders/my_orders_page.dart';
 import 'package:admin/presentation/pages/orders_admin_page/order_page.dart';
 import 'package:admin/presentation/pages/profile/profile_page.dart';
->>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+import '../home/home_page.dart';
 
 // TODO make all displayed text dynamic
 class Header extends StatelessWidget {
@@ -31,12 +30,12 @@ class Header extends StatelessWidget {
     return Column(
       children: [
         TopBar(mobile: mobile),
-        bottomBar(),
+        bottomBar(context),
       ],
     );
   }
 
-  Widget bottomBar() {
+  Widget bottomBar(BuildContext context) {
     return Container(
       height: 64,
       decoration: BoxDecoration(
@@ -54,10 +53,15 @@ class Header extends StatelessWidget {
           const SizedBox(
             width: 30,
           ),
-          SvgPicture.asset(
-            Assets.iconsTitleBarlogo,
-            width: 255,
-            height: 51,
+          InkWell(
+            onTap: () {
+              Routemaster.of(context).push(LandingPage.routeName);
+            },
+            child: SvgPicture.asset(
+              Assets.iconsTitleBarlogo,
+              width: 255,
+              height: 51,
+            ),
           ),
           const Spacer(),
           mobile
@@ -214,14 +218,20 @@ class _TopBarState extends ConsumerState<TopBar> {
                                 size: 12, color: AppColors.yellowColor)
                           ],
                         ),
-                        itemBuilder: (_) => ["Profile", "History", "Sign out"]
+                        itemBuilder: (_) => (user?.userType == UserType.admin
+                                ? ["Profile", "History", "Sign out"]
+                                : [
+                                    "Profile",
+                                    "History",
+                                    "Sign out",
+                                    "My orders",
+                                    "My Chat"
+                                  ])
                             .map((menu) => PopupMenuItem(
                                   child: Text(menu),
                                   onTap: () {
                                     if (menu == "Sign out") {
                                       ref.read(AppState.auth.notifier).logout();
-<<<<<<< Updated upstream
-=======
                                     } else if (menu == "My orders") {
                                       Routemaster.of(context)
                                           .push(MyOrdersPage.routeName);
@@ -239,7 +249,6 @@ class _TopBarState extends ConsumerState<TopBar> {
                                       Routemaster.of(context).push(
                                         MyOrdersPage.routeName,
                                       );
->>>>>>> Stashed changes
                                     }
                                   },
                                 ))

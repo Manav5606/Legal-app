@@ -22,6 +22,9 @@ class EditLandingViewModel extends BaseViewModel {
   final List<BannerDetail> _banners = [];
   List<BannerDetail> get getBanners => _banners;
 
+  final List<Stats> _stats = [];
+  List<Stats> get getStats => _stats;
+
   final List<CustomerReview> _reviews = [];
   List<CustomerReview> get getReviews => _reviews;
 
@@ -37,6 +40,18 @@ class EditLandingViewModel extends BaseViewModel {
     }, (r) {
       _banners.clear();
       _banners.addAll(r);
+      toggleLoadingOn(false);
+    });
+  }
+  Future<void> initStats() async {
+    toggleLoadingOn(true);
+    final res = await _databaseRepositoryImpl.getStats();
+    res.fold((l) {
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+    }, (r) {
+      _stats.clear();
+      _stats.addAll(r);
       toggleLoadingOn(false);
     });
   }

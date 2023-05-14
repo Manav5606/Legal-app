@@ -63,6 +63,14 @@ class _AddServiceDialogState extends ConsumerState<AddServiceRequestDialog> {
               controller: _viewModel.fieldNameController,
             ),
             const SizedBox(height: 12),
+            DialogTextField(
+              width: 600 * 0.8,
+              errorText: _viewModel.fieldDescriptionError,
+              label: "Field Description",
+              hintText: "Type here",
+              controller: _viewModel.fieldDescriptionController,
+            ),
+            const SizedBox(height: 12),
             SizedBox(
               width: 600 * 0.8,
               child: FormField<ServiceFieldType>(

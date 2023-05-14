@@ -8,3 +8,5 @@ export 'banner.dart';
 export 'transaction.dart';
 export 'vendor.dart';
 export 'customer_review.dart';
+export 'stats.dart';
+export 'notifications.dart';

@@ -91,8 +91,15 @@ class _ServicePageState extends ConsumerState<ServicePage> {
             ? ListTile(
                 tileColor: data.isDeactivated ? AppColors.lightRedColor : null,
                 dense: true,
-                title: Text(data.shortDescription),
-                subtitle: Text(data.aboutDescription),
+                isThreeLine: true,
+                title: Text(data.title),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(data.shortDescription),
+                    Text(data.aboutDescription),
+                  ],
+                ),
                 leading: PopupMenuButton<String>(
                     onSelected: (value) {
                       switch (value) {
@@ -143,8 +150,15 @@ class _ServicePageState extends ConsumerState<ServicePage> {
             : ListTile(
                 dense: true,
                 tileColor: data.isDeactivated ? AppColors.lightRedColor : null,
-                title: Text(data.shortDescription),
-                subtitle: Text(data.aboutDescription),
+                isThreeLine: true,
+                title: Text(data.title),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(data.shortDescription),
+                    Text(data.aboutDescription),
+                  ],
+                ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

@@ -25,6 +25,7 @@ class CategoryClientPageViewModel extends BaseViewModel {
   Service getServiceByID(String id) {
     return _services.firstWhere((element) => element.id == id,
         orElse: () => Service(
+            title: "",
             shortDescription: "",
             aboutDescription: "",
             childServices: [],

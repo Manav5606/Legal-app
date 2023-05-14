@@ -1,6 +1,8 @@
 import 'package:admin/presentation/pages/authentication/index.dart';
+import 'package:admin/presentation/pages/authentication/vendor_register.dart/vendor_register.dart';
 import 'package:admin/presentation/pages/category_client/category_client_page.dart';
 import 'package:admin/presentation/pages/home/home_page.dart';
+import 'package:admin/presentation/pages/home/tabs/inbox/chat_view.dart';
 import 'package:admin/presentation/pages/landing/landing_page.dart';
 import 'package:admin/presentation/pages/my_orders/my_orders_page.dart';
 import 'package:admin/presentation/pages/order_detail_client/order_detail_page.dart';
@@ -14,8 +16,10 @@ import '../../presentation/pages/orders_admin_page/order_page.dart';
 abstract class AppRoutes {
   static String get login => LoginPage.routeName;
   static String get register => RegisterPage.routeName;
+  static String get vendor_register => VendorRegisterPage.routeName;
   static String get home => HomePage.routeName;
   static String get order => OrderPage.routeName;
+  static String get chatView => ChatView.routeName;
 }
 
 final routeLoggedOut = RouteMap(
@@ -28,6 +32,10 @@ final routeLoggedOut = RouteMap(
                 data.queryParameters['navigateBack'] == "true" ? true : false)),
     RegisterPage.routeName: (data) => MaterialPage(
         child: RegisterPage(
+            navigateBack:
+                data.queryParameters['navigateBack'] == "true" ? true : false)),
+    VendorRegisterPage.routeName: (data) => MaterialPage(
+        child: VendorRegisterPage(
             navigateBack:
                 data.queryParameters['navigateBack'] == "true" ? true : false)),
     CategoryClientPage.routeName: (data) => MaterialPage(
