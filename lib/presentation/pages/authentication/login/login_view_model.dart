@@ -1,3 +1,4 @@
+import 'package:admin/core/constant/firebase_config.dart';
 import 'package:admin/core/provider.dart';
 import 'package:admin/core/utils/messenger.dart';
 import 'package:admin/data/models/models.dart';
@@ -7,8 +8,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../../core/constant/firebase_config.dart';
 
 final _loginViewModel = ChangeNotifierProvider.autoDispose(
     (ref) => LoginViewModel(ref.read(AppState.auth.notifier)));
@@ -73,8 +72,8 @@ class LoginViewModel extends BaseViewModel {
         return result.fold((l) async {
           Messenger.showSnackbar(l.message);
           return null;
-        }, (r) async{
-         await getFirebaseMessagingToken(r.id!);
+        }, (r) async {
+          await getFirebaseMessagingToken(r.id!);
           Messenger.showSnackbar("Logged In ✅");
           return r;
         });
@@ -94,7 +93,6 @@ class LoginViewModel extends BaseViewModel {
     await fMessaging.requestPermission();
     await fMessaging.getToken().then((t) {
       if (t != null) {
-
         FirebaseFirestore.instance
             .collection(FirebaseConfig.userCollection)
             .doc(id)
