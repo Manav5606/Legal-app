@@ -8,7 +8,7 @@ abstract class Assets {
   static const String ASSETS_ICONS_VECTORMAIL_SVG =
       'assets/icons/Vectormail.svg';
 
-  static const String ASSETS_ICONS_VECTOROVERLAYLEFT_SVG =
+  static const String   ASSETS_ICONS_VECTOROVERLAYLEFT_SVG =
       'assets/icons/Vectoroverlayleft.svg';
 
   static const String ASSETS_ICONS_VECTOROVERLAYSQUARE_SVG =

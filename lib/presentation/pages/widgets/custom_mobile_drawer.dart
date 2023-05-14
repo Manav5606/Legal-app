@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../home/home_page.dart';
+
 class CustomMobileDrawer extends ConsumerStatefulWidget {
   final List<Category> categories;
   const CustomMobileDrawer({super.key, required this.categories});
@@ -80,6 +82,13 @@ class _CustomMobileDrawerState extends ConsumerState<CustomMobileDrawer> {
                             fontSize: 16, color: AppColors.blackColor))),
               ),
               ListTile(
+                onTap: () {
+                      Routemaster.of(context).push(HomePage.routeName);
+                    },
+                  title: Text("My Chat",
+                      style: FontStyles.font12Regular.copyWith(
+                          fontSize: 16, color: AppColors.blackColor))),
+                           ListTile(
                   title: Text("FAQs",
                       style: FontStyles.font12Regular.copyWith(
                           fontSize: 16, color: AppColors.blackColor))),

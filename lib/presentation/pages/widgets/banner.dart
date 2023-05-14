@@ -5,6 +5,10 @@ import 'package:admin/data/models/models.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:routemaster/routemaster.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+
+import '../category_client/category_client_page.dart';
 
 class BannerSlides extends StatefulWidget {
   final bool mobile;
@@ -62,7 +66,14 @@ class _BannerSlidesState extends State<BannerSlides> {
                         CTAButton(
                             mobile: widget.mobile,
                             title: widget.bannerDetails[i].btnText,
-                            onTap: () {},
+                            onTap: () {
+                              Routemaster.of(context).push(
+                                  CategoryClientPage.routeName,
+                                  queryParameters: {
+                                    "categoryId":
+                                        widget.bannerDetails[i].urlToLoad
+                                  });
+                            },
                             radius: 100),
                       ],
                     ),

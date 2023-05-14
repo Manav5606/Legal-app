@@ -16,7 +16,7 @@ class HomeViewModel extends BaseViewModel {
 
   Widget get otherView => _view;
 
-  void updateTabView(bool value) {
+  void updateTabView(bool value) {    
     _showTabView = value;
     notifyListeners();
   }

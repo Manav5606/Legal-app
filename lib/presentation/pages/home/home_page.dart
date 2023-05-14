@@ -1,11 +1,14 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
+import 'package:admin/core/enum/role.dart';
 import 'package:admin/presentation/pages/home/home_view_model.dart';
 import 'package:admin/presentation/pages/widgets/footer.dart';
 import 'package:admin/presentation/pages/widgets/header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/provider.dart';
+import '../../../data/models/user.dart';
 import 'tabs/dashboard/dashboard_view.dart';
 import 'tabs/inbox/inbox_view.dart';
 import 'tabs/notification/notification_view.dart';
@@ -22,11 +25,15 @@ class _HomePageState extends ConsumerState<HomePage>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
   late final HomeViewModel _viewModel;
+  late bool isAuthenticated;
+  late User? user;
 
   @override
   void initState() {
     _tabController = TabController(length: 3, vsync: this);
     _viewModel = ref.read(HomeViewModel.provider);
+    isAuthenticated = ref.read(AppState.auth).isAuthenticated;
+    user = ref.read(AppState.auth).user;
     super.initState();
   }
 
@@ -55,11 +62,17 @@ class _HomePageState extends ConsumerState<HomePage>
                           _viewModel.updateTabView(true);
                           _tabController.animateTo(value);
                         },
-                        tabs: ["Dashboard", "Inbox", "Notification"]
-                            .map((e) => Text(e,
-                                style: FontStyles.font24Semibold
-                                    .copyWith(color: AppColors.blueColor)))
-                            .toList()),
+                        tabs: user?.userType.name != UserType.admin.name
+                            ? ["Inbox", "Notification"]
+                                .map((e) => Text(e,
+                                    style: FontStyles.font24Semibold
+                                        .copyWith(color: AppColors.blueColor)))
+                                .toList()
+                            : ["Dashboard", "Inbox", "Notification"]
+                                .map((e) => Text(e,
+                                    style: FontStyles.font24Semibold
+                                        .copyWith(color: AppColors.blueColor)))
+                                .toList()),
                   ),
                   const Expanded(flex: 1, child: SizedBox()),
                 ],
@@ -70,12 +83,17 @@ class _HomePageState extends ConsumerState<HomePage>
               child: _viewModel.showTabView
                   ? TabBarView(
                       controller: _tabController,
-                      children: const [
-                        DashboardTab(),
-                        InboxTab(),
-                        NotificationTab(),
-                      ],
-                    )
+                      children: user?.userType.name != UserType.admin.name
+                          ? const [
+                              // DashboardTab(),
+                              InboxTab(),
+                              NotificationTab(),
+                            ]
+                          : const [
+                              DashboardTab(),
+                              InboxTab(),
+                              NotificationTab(),
+                            ])
                   : _viewModel.otherView,
             ),
             const Footer(),

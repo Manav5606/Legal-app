@@ -33,6 +33,7 @@ class ServiceContainer extends StatelessWidget {
       },
       child: Container(
         width: width / 5,
+        height: MediaQuery.of(context).size.height * 0.35,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: AppColors.yellowColor,

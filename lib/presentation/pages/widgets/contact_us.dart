@@ -48,7 +48,8 @@ class ContactUs extends StatelessWidget {
                           fontSize: mobile ? 18 : null)),
                   const SizedBox(height: 4),
                   Text(
-                      "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7",
+                      // "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7",
+                      "Visit our office at SAI NAGAR COLONY,MANSOORABAD Hyderabad TG 500068 IN",
                       textAlign: TextAlign.center,
                       style: FontStyles.font12Regular.copyWith(
                           color: AppColors.blueColor,

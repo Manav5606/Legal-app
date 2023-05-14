@@ -8,10 +8,17 @@ import 'package:admin/data/models/models.dart';
 import 'package:admin/presentation/pages/authentication/index.dart';
 import 'package:admin/presentation/pages/home/home_view_model.dart';
 import 'package:admin/presentation/pages/landing/landing_page.dart';
+<<<<<<< Updated upstream
+=======
+import 'package:admin/presentation/pages/my_orders/my_orders_page.dart';
+import 'package:admin/presentation/pages/orders_admin_page/order_page.dart';
+import 'package:admin/presentation/pages/profile/profile_page.dart';
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 // TODO make all displayed text dynamic
@@ -62,21 +69,22 @@ class Header extends StatelessWidget {
               : Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
-                      color: AppColors.yellowColor,
+                      color: Colors.transparent,
                       borderRadius: BorderRadius.circular(50)),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 150,
-                        child: TextFormField(
-                            decoration: const InputDecoration(
-                          hintText: "Search...",
-                          border: InputBorder.none,
-                        )),
-                      ),
-                      Icon(Icons.search, color: AppColors.blueColor),
-                    ],
-                  )),
+                  // child: Row(
+                  //   children: [
+                  //     // SizedBox(
+                  //     //   width: 150,
+                  //     //   child: TextFormField(
+                  //     //       decoration: const InputDecoration(
+                  //     //     hintText: "Search...",
+                  //     //     border: InputBorder.none,
+                  //     //   )),
+                  //     // ),
+                  //     // Icon(Icons.search, color: AppColors.blueColor),
+                  //   ],
+                  // )
+                ),
           const SizedBox(
             width: 30,
           ),
@@ -111,6 +119,7 @@ class _TopBarState extends ConsumerState<TopBar> {
     ref.watch(AppState.auth).user;
     return Container(
       height: 26,
+      width: double.infinity,
       color: AppColors.blueColor,
       child: Row(
         children: [
@@ -123,10 +132,10 @@ class _TopBarState extends ConsumerState<TopBar> {
           ),
           InkWell(
             onTap: () {
-              launchUrlString("tel:+911115342382");
+              launchUrlString("tel:+918125504448");
             },
             child: Text(
-              "+91-11153-42382",
+              "+91-8125504448",
               style: FontStyles.font12Regular,
             ),
           ),
@@ -140,7 +149,7 @@ class _TopBarState extends ConsumerState<TopBar> {
           ),
           InkWell(
             onTap: () {
-              launchUrlString("mail:contact@247legal.in");
+              launchMailTo();
             },
             child: Text(
               "contact@247legal.in",
@@ -211,6 +220,26 @@ class _TopBarState extends ConsumerState<TopBar> {
                                   onTap: () {
                                     if (menu == "Sign out") {
                                       ref.read(AppState.auth.notifier).logout();
+<<<<<<< Updated upstream
+=======
+                                    } else if (menu == "My orders") {
+                                      Routemaster.of(context)
+                                          .push(MyOrdersPage.routeName);
+                                    } else if (menu == "Profile") {
+                                      Routemaster.of(context).push(
+                                          ProfilePage.routeName,
+                                          queryParameters: {
+                                            "userID": user!.id!
+                                          });
+                                    } else if (menu == "My Chat") {
+                                      Routemaster.of(context).push(
+                                        HomePage.routeName,
+                                      );
+                                    } else if (menu == "History") {
+                                      Routemaster.of(context).push(
+                                        MyOrdersPage.routeName,
+                                      );
+>>>>>>> Stashed changes
                                     }
                                   },
                                 ))
@@ -245,5 +274,20 @@ class _TopBarState extends ConsumerState<TopBar> {
         ],
       ),
     );
+  }
+
+  void launchMailTo() async {
+    final Uri params = Uri(
+      scheme: 'mailto',
+      path: 'contact@247legal.in',
+    );
+
+    String url = params.toString();
+
+    try {
+      await launch(url);
+    } catch (e) {
+      throw 'Could not launch $url';
+    }
   }
 }

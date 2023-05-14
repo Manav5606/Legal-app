@@ -43,12 +43,25 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
           _heading(),
           const SizedBox(height: 28),
           Expanded(
+<<<<<<< Updated upstream
             child: Column(
               children: [
                 _editBanner(),
                 _editReview(),
                 _editContactDetail(),
               ],
+=======
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: [
+                  _editBanner(),
+                  _editReview(),
+                  _editContactDetail(),
+                  _editStats()
+                ],
+              ),
+>>>>>>> Stashed changes
             ),
           ),
           const SizedBox(height: 4),
@@ -70,10 +83,10 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
           title: Text(banner.title),
           subtitle: Text(banner.description),
           leading: Image.network(banner.imageUrl),
-          trailing: TextButton(
-            child: Text(banner.btnText),
-            onPressed: () => launchUrlString(banner.urlToLoad),
-          ),
+          // trailing: TextButton(
+          //   child: Text(banner.btnText),
+          //   onPressed: () => launchUrlString(banner.urlToLoad),
+          // ),
           onTap: () {
             showDialog(
               context: context,
@@ -117,6 +130,60 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
     );
   }
 
+<<<<<<< Updated upstream
+=======
+  Widget _editStats() {
+    return ExpansionTile(
+      title: _statsHeading(),
+      children: _viewModel.getStats.map((stats) {
+        return ListTile(
+          dense: true,
+          title: Text(stats.title),
+          subtitle: Text(stats.description),
+          onTap: () {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) => Dialog(
+                insetPadding: const EdgeInsets.all(24),
+                child: AddStatsDilaog(statsDetails: stats),
+              ),
+            );
+          },
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _statsHeading() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Stats", style: FontStyles.font24Semibold),
+            Text("Your list of stats is here",
+                style: FontStyles.font14Semibold),
+          ],
+        ),
+        CTAButton(
+            title: "Add Stats",
+            onTap: () {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => const Dialog(
+                  insetPadding: EdgeInsets.all(24),
+                  child: AddStatsDilaog(),
+                ),
+              );
+            }),
+      ],
+    );
+  }
+
+>>>>>>> Stashed changes
   Widget _editReview() {
     return ExpansionTile(
       title: _reviewHeading(),

@@ -45,7 +45,7 @@ class Services extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: category
                           .map((category) => ServiceContainer(
-                              category: category, width: height * 1.6))
+                              category: category, width: height * 1.9))
                           .toList(),
                     ),
                   ],

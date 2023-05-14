@@ -24,7 +24,7 @@ class AddBannerViewModel extends BaseViewModel {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController btnController = TextEditingController();
-  final TextEditingController urlController = TextEditingController();
+   TextEditingController urlController = TextEditingController();
 
   String? imageUrl;
 
@@ -34,6 +34,9 @@ class AddBannerViewModel extends BaseViewModel {
   String? urlError;
 
   bool imageLoading = false;
+
+  final List<Category> _categories = [];
+  List<Category> get getCategories => _categories;
 
   void clearError() {
     titleError = descriptionError = btnError = urlError = null;
@@ -88,6 +91,20 @@ class AddBannerViewModel extends BaseViewModel {
       imageUrl = bannerDetail.imageUrl;
       notifyListeners();
     }
+  }
+
+   Future<void> fetchCategories() async {
+    toggleLoadingOn(true);
+    final res = await _databaseRepositoryImpl.fetchCategories();
+    res.fold((l) {
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+    }, (r) {
+      _categories.clear();
+      _categories.addAll(r.where((e) => !e.isDeactivated).toList()
+        ..sort((a, b) => a.name.compareTo(b.name)));
+    });
+    toggleLoadingOn(false);
   }
 
   Future<void> uploadImage({required XFile file}) async {

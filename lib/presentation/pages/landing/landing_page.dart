@@ -159,15 +159,20 @@ class _LandingPageState extends ConsumerState<LandingPage> {
             child: SizedBox(
               width: height * 3,
               child: Column(
-                mainAxisAlignment: mobile
-                    ? MainAxisAlignment.start
-                    : MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment:
+                    mobile ? MainAxisAlignment.start : MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Visibility(visible: mobile, child: const SizedBox(height: 8)),
-                  Text("Frequently used services",
-                      style: FontStyles.font24Semibold
-                          .copyWith(color: AppColors.yellowColor)),
+                  Padding(
+                    padding: mobile == true
+                        ? const EdgeInsets.all(0)
+                        : const EdgeInsets.all(8.0).copyWith(
+                            bottom: MediaQuery.of(context).size.height * 0.04),
+                    child: Text("Frequently used services",
+                        style: FontStyles.font24Semibold
+                            .copyWith(color: AppColors.yellowColor)),
+                  ),
                   Visibility(visible: mobile, child: const SizedBox(height: 8)),
                   Wrap(
                     spacing: mobile ? 20 : 8,
