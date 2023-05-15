@@ -33,6 +33,7 @@ class _CategoryClientPageState extends ConsumerState<CategoryClientPage> {
     _viewModel = ref.read(CategoryClientPageViewModel.provider);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _viewModel.initCategoryInfo(widget.categoryId);
+      _viewModel.fetchContacts();
     });
     super.initState();
   }
@@ -94,7 +95,9 @@ class _CategoryClientPageState extends ConsumerState<CategoryClientPage> {
                           vertical: 24),
                       child: const CategoryContainer(mobile: false)),
                   const ContactUs(height: 250),
-                  ContactUsCard(contactDetails: _contactDetails, height: 200),
+                  ContactUsCard(
+                      contactDetails: _viewModel.getContacts,
+                      height: MediaQuery.of(context).size.height * 0.4),
                   const Footer(),
                 ],
               ),

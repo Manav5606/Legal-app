@@ -18,6 +18,9 @@ class CategoryClientPageViewModel extends BaseViewModel {
   Category? selectedCategory;
 
   final List<Service> _services = [];
+  final List<Category> _contacts = [];
+
+  List<Category> get getContacts => _contacts;
 
   List<Service> get getServices =>
       _services.where((e) => e.parentServiceID == null).toList();
@@ -44,6 +47,20 @@ class CategoryClientPageViewModel extends BaseViewModel {
       selectedCategory = r;
       notifyListeners();
       await _getServicesByCategoryID(categoryId);
+    });
+    toggleLoadingOn(false);
+  }
+
+  Future<void> fetchContacts() async {
+    toggleLoadingOn(true);
+    final res = await _databaseRepositoryImpl.getContactDetails();
+    res.fold((l) {
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+    }, (r) {
+      _contacts.clear();
+      _contacts.addAll(r.where((e) => !e.isDeactivated).toList()
+        ..sort((a, b) => a.name.compareTo(b.name)));
     });
     toggleLoadingOn(false);
   }

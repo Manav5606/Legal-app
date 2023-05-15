@@ -34,7 +34,7 @@ class ContactServiceContainer extends StatelessWidget {
       },
       child: Container(
         width: width / 5,
-        height: MediaQuery.of(context).size.height * 0.35,
+        height: MediaQuery.of(context).size.height * 0.45,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: AppColors.yellowColor,
