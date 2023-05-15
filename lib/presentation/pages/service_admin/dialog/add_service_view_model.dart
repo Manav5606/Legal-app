@@ -42,15 +42,15 @@ class AddServiceViewModel extends BaseViewModel {
   bool _validateValues() {
     clearError();
 
-    if (shortDescController.text.isEmpty) {
-      shortDescError = "Service description can't be empty.";
-    }
+    // if (shortDescController.text.isEmpty) {
+    //   shortDescError = "Service description can't be empty.";
+    // }
     if (titleController.text.isEmpty) {
       titleError = "Service title can't be empty.";
     }
-    if (aboutDescController.text.isEmpty) {
-      aboutDescError = "Service About can't be empty.";
-    }
+    // if (aboutDescController.text.isEmpty) {
+    //   aboutDescError = "Service About can't be empty.";
+    // }
     if (marketPriceController.text.isNotEmpty &&
         double.tryParse(marketPriceController.text) == null) {
       marketPriceError = "Please enter a valid Price.";
