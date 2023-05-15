@@ -26,12 +26,16 @@ class LandingPageViewModel extends BaseViewModel {
   final List<BannerDetail> _banners = [];
   final List<CustomerReview> _reviews = [];
   final List<Stats> _stats = [];
+  final List<Service> _service = [];
+  final List<String> _s = [];
 
   List<Category> get getCategories => _categories;
   List<Category> get getContacts => _contacts;
   List<BannerDetail> get getBanners => _banners;
   List<CustomerReview> get getReviews => _reviews;
   List<Stats> get getStats => _stats;
+  List<Service> get getService => _service;
+  List<String> get gets => _s;
 
   Future<void> fetchCategories() async {
     toggleLoadingOn(true);
@@ -43,6 +47,21 @@ class LandingPageViewModel extends BaseViewModel {
       _categories.clear();
       _categories.addAll(r.where((e) => !e.isDeactivated).toList()
         ..sort((a, b) => a.name.compareTo(b.name)));
+    });
+    toggleLoadingOn(false);
+  }
+
+  Future<void> fetchServices() async {
+    toggleLoadingOn(true);
+    final res = await _databaseRepositoryImpl.fetchServices();
+    res.fold((l) {
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+    }, (r) {
+      _service.clear();
+      _service.addAll(r);
+      
+      // ..sort((a, b) => a.name.compareTo(b.name)));
     });
     toggleLoadingOn(false);
   }

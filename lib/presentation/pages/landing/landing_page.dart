@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-
+import 'package:admin/data/models/models.dart' as model;
 import '../../../data/models/stats.dart';
 
 final landingScaffold = GlobalKey<ScaffoldState>();
@@ -76,6 +76,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
   @override
   void initState() {
     _viewModel = ref.read(LandingPageViewModel.provider);
+    _viewModel.fetchServices();
     super.initState();
   }
 
@@ -179,10 +180,18 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                     spacing: mobile ? 20 : 8,
                     alignment: WrapAlignment.start,
                     runSpacing: mobile ? 14 : 8,
-                    children: _frequentlyUsedServicesList
-                        .map((e) => FrequentServiceContainer(
-                            serviceName: e, width: height * 3, mobile: mobile))
-                        .toList(),
+                    children:
+                        // _viewModel.getService.asMap().entries.map((entry) {
+                        _viewModel.getService.take(8).map((service) {
+                      // int index = entry.key;
+                      // model.Service service = entry.value;
+
+                      return FrequentServiceContainer(
+                        serviceName: service.title,
+                        width: height * 3,
+                        mobile: mobile,
+                      );
+                    }).toList(),
                   ),
                 ],
               ),
