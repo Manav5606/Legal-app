@@ -24,6 +24,17 @@ class MyOrdersPage extends ConsumerStatefulWidget {
 }
 
 class _MyOrdersPageState extends ConsumerState<MyOrdersPage> {
+  late final MyOrdersPageViewModel _viewModel;
+
+  @override
+  void initState() {
+    _viewModel = ref.read(MyOrdersPageViewModel.provider);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _viewModel.fetchContacts();
+    });
+    super.initState();
+  }
+
   late bool isAuthenticated;
 
   // TODO make it dynamic
@@ -72,7 +83,7 @@ class _MyOrdersPageState extends ConsumerState<MyOrdersPage> {
             const Header(mobile: false),
             const MyOrdersList(),
             const ContactUs(height: 250),
-            ContactUsCard(contactDetails: _contactDetails, height: 200),
+            ContactUsCard(contactDetails: _viewModel.getContacts, height: 200),
             const Footer(),
           ],
         ),

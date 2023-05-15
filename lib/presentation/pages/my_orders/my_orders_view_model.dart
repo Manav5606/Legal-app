@@ -21,8 +21,10 @@ class MyOrdersPageViewModel extends BaseViewModel {
       _provider;
 
   final List<Order> _myOrders = [];
+  final List<Category> _contacts = [];
 
   List<Order> get getMyOrders => _myOrders;
+   List<Category> get getContacts => _contacts;
 
   Future<void> initMyOrders() async {
     toggleLoadingOn(true);
@@ -35,6 +37,20 @@ class MyOrdersPageViewModel extends BaseViewModel {
       _myOrders.clear();
       _myOrders.addAll(r);
       notifyListeners();
+    });
+    toggleLoadingOn(false);
+  }
+
+  Future<void> fetchContacts() async {
+    toggleLoadingOn(true);
+    final res = await _databaseRepositoryImpl.getContactDetails();
+    res.fold((l) {
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+    }, (r) {
+      _contacts.clear();
+      _contacts.addAll(r.where((e) => !e.isDeactivated).toList()
+        ..sort((a, b) => a.name.compareTo(b.name)));
     });
     toggleLoadingOn(false);
   }
