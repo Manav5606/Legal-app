@@ -179,7 +179,7 @@ class _CategoryContainerState extends ConsumerState<CategoryContainer> {
   }
 
   Widget showServices(Service data) {
-    return data.shortDescription.isEmpty || data.ourPrice == null
+    return data.title.isEmpty || data.ourPrice == null
         ? const SizedBox.shrink()
         : ListTile(
             leading: const SizedBox.shrink(),
