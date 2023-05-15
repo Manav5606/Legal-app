@@ -8,7 +8,7 @@ abstract class Assets {
   static const String ASSETS_ICONS_VECTORMAIL_SVG =
       'assets/icons/Vectormail.svg';
 
-  static const String   ASSETS_ICONS_VECTOROVERLAYLEFT_SVG =
+  static const String ASSETS_ICONS_VECTOROVERLAYLEFT_SVG =
       'assets/icons/Vectoroverlayleft.svg';
 
   static const String ASSETS_ICONS_VECTOROVERLAYSQUARE_SVG =
@@ -22,6 +22,7 @@ abstract class Assets {
 
   static const String iconsCirlceFilledCheck =
       'assets/icons/cirlceFilledCheck.svg';
+  static const String phone = 'assets/icons/phone.png';
   static const String iconsCooliconhamburger =
       'assets/icons/cooliconhamburger.svg';
   static const String iconsFilledCircleChevronDown =
