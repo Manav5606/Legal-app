@@ -145,7 +145,10 @@ class _CategoryContainerState extends ConsumerState<CategoryContainer> {
                   style: FontStyles.font24Semibold
                       .copyWith(color: AppColors.yellowColor))),
           const SizedBox(height: 12),
-          ..._viewModel.getServices.map(expandServices).toList(),
+          ..._viewModel.getServices
+              .where((service) => !service.isDeactivated)
+              .map(expandServices)
+              .toList(),
         ],
       ),
     );
@@ -166,12 +169,13 @@ class _CategoryContainerState extends ConsumerState<CategoryContainer> {
             title:
                 Text(data.shortDescription, style: FontStyles.font14Semibold),
           ),
-          children: data.childServices.map((e) {
-            final service = _viewModel.getServiceByID(e);
-            return service.childServices.isNotEmpty
-                ? expandServices(service)
-                : showServices(service);
-          }).toList(),
+          children: data.childServices
+              .map((e) => _viewModel.getServiceByID(e))
+              .where((service) => !service.isDeactivated)
+              .map((service) => service.childServices.isNotEmpty
+                  ? expandServices(service)
+                  : showServices(service))
+              .toList(),
         ),
         const SizedBox(height: 8),
       ],

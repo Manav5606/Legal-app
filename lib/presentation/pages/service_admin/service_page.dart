@@ -85,7 +85,7 @@ class _ServicePageState extends ConsumerState<ServicePage> {
   }
 
   Widget serviceData(Service data, BuildContext context) {
-    return data.shortDescription.isEmpty || data.isDeactivated
+    return data.shortDescription.isEmpty
         ? const SizedBox.shrink()
         : data.ourPrice != null
             ? ListTile(
