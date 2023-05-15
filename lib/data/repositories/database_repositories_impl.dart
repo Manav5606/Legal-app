@@ -614,15 +614,17 @@ class DatabaseRepositoryImpl extends DatabaseRepository
     }
   }
 
-    @override
-  Future<Either<model.AppError, List<model.Notification>>> fetchNotifications() async {
+  @override
+  Future<Either<model.AppError, List<model.Notification>>>
+      fetchNotifications() async {
     try {
       final response = await _firebaseFirestore
           .collection(FirebaseConfig.notifications)
           .get();
 
-      return Right(
-          response.docs.map((doc) => model.Notification.fromSnapshot(doc)).toList());
+      return Right(response.docs
+          .map((doc) => model.Notification.fromSnapshot(doc))
+          .toList());
     } on FirebaseException catch (fae) {
       logger.severe(fae);
       return Left(
@@ -694,8 +696,6 @@ class DatabaseRepositoryImpl extends DatabaseRepository
     }
   }
 
- 
-
   @override
   Future<Either<model.AppError, bool>> deleteBanner(
       {required model.BannerDetail banner}) async {
@@ -757,7 +757,7 @@ class DatabaseRepositoryImpl extends DatabaseRepository
     }
   }
 
-    @override
+  @override
   Future<Either<model.AppError, model.Stats>> createStats(
       {required model.Stats stats}) async {
     try {
@@ -800,13 +800,11 @@ class DatabaseRepositoryImpl extends DatabaseRepository
   @override
   Future<Either<model.AppError, List<model.Stats>>> getStats() async {
     try {
-      final response = await _firebaseFirestore
-          .collection(FirebaseConfig.stats)
-          .get();
+      final response =
+          await _firebaseFirestore.collection(FirebaseConfig.stats).get();
 
-      return Right(response.docs
-          .map((doc) => model.Stats.fromSnapshot(doc))
-          .toList());
+      return Right(
+          response.docs.map((doc) => model.Stats.fromSnapshot(doc)).toList());
     } on FirebaseException catch (fae) {
       logger.severe(fae);
       return Left(
@@ -837,7 +835,6 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           model.AppError(message: "Unkown Error, Plese try again later."));
     }
   }
-
 
   @override
   Future<Either<model.AppError, model.CustomerReview>> createReview(
@@ -1022,7 +1019,6 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           model.AppError(message: "Unkown Error, Plese try again later."));
     }
   }
-
 
   @override
   Future<Either<model.AppError, model.Order>> fetchOrderByID(String uid) async {

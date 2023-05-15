@@ -29,12 +29,12 @@ class ProfileViewModel extends BaseViewModel {
 
   User? _user;
   Vendor? _vendor;
-  
+
   List<Service> _service = [];
   List<Service> get getService => _service;
   List<Service> getSelectedServices() {
-  return _service.toList();
-}
+    return _service.toList();
+  }
 
   User? get getUser => _user;
   Vendor? get getVendor => _vendor;
@@ -49,13 +49,12 @@ class ProfileViewModel extends BaseViewModel {
   List<String> get getQualificationDegree => _qualificationDegree;
   List<String> get getQualificationUniversity => _qualificationUniversity;
 
-   bool isSelected(Service service) {
+  bool isSelected(Service service) {
     return _service.contains(service);
   }
 
   void selectService(Service service) {
     _service.add(service);
-    
   }
 
   void deselectService(Service service) {
@@ -437,7 +436,7 @@ class ProfileViewModel extends BaseViewModel {
     });
   }
 
-    Future<void> addService(List myList, String vendorId) async {
+  Future<void> addService(List myList, String vendorId) async {
     toggleLoadingOn(true);
 
     try {
@@ -459,33 +458,36 @@ class ProfileViewModel extends BaseViewModel {
       }
 
       toggleLoadingOn(false);
-      Messenger.showSnackbar('Order assigned to vendor successfully.');
+      Messenger.showSnackbar('Service Added successfully.');
     } catch (e) {
       toggleLoadingOn(false);
       Messenger.showSnackbar('Unknown Error, Please try again later.');
     }
   }
 
-  Future<void> removeServicesFromVendor(List serviceIds, String vendorId) async {
-  toggleLoadingOn(true);
-  try {
-    final firestore.CollectionReference vendorServiceRef = firestore.FirebaseFirestore.instance.collection('vendor-service');
-    final firestore.QuerySnapshot vendorSnapshot = await vendorServiceRef.where('vendor_id', isEqualTo: vendorId).get();
+  Future<void> removeServicesFromVendor(
+      List serviceIds, String vendorId) async {
+    toggleLoadingOn(true);
+    try {
+      final firestore.CollectionReference vendorServiceRef =
+          firestore.FirebaseFirestore.instance.collection('vendor-service');
+      final firestore.QuerySnapshot vendorSnapshot =
+          await vendorServiceRef.where('vendor_id', isEqualTo: vendorId).get();
 
-    if (vendorSnapshot.docs.isNotEmpty) {
-      final String docRefId = vendorSnapshot.docs.first.id;
-      await vendorServiceRef.doc(docRefId).update({
-        'service_id': firestore.FieldValue.arrayRemove(serviceIds),
-      });
+      if (vendorSnapshot.docs.isNotEmpty) {
+        final String docRefId = vendorSnapshot.docs.first.id;
+        await vendorServiceRef.doc(docRefId).update({
+          'service_id': firestore.FieldValue.arrayRemove(serviceIds),
+        });
+      }
+
+      toggleLoadingOn(false);
+      Messenger.showSnackbar('Services removed successfully.');
+    } catch (e) {
+      toggleLoadingOn(false);
+      Messenger.showSnackbar('Unknown Error, Please try again later.');
     }
-
-    toggleLoadingOn(false);
-    Messenger.showSnackbar('Services removed successfully.');
-  } catch (e) {
-    toggleLoadingOn(false);
-    Messenger.showSnackbar('Unknown Error, Please try again later.');
   }
-}
 
   Future<void> saveProfileData() async {
     try {
@@ -495,7 +497,7 @@ class ProfileViewModel extends BaseViewModel {
         phoneNumber: int.tryParse(phoneController.text),
       );
       await _databaseRepositoryImpl.updateUser(user: updatedUser);
-      if (_user!.userType == UserType.vendor) {
+      if (_user!.userType.name == UserType.vendor.name) {
         final updatedVendor = _vendor!.copyWith(
           companyName: companyNameController.text,
           permanentAddress: permanentAddressController.text,
