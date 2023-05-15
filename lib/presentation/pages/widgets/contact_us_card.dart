@@ -43,7 +43,8 @@ class _ContactUsCardState extends State<ContactUsCard> {
               children: widget.contactDetails
                   .map((contact) => ContactServiceContainer(
                       contactCard: true,
-                      category: contact,                     
+                      category: contact,
+                      
                       width: MediaQuery.of(context).size.width))
                   .toList(),
             ),

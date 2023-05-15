@@ -53,6 +53,7 @@ class ServiceContainer extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
                     decoration: BoxDecoration(

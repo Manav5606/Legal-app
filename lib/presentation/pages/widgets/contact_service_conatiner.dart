@@ -34,7 +34,7 @@ class ContactServiceContainer extends StatelessWidget {
       },
       child: Container(
         width: width / 5,
-        height: MediaQuery.of(context).size.height * 0.45,
+        height: MediaQuery.of(context).size.height * 0.35,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: AppColors.yellowColor,
@@ -54,6 +54,7 @@ class ContactServiceContainer extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
                     decoration: BoxDecoration(

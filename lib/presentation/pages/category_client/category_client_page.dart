@@ -191,7 +191,7 @@ class _CategoryContainerState extends ConsumerState<CategoryContainer> {
                   queryParameters: {"serviceId": data.id!});
             },
             dense: true,
-            title: Text(data.shortDescription,
+            title: Text(data.title,
                 style: FontStyles.font12Medium
                     .copyWith(color: AppColors.blackColor)),
             trailing: const Icon(Icons.check_circle),
