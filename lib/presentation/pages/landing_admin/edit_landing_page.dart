@@ -1,6 +1,8 @@
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/presentation/pages/landing_admin/dialog/add_banner_dialog.dart';
 import 'package:admin/presentation/pages/landing_admin/dialog/add_contact_dialog.dart';
+import 'package:admin/presentation/pages/landing_admin/dialog/add_image_news.dart';
+import 'package:admin/presentation/pages/landing_admin/dialog/add_news_dialog.dart';
 import 'package:admin/presentation/pages/landing_admin/dialog/add_review_dialog.dart';
 import 'package:admin/presentation/pages/landing_admin/dialog/add_stats.dart';
 import 'package:admin/presentation/pages/landing_admin/edit_landing_view_model.dart';
@@ -27,9 +29,12 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
   void initState() {
     _viewModel = ref.read(EditLandingViewModel.provider);
     _viewModel.initBanner();
+    _viewModel.initNews();
     _viewModel.initStats();
     _viewModel.initReview();
     _viewModel.initContactDetails();
+    _viewModel.initNewsImage();
+    // _viewModel.initNewss();
     super.initState();
   }
 
@@ -52,7 +57,9 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
                   _editBanner(),
                   _editReview(),
                   _editContactDetail(),
-                  _editStats()
+                  _editStats(),
+                  _editNews(),
+                  _editNewsImages(),
                 ],
               ),
             ),
@@ -95,6 +102,29 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
     );
   }
 
+  Widget _editNews() {
+    return ExpansionTile(
+      title: _newsHeading(),
+      children: _viewModel.getNews.map((news) {
+        return ListTile(
+          dense: true,
+          title: Text(news.title),
+          subtitle: Text(news.description),
+          onTap: () {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) => Dialog(
+                insetPadding: const EdgeInsets.all(24),
+                child: AddNewsDialog(news: news),
+              ),
+            );
+          },
+        );
+      }).toList(),
+    );
+  }
+
   Widget _bannerHeading() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -116,6 +146,33 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
                 builder: (_) => const Dialog(
                   insetPadding: EdgeInsets.all(24),
                   child: AddBannerDialog(),
+                ),
+              );
+            }),
+      ],
+    );
+  }
+
+  Widget _newsHeading() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("News", style: FontStyles.font24Semibold),
+            Text("Your list of news is here", style: FontStyles.font14Semibold),
+          ],
+        ),
+        CTAButton(
+            title: "Add News",
+            onTap: () {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => const Dialog(
+                  insetPadding: EdgeInsets.all(24),
+                  child: AddNewsDialog(),
                 ),
               );
             }),
@@ -146,6 +203,29 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
     );
   }
 
+  Widget _editNewsImages() {
+    return ExpansionTile(
+      title: _newImageHeading(),
+      children: _viewModel.getNewsImage.map((newsImages) {
+        return ListTile(
+          dense: true,
+          title: Image.network(newsImages.imageUrl),
+          // subtitle: Text(stats.description),
+          onTap: () {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) => Dialog(
+                insetPadding: const EdgeInsets.all(24),
+                child: AddImageNewsDialog(newsImageDetail: newsImages),
+              ),
+            );
+          },
+        );
+      }).toList(),
+    );
+  }
+
   Widget _statsHeading() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -167,6 +247,33 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
                 builder: (_) => const Dialog(
                   insetPadding: EdgeInsets.all(24),
                   child: AddStatsDilaog(),
+                ),
+              );
+            }),
+      ],
+    );
+  }
+
+  Widget _newImageHeading() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("News Image", style: FontStyles.font24Semibold),
+            Text("Your News Image is here", style: FontStyles.font14Semibold),
+          ],
+        ),
+        CTAButton(
+            title: "Add NewsImage",
+            onTap: () {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => const Dialog(
+                  insetPadding: EdgeInsets.all(24),
+                  child: AddImageNewsDialog(),
                 ),
               );
             }),

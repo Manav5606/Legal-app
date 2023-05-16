@@ -83,7 +83,7 @@ class _MyOrdersPageState extends ConsumerState<MyOrdersPage> {
             const Header(mobile: false),
             const MyOrdersList(),
             const ContactUs(height: 250),
-            ContactUsCard(contactDetails: _viewModel.getContacts, height: 200),
+            ContactUsCard(contactDetails: _viewModel.getContacts, height: 300),
             const Footer(),
           ],
         ),

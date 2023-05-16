@@ -75,7 +75,7 @@ class _InboxTabState extends ConsumerState<InboxTab> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
-        print(user!.id);
+  
 
         return ListView.builder(
           scrollDirection: Axis.vertical,

@@ -69,13 +69,28 @@ abstract class DatabaseRepository {
   Future<Either<model.AppError, bool>> deleteBanner(
       {required model.BannerDetail banner});
   Future<Either<model.AppError, List<model.BannerDetail>>> getBanners();
+  Future<Either<model.AppError, model.News>> createNews(
+      {required model.News news});
+  Future<Either<model.AppError, model.News>> updateNews(
+      {required model.News news});
+  Future<Either<model.AppError, bool>> deleteNews(
+      {required model.News news});
+  Future<Either<model.AppError, List<model.News>>> getNews();
   Future<Either<model.AppError, model.Stats>> createStats(
       {required model.Stats stats});
   Future<Either<model.AppError, model.Stats>> updateStats(
-      {required model.Stats stats});
+      {required model.Stats stats});  
   Future<Either<model.AppError, bool>> deleteStats(
       {required model.Stats stats});
   Future<Either<model.AppError, List<model.Stats>>> getStats();
+  Future<Either<model.AppError, model.NewsImage>> createNewsImage(
+      {required model.NewsImage news});
+  Future<Either<model.AppError, model.NewsImage>> updateNewsImage(
+      {required model.NewsImage news});  
+  Future<Either<model.AppError, bool>> deleteNewsImage(
+      {required model.NewsImage news});
+  Future<Either<model.AppError, List<model.NewsImage>>> getNewsImage();
+
   Future<Either<model.AppError, model.CustomerReview>> createReview(
       {required model.CustomerReview review});
   Future<Either<model.AppError, model.CustomerReview>> updateReview(

@@ -10,3 +10,5 @@ export 'vendor.dart';
 export 'customer_review.dart';
 export 'stats.dart';
 export 'notifications.dart';
+export 'news.dart';
+export 'news_image.dart';

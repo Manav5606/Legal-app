@@ -3,7 +3,6 @@ import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
 import 'package:admin/core/provider.dart';
 import 'package:admin/data/models/general_stat.dart';
-import 'package:admin/data/models/news.dart';
 import 'package:admin/presentation/pages/landing/landing_page_view_model.dart';
 import 'package:admin/presentation/pages/landing/widgets/services.dart';
 import 'package:admin/presentation/pages/widgets/banner.dart';
@@ -22,6 +21,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:admin/data/models/models.dart' as model;
+import '../../../data/models/news.dart';
 import '../../../data/models/stats.dart';
 
 final landingScaffold = GlobalKey<ScaffoldState>();
@@ -36,20 +36,23 @@ class LandingPage extends ConsumerStatefulWidget {
 }
 
 class _LandingPageState extends ConsumerState<LandingPage> {
-  final _news = [
-    News(
-        headline:
-            "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year ended on 31.03.2021 under the Companies Act, 2013",
-        createdAt: DateTime.now().millisecondsSinceEpoch),
-    News(
-        headline:
-            "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year ended on 31.03.2021 under the Companies Act, 2013",
-        createdAt: DateTime.now().millisecondsSinceEpoch),
-    News(
-        headline:
-            "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year ended on 31.03.2021 under the Companies Act, 2013",
-        createdAt: DateTime.now().millisecondsSinceEpoch),
-  ];
+  // final _news = [
+  //   News(
+  //       title: "assa",
+  //       description:
+  //           "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year ended on 31.03.2021 under the Companies Act, 2013",
+  //       createdAt: DateTime.now().millisecondsSinceEpoch),
+  //   News(
+  //       title: "asas",
+  //       description:
+  //           "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year ended on 31.03.2021 under the Companies Act, 2013",
+  //       createdAt: DateTime.now().millisecondsSinceEpoch),
+  //   News(
+  //       title: "assa",
+  //       description:
+  //           "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year ended on 31.03.2021 under the Companies Act, 2013",
+  //       createdAt: DateTime.now().millisecondsSinceEpoch),
+  // ];
 
   final _StatssData = [
     Stats(title: "1500", description: "Orders"),
@@ -77,6 +80,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
   void initState() {
     _viewModel = ref.read(LandingPageViewModel.provider);
     _viewModel.fetchServices();
+    _viewModel.fetchNews();
     super.initState();
   }
 
@@ -105,7 +109,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                   ),
                   Services(height: 0, category: _viewModel.getCategories),
                   _frequentlyUsedServices(300, mobile: true),
-                  // _newsAndUpdates(800),
+                  _newsAndUpdates(800),
                   Center(child: _Statss(300, mobile: true)),
                   Visibility(
                     visible: _viewModel.getReviews.isNotEmpty,
@@ -131,7 +135,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                   ),
                   Services(height: 700, category: _viewModel.getCategories),
                   _frequentlyUsedServices(350),
-                  // _newsAndUpdates(800),
+                  _newsAndUpdates(800),
                   Center(child: _Statss(300)),
                   Visibility(
                       visible: _viewModel.getReviews.isNotEmpty,
@@ -240,7 +244,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                     style: FontStyles.font24Semibold
                         .copyWith(color: AppColors.blackColor, fontSize: 32)),
                 const SizedBox(height: 18),
-                ..._news.map((e) => NewsTile(news: e)).toList(),
+                ..._viewModel.getNews.map((e) => NewsTile(news: e)).toList(),
                 const SizedBox(height: 18),
                 const CTAButton(title: "Show all", radius: 100),
               ],
@@ -272,9 +276,16 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                             height: height / 2,
                             width: height / 2,
                             color: Colors.pink,
+                            child: _viewModel.getNewsImage.isNotEmpty &&
+                                    _viewModel.getNewsImage[0].imageUrl != null
+                                ? Image.network(
+                                    _viewModel.getNewsImage[0].imageUrl,
+                                    fit: BoxFit.cover,
+                                  )
+                                : CircularProgressIndicator(),
                           ),
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),

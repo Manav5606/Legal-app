@@ -7,6 +7,8 @@ class FirebaseConfig {
   static String transactionCollection = "transaction";
   static String serviceRequestCollection = "service-request";
   static String landingBannerCollection = "landing-banner";
+  static String newsCollection = "news";
+  static String newsImageCollection = "news-image";
   static String reviewCollection = "review";
   static String contactCollection = "contact";
   static String stats = "stats";

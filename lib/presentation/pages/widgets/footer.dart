@@ -51,7 +51,7 @@ class _FooterState extends ConsumerState<Footer> {
                       ),
                       const SizedBox(height: 20),
                       Text(
-                          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda placeat similique dolore aperiam ad a sunt molestiae debitis molestias. At id consequatur laudantium dolore quo asperiores earum cupiditate, maxime aperiam?",
+                          "Lorem  elit. debitisiores earum cupiditate, maxime aperiam?",
                           textAlign: TextAlign.center,
                           style: FontStyles.font12Regular.copyWith(
                               color: AppColors.whiteColor,
