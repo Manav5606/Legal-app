@@ -1,3 +1,4 @@
+import 'package:admin/presentation/pages/profile/widget/add_service_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -19,20 +20,19 @@ class AddRemoveServiceDailog extends ConsumerStatefulWidget {
 
 class _AddRemoveServiceDailogState
     extends ConsumerState<AddRemoveServiceDailog> {
-  late final ProfileViewModel _viewModel;
+  late final AddRemoveServiceViewModel _viewModel;
   @override
   void initState() {
-    _viewModel = ref.read(ProfileViewModel.provider);
+    _viewModel = ref.read(AddRemoveServiceViewModel.provider);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _viewModel.fetchUser(widget.userID);
-      _viewModel.clearSelectedServices();
+      _viewModel.fetchService();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(ProfileViewModel.provider);
+    ref.watch(AddRemoveServiceViewModel.provider);
     final CollectionReference usersRef =
         FirebaseFirestore.instance.collection('vendor-service');
     return Padding(
