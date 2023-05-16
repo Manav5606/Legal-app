@@ -100,7 +100,7 @@ class _AssignOrderToVendorState extends ConsumerState<AssignOrderToVendor> {
                               dataTextStyle: FontStyles.font14Semibold
                                   .copyWith(color: AppColors.blueColor),
                               headingTextStyle: FontStyles.font16Semibold
-                                  .copyWith(color: AppColors.blackColor),
+                                  .copyWith(color: AppColors.blackColor), 
                               columns: [
                                 DataColumn(
                                   label: const Text(""),

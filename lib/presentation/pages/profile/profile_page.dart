@@ -6,6 +6,7 @@ import 'package:admin/core/enum/role.dart';
 import 'package:admin/presentation/pages/profile/profile_view_model.dart';
 import 'package:admin/presentation/pages/profile/widget/add_qualification_degree.dart';
 import 'package:admin/presentation/pages/profile/widget/add_qualification_university.dart';
+import 'package:admin/presentation/pages/profile/widget/add_service.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/pages/widgets/custom_textfield.dart';
 import 'package:admin/presentation/pages/widgets/footer.dart';
@@ -64,14 +65,21 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       child: ListView(
                         shrinkWrap: true,
                         children: [
-                          ListTile(
-                            title: Text("Profile",
-                                style: FontStyles.font24Semibold.copyWith(
-                                    fontSize: 48, color: AppColors.blueColor)),
-                            subtitle: Text(
-                                "Your profile details are updated here",
-                                style: FontStyles.font12Medium
-                                    .copyWith(color: AppColors.blueColor)),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 48.0),
+                            child: ListTile(
+                              title: Text("Profile",
+                                  style: FontStyles.font24Semibold.copyWith(
+                                      fontSize: 48,
+                                      color: AppColors.blueColor)),
+                              subtitle: Text(
+                                  "Your profile details are updated here",
+                                  style: FontStyles.font12Medium
+                                      .copyWith(color: AppColors.blueColor)),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -2100,166 +2108,239 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                   ],
                                                 ),
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                        Visibility(
-                                          visible:
-                                              _viewModel.getUser!.userType ==
-                                                  UserType.vendor,
-                                          child: Column(
-                                            children: [
-                                              const SizedBox(height: 16),
-                                              const SizedBox(height: 8),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 28.0),
-                                                child: ExpansionTile(
-                                                  title: Text(
-                                                    'Select services:',
-                                                    style: FontStyles
-                                                        .font14Semibold
-                                                        .copyWith(
-                                                      fontStyle:
-                                                          FontStyle.italic,
-                                                    ),
-                                                  ),
+                                              Visibility(
+                                                visible: _viewModel
+                                                        .getUser!.userType ==
+                                                    UserType.vendor,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
                                                   children: [
-                                                    ElevatedButton(
-                                                      onPressed: () {
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return AlertDialog(
-                                                              title: Text(
-                                                                  "Services"),
-                                                              content: SizedBox(
-                                                                height: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .height *
-                                                                    0.5,
-                                                                width: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .height *
-                                                                    0.7,
-                                                                child: ListView
-                                                                    .builder(
-                                                                  shrinkWrap:
-                                                                      true,
-                                                                  itemCount:
-                                                                      _viewModel
-                                                                          .getService
-                                                                          .length,
-                                                                  itemBuilder:
-                                                                      (BuildContext
-                                                                              context,
-                                                                          int index) {
-                                                                    final service =
-                                                                        _viewModel
-                                                                            .getService[index];
-
-                                                                    return Row(
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .center,
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
-                                                                      children: [
-                                                                        Expanded(
-                                                                          child:
-                                                                              SizedBox(
-                                                                            width:
-                                                                                300,
-                                                                            child:
-                                                                                Text(service.aboutDescription),
-                                                                          ),
-                                                                        ),
-                                                                        SizedBox(
-                                                                            width:
-                                                                                20),
-                                                                        Column(
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            FutureBuilder<DocumentSnapshot>(
-                                                                              future: usersRef.where('vendor_id', isEqualTo: widget.userID).get().then((snapshot) => snapshot.docs.isNotEmpty ? snapshot.docs.first.reference.get() : Future.value(null)),
-                                                                              builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                                                                                if (snapshot.connectionState == ConnectionState.done) {
-                                                                                  final docRef = snapshot.data;
-                                                                                  if (docRef != null && docRef.get('service_id').contains(service.id)) {
-                                                                                    return Text("Already Added");
-                                                                                  } else {
-                                                                                    return ElevatedButton(
-                                                                                      onPressed: () async {
-                                                                                        final myList = [
-                                                                                          service.id!
-                                                                                        ];
-                                                                                        await _viewModel.addService(myList, widget.userID);
-                                                                                        setState(() {}); // Update the dialog content
-                                                                                      },
-                                                                                      child: Text("Add"),
-                                                                                    );
-                                                                                  }
-                                                                                } else {
-                                                                                  return Text("Loading...");
-                                                                                }
-                                                                              },
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                        InkWell(
-                                                                          onTap:
-                                                                              () async {
-                                                                            final myList =
-                                                                                [
-                                                                              service.id!
-                                                                            ];
-                                                                            await _viewModel.removeServicesFromVendor(myList,
-                                                                                widget.userID);
-                                                                            setState(() {}); // Update the dialog content
-                                                                          },
-                                                                          child:
-                                                                              Text(
-                                                                            "Remove",
-                                                                            style:
-                                                                                FontStyles.font14Semibold,
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    );
-                                                                  },
+                                                    SizedBox(
+                                                      width: 200,
+                                                      height: 40,
+                                                      child: Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Text(
+                                                            "Select Services",
+                                                            style: FontStyles
+                                                                .font14Semibold
+                                                                .copyWith(
+                                                                    fontStyle:
+                                                                        FontStyle
+                                                                            .italic),
+                                                          )),
+                                                    ),
+                                                    Expanded(
+                                                      child: Row(
+                                                        children: [
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              showDialog(
+                                                                context:
+                                                                    context,
+                                                                barrierDismissible:
+                                                                    true,
+                                                                builder: (_) =>
+                                                                    Dialog(
+                                                                  insetPadding:
+                                                                      const EdgeInsets
+                                                                          .all(24),
+                                                                  child: AddRemoveServiceDailog(
+                                                                      widget
+                                                                          .userID),
                                                                 ),
-                                                              ),
-                                                              actions: [
-                                                                TextButton(
-                                                                  onPressed:
-                                                                      () {
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop();
-                                                                  },
+                                                              );
+                                                            },
+                                                            child: Container(
+                                                              height: 30,
+                                                              width: 130,
+                                                              decoration: BoxDecoration(
+                                                                  color: AppColors
+                                                                      .viewblue,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              20)),
+                                                              child: Center(
                                                                   child: Text(
-                                                                      'Close'),
-                                                                ),
-                                                              ],
-                                                            );
-                                                          },
-                                                        );
-                                                      },
-                                                      child: Text(
-                                                          'Select Services'),
+                                                                "Select Services",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .white),
+                                                              )),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                              const SizedBox(height: 16),
                                             ],
                                           ),
                                         ),
+                                        // Visibility(
+                                        //   visible:
+                                        //       _viewModel.getUser!.userType ==
+                                        //           UserType.vendor,
+                                        //   child: Column(
+                                        //     children: [
+                                        //       const SizedBox(height: 16),
+                                        //       const SizedBox(height: 8),
+                                        //       Padding(
+                                        //         padding: const EdgeInsets.only(
+                                        //             left: 28.0),
+                                        //         child: ExpansionTile(
+                                        //           title: Text(
+                                        //             'Select services:',
+                                        //             style: FontStyles
+                                        //                 .font14Semibold
+                                        //                 .copyWith(
+                                        //               fontStyle:
+                                        //                   FontStyle.italic,
+                                        //             ),
+                                        //           ),
+                                        //           children: [
+                                        //             ElevatedButton(
+                                        //               onPressed: () {
+                                        //                 showDialog(
+                                        //                   context: context,
+                                        //                   builder: (BuildContext
+                                        //                       context) {
+                                        //                     return AlertDialog(
+                                        //                       title: Text(
+                                        //                           "Services"),
+                                        //                       content: SizedBox(
+                                        //                         height: MediaQuery.of(
+                                        //                                     context)
+                                        //                                 .size
+                                        //                                 .height *
+                                        //                             0.5,
+                                        //                         width: MediaQuery.of(
+                                        //                                     context)
+                                        //                                 .size
+                                        //                                 .height *
+                                        //                             0.7,
+                                        //                         child: ListView
+                                        //                             .builder(
+                                        //                           shrinkWrap:
+                                        //                               true,
+                                        //                           itemCount:
+                                        //                               _viewModel
+                                        //                                   .getService
+                                        //                                   .length,
+                                        //                           itemBuilder:
+                                        //                               (BuildContext
+                                        //                                       context,
+                                        //                                   int index) {
+                                        //                             final service =
+                                        //                                 _viewModel
+                                        //                                     .getService[index];
+
+                                        //                             return Row(
+                                        //                               crossAxisAlignment:
+                                        //                                   CrossAxisAlignment
+                                        //                                       .center,
+                                        //                               mainAxisAlignment:
+                                        //                                   MainAxisAlignment
+                                        //                                       .spaceBetween,
+                                        //                               children: [
+                                        //                                 Expanded(
+                                        //                                   child:
+                                        //                                       SizedBox(
+                                        //                                     width:
+                                        //                                         300,
+                                        //                                     child:
+                                        //                                         Text(service.aboutDescription),
+                                        //                                   ),
+                                        //                                 ),
+                                        //                                 SizedBox(
+                                        //                                     width:
+                                        //                                         20),
+                                        //                                 Column(
+                                        //                                   crossAxisAlignment:
+                                        //                                       CrossAxisAlignment.start,
+                                        //                                   children: [
+                                        //                                     FutureBuilder<DocumentSnapshot>(
+                                        //                                       future: usersRef.where('vendor_id', isEqualTo: widget.userID).get().then((snapshot) => snapshot.docs.isNotEmpty ? snapshot.docs.first.reference.get() : Future.value(null)),
+                                        //                                       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                        //                                         if (snapshot.connectionState == ConnectionState.done) {
+                                        //                                           final docRef = snapshot.data;
+                                        //                                           if (docRef != null && docRef.get('service_id').contains(service.id)) {
+                                        //                                             return Text("Already Added");
+                                        //                                           } else {
+                                        //                                             return ElevatedButton(
+                                        //                                               onPressed: () async {
+                                        //                                                 final myList = [
+                                        //                                                   service.id!
+                                        //                                                 ];
+                                        //                                                 await _viewModel.addService(myList, widget.userID);
+                                        //                                                 setState(() {}); // Update the dialog content
+                                        //                                               },
+                                        //                                               child: Text("Add"),
+                                        //                                             );
+                                        //                                           }
+                                        //                                         } else {
+                                        //                                           return Text("Loading...");
+                                        //                                         }
+                                        //                                       },
+                                        //                                     ),
+                                        //                                   ],
+                                        //                                 ),
+                                        //                                 InkWell(
+                                        //                                   onTap:
+                                        //                                       () async {
+                                        //                                     final myList =
+                                        //                                         [
+                                        //                                       service.id!
+                                        //                                     ];
+                                        //                                     await _viewModel.removeServicesFromVendor(myList,
+                                        //                                         widget.userID);
+                                        //                                     setState(() {}); // Update the dialog content
+                                        //                                   },
+                                        //                                   child:
+                                        //                                       Text(
+                                        //                                     "Remove",
+                                        //                                     style:
+                                        //                                         FontStyles.font14Semibold,
+                                        //                                   ),
+                                        //                                 ),
+                                        //                               ],
+                                        //                             );
+                                        //                           },
+                                        //                         ),
+                                        //                       ),
+                                        //                       actions: [
+                                        //                         TextButton(
+                                        //                           onPressed:
+                                        //                               () {
+                                        //                             Navigator.of(
+                                        //                                     context)
+                                        //                                 .pop();
+                                        //                           },
+                                        //                           child: Text(
+                                        //                               'Close'),
+                                        //                         ),
+                                        //                       ],
+                                        //                     );
+                                        //                   },
+                                        //                 );
+                                        //               },
+                                        //               child: Text(
+                                        //                   'Select Services'),
+                                        //             ),
+                                        //           ],
+                                        //         ),
+                                        //       ),
+                                        //       const SizedBox(height: 16),
+                                        //     ],
+                                        //   ),
+                                        // ),
                                         const SizedBox(height: 8),
                                         Row(
                                           mainAxisAlignment:

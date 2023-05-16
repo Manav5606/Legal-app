@@ -459,6 +459,7 @@ class ProfileViewModel extends BaseViewModel {
 
       toggleLoadingOn(false);
       Messenger.showSnackbar('Service Added successfully.');
+      notifyListeners();
     } catch (e) {
       toggleLoadingOn(false);
       Messenger.showSnackbar('Unknown Error, Please try again later.');
