@@ -51,14 +51,14 @@ class _ShowNewsState extends ConsumerState<ShowNews> {
               mobile: (context) => ListView(
                 children: [
                   const Header(mobile: true),
-                  Visibility(
-                    visible: _viewModel.getBanners.isNotEmpty,
-                    child: BannerSlides(
-                      mobile: true,
-                      height: 250,
-                      bannerDetails: _viewModel.getBanners,
-                    ),
-                  ),
+                  // Visibility(
+                  //   visible: _viewModel.getBanners.isNotEmpty,
+                  //   child: BannerSlides(
+                  //     mobile: true,
+                  //     height: 250,
+                  //     bannerDetails: _viewModel.getBanners,
+                  //   ),
+                  // ),
 
                   _newsAndUpdates(800),
 
@@ -69,14 +69,14 @@ class _ShowNewsState extends ConsumerState<ShowNews> {
               desktop: (context) => ListView(
                 children: [
                   const Header(mobile: false),
-                  Visibility(
-                    visible: _viewModel.getBanners.isNotEmpty,
-                    child: BannerSlides(
-                      mobile: false,
-                      height: 700,
-                      bannerDetails: _viewModel.getBanners,
-                    ),
-                  ),
+                  // Visibility(
+                  //   visible: _viewModel.getBanners.isNotEmpty,
+                  //   child: BannerSlides(
+                  //     mobile: false,
+                  //     height: 700,
+                  //     bannerDetails: _viewModel.getBanners,
+                  //   ),
+                  // ),
 
                   _newsAndUpdates(800),
 
@@ -105,16 +105,11 @@ class _ShowNewsState extends ConsumerState<ShowNews> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0).copyWith(left: 20),
-                      child: Text("Recent news and \nupdates",
-                          textAlign: TextAlign.left,
-                          style: FontStyles.font24Semibold.copyWith(
-                              color: AppColors.blackColor, fontSize: 32)),
-                    ),
-                  ),
+                  const SizedBox(height: 18),
+                  Text("Recent news and updates",
+                      textAlign: TextAlign.center,
+                      style: FontStyles.font24Semibold
+                          .copyWith(color: AppColors.blackColor, fontSize: 32)),
                   const SizedBox(height: 18),
                   ..._viewModel.getNews.map((e) => NewsTile(news: e)).toList(),
                   const SizedBox(height: 18),

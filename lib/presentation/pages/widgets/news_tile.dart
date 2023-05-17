@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:routemaster/routemaster.dart';
 import '../../../data/models/news.dart';
+// import 'dart:io' show Platform;
 
 class NewsTile extends StatelessWidget {
   final News news;
@@ -29,48 +30,53 @@ class NewsTile extends StatelessWidget {
           },
         );
       },
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const CircularArrow(),
-              const SizedBox(
-                width: 20,
-              ),
-              Column(
-                children: [
-                  SizedBox(
-                    width: 400,
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(news.title,
-                          style: FontStyles.font14Semibold
-                              .copyWith(color: AppColors.blueColor)),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    width: 400,
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
+      child: Align(
+        alignment: Alignment.center,
+        child: Container(
+          width: 900,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const CircularArrow(),
+                const SizedBox(
+                  width: 20,
+                ),
+                Flexible(
+                  child: Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 20,
+                    children: [
+                      Container(
+                        // color: AppColors.yellowColor
+                        width: 900,
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            news.title,
+                            style: FontStyles.font14Semibold
+                                .copyWith(color: AppColors.blueColor),
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
                           DateFormat('MM-dd-yyyy').format(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  news.createdAt! * 1000)),
-                          // textAlign: TextAlign.start,
+                            DateTime.fromMillisecondsSinceEpoch(
+                                news.createdAt! * 1000),
+                          ),
                           style: FontStyles.font14Bold
-                              .copyWith(color: AppColors.blueColor)),
-                    ),
+                              .copyWith(color: AppColors.blueColor),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

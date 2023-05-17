@@ -111,7 +111,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                   ),
                   Services(height: 0, category: _viewModel.getCategories),
                   _frequentlyUsedServices(300, mobile: true),
-                  _newsAndUpdates(800),
+                  _newsAndUpdates(1000),
                   Center(child: _Statss(300, mobile: true)),
                   Visibility(
                     visible: _viewModel.getReviews.isNotEmpty,
@@ -229,93 +229,205 @@ class _LandingPageState extends ConsumerState<LandingPage> {
   }
 
   Widget _newsAndUpdates(double height) {
-    return SizedBox(
-      height: height,
-      width: height * 1.6,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 1,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0).copyWith(left: 20),
-                    child: Text("Recent news and \nupdates",
-                        textAlign: TextAlign.left,
-                        style: FontStyles.font24Semibold.copyWith(
-                            color: AppColors.blackColor, fontSize: 32)),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > 900) {
+          // Display as a row
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: SizedBox(
+              height: height,
+              width: height * 1.6,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0).copyWith(
+                                left: MediaQuery.of(context).size.width * 0.05),
+                            child: Text(
+                              "Recent news and updates",
+                              textAlign: TextAlign.left,
+                              style: FontStyles.font24Semibold.copyWith(
+                                color: AppColors.blackColor,
+                                fontSize: 32,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 38),
+                        ..._viewModel.getNews
+                            .take(3)
+                            .map((e) => Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 38.0,
+                                  ),
+                                  child: NewsTile(news: e),
+                                ))
+                            .toList(),
+                        // const SizedBox(height: 18),
+                        CTAButton(
+                          onTap: () {
+                            Routemaster.of(context).replace(ShowNews.routeName);
+                          },
+                          title: "Show all",
+                          radius: 100,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 18),
-                ..._viewModel.getNews
-                    .take(3)
-                    .map((e) => NewsTile(news: e))
-                    .toList(),
-                const SizedBox(height: 18),
-                CTAButton(
-                    onTap: () {
-                      Routemaster.of(context).replace(ShowNews.routeName);
-                    },
-                    title: "Show all",
-                    radius: 100),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Column(
-              children: [
-                const Spacer(),
-                SizedBox(
-                  height: height * 0.8,
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: SvgPicture.asset(Assets.iconsVectoryellowSquare,
-                            height: 100, width: 100),
+                  Visibility(
+                    visible: _viewModel.getNewsImage.isNotEmpty,
+                    child: Expanded(
+                      flex: 1,
+                      child: Column(
+                        children: [
+                          const Spacer(),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 48.0),
+                            child: SizedBox(
+                              height: height * 0.8,
+                              width: 500,
+                              child: Stack(
+                                alignment: Alignment.topCenter,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: SvgPicture.asset(
+                                      Assets.iconsVectoryellowSquare,
+                                      height: 100,
+                                      width: 100,
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0)
+                                          .copyWith(left: 60, top: 40),
+                                      child: Container(
+                                        height: height / 2,
+                                        width: height,
+                                        color: Colors.pink,
+                                        child: _viewModel
+                                                    .getNewsImage.isNotEmpty &&
+                                                _viewModel.getNewsImage[0]
+                                                        .imageUrl !=
+                                                    null
+                                            ? Image.network(
+                                                _viewModel
+                                                    .getNewsImage[0].imageUrl,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Center(
+                                                child:
+                                                    CircularProgressIndicator()),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(12).copyWith(
-                            left: MediaQuery.of(context).size.width * 0.04,
-                            top: MediaQuery.of(context).size.width * 0.03),
-                        child: Expanded(
-                          child: Container(
-                            height: height / 2,
-                            width: height / 2,
-                            color: Colors.pink,
-                            child: _viewModel.getNewsImage.isNotEmpty &&
-                                    _viewModel.getNewsImage[0].imageUrl != null
-                                ? Image.network(
-                                    _viewModel.getNewsImage[0].imageUrl,
-                                    fit: BoxFit.cover,
-                                  )
-                                : CircularProgressIndicator(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else {
+          // Display as a column
+
+          return Padding(
+            padding: const EdgeInsets.only(top: 28.0),
+            child: SizedBox(
+              height: height,
+              width: height * 1.6,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Recent news and updates",
+                    // textAlign: TextAlign.left,
+                    textAlign: TextAlign.center,
+                    style: FontStyles.font24Semibold.copyWith(
+                      color: AppColors.blackColor,
+                      fontSize: 32,
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Visibility(
+                      visible: _viewModel.getNewsImage.isNotEmpty,
+                      child: AspectRatio(
+                        aspectRatio: 2, // Square aspect ratio
+                        child: SizedBox(
+                          // color: Colors.pink,
+                          child: Stack(
+                            children: [
+                              // Align(
+                              //   alignment: Alignment.topLeft,
+                              //   child: Padding(
+                              //     padding: const EdgeInsets.only(left: 48.0),
+                              //     child: SvgPicture.asset(
+                              //       Assets.iconsVectoryellowSquare,
+                              //       height: 50,
+                              //       width: 50,
+                              //     ),
+                              //   ),
+                              // ),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: _viewModel.getNewsImage.isNotEmpty &&
+                                          _viewModel.getNewsImage[0].imageUrl !=
+                                              null
+                                      ? Image.network(
+                                          _viewModel.getNewsImage[0].imageUrl,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Center(
+                                          child: CircularProgressIndicator()),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                      // Padding(
-                      //   padding: EdgeInsets.only(
-                      //       right: MediaQuery.of(context).size.width * 0.08),
-                      //   child: Align(
-                      //     alignment: Alignment.centerRight,
-                      //     child: SvgPicture.asset(Assets.iconsVectorblueSquare,
-                      //         height: 50, width: 50),
-                      //   ),
-                      // ),
-                    ],
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 18),
+                  ..._viewModel.getNews
+                      .take(3)
+                      .map((e) => NewsTile(news: e))
+                      .toList(),
+                  const SizedBox(height: 18),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0).copyWith(left: 30),
+                    child: CTAButton(
+                      onTap: () {
+                        Routemaster.of(context).replace(ShowNews.routeName);
+                      },
+                      title: "Show all",
+                      radius: 100,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
+          );
+        }
+      },
     );
   }
 }

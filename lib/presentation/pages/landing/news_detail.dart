@@ -55,14 +55,6 @@ class _NewsDetailState extends ConsumerState<NewsDetail> {
               mobile: (context) => ListView(
                 children: [
                   const Header(mobile: true),
-                  Visibility(
-                    visible: _viewModel.getBanners.isNotEmpty,
-                    child: BannerSlides(
-                      mobile: true,
-                      height: 250,
-                      bannerDetails: _viewModel.getBanners,
-                    ),
-                  ),
 
                   _newsAndUpdates(800),
 
@@ -73,18 +65,11 @@ class _NewsDetailState extends ConsumerState<NewsDetail> {
               desktop: (context) => ListView(
                 children: [
                   const Header(mobile: false),
-                  Visibility(
-                    visible: _viewModel.getBanners.isNotEmpty,
-                    child: BannerSlides(
-                      mobile: false,
-                      height: 700,
-                      bannerDetails: _viewModel.getBanners,
-                    ),
-                  ),
-                  _newsAndUpdates(400),
-                  const ContactUs(height: 250),
-                  ContactUsCard(
-                      contactDetails: _viewModel.getContacts, height: 250),
+
+                  _newsAndUpdates(600),
+                  // const ContactUs(height: 250),
+                  // ContactUsCard(
+                  //     contactDetails: _viewModel.getContacts, height: 250),
                   const Footer(),
                 ],
               ),
@@ -107,70 +92,132 @@ class _NewsDetailState extends ConsumerState<NewsDetail> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0).copyWith(left: 20),
-                      child: Text("Recent news and \nupdates",
-                          textAlign: TextAlign.left,
-                          style: FontStyles.font24Semibold.copyWith(
-                              color: AppColors.blackColor, fontSize: 32)),
-                    ),
-                  ),
                   const SizedBox(height: 18),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const CircularArrow(),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Column(
+                  Text("Recent news and updates",
+                      textAlign: TextAlign.center,
+                      style: FontStyles.font24Semibold
+                          .copyWith(color: AppColors.blackColor, fontSize: 32)),
+                  const SizedBox(height: 18),
+                  Align(
+                    alignment: Alignment.center,
+                    child: SizedBox(
+                      width: 900,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // const CircularArrow(),
                             SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(widget.title! ?? "",
-                                    style: FontStyles.font14Semibold
-                                        .copyWith(color: AppColors.blueColor)),
-                              ),
+                              width: 20,
                             ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(widget.desc! ?? "",
-                                    style: FontStyles.font14Semibold
-                                        .copyWith(color: AppColors.blueColor)),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                    DateFormat('MM-dd-yyyy').format(
-                                        DateTime.fromMillisecondsSinceEpoch(
-                                            int.parse(widget.createdAt! ?? "") *
-                                                1000)),
-                                    // textAlign: TextAlign.start,
-                                    style: FontStyles.font14Bold
-                                        .copyWith(color: AppColors.blueColor)),
+                            Flexible(
+                              child: Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                spacing: 20,
+                                children: [
+                                  const SizedBox(
+                                    height: 40,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Container(
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "Title-",
+                                            style: FontStyles.font24Semibold,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.7,
+                                          child: Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Text(widget.title! ?? "",
+                                                style: FontStyles.font14Semibold
+                                                    .copyWith(
+                                                        color: AppColors
+                                                            .blueColor)),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.7,
+                                      child: Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text(
+                                            DateFormat('MM-dd-yyyy').format(
+                                                DateTime
+                                                    .fromMillisecondsSinceEpoch(
+                                                        int.parse(widget
+                                                                    .createdAt! ??
+                                                                "") *
+                                                            1000)),
+                                            // textAlign: TextAlign.start,
+                                            style: FontStyles.font14Bold
+                                                .copyWith(
+                                                    color:
+                                                        AppColors.blueColor)),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Container(
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "Description-",
+                                            style: FontStyles.font24Semibold,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.7,
+                                          child: Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Text(widget.desc! ?? "",
+                                                style: FontStyles.font14Semibold
+                                                    .copyWith(
+                                                        color: AppColors
+                                                            .blueColor)),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 18),
