@@ -41,42 +41,7 @@ class NewsDetail extends ConsumerStatefulWidget {
 }
 
 class _NewsDetailState extends ConsumerState<NewsDetail> {
-  // final _news = [
-  //   News(
-  //       title: "assa",
-  //       description:
-  //           "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year ended on 31.03.2021 under the Companies Act, 2013",
-  //       createdAt: DateTime.now().millisecondsSinceEpoch),
-  //   News(
-  //       title: "asas",
-  //       description:
-  //           "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year ended on 31.03.2021 under the Companies Act, 2013",
-  //       createdAt: DateTime.now().millisecondsSinceEpoch),
-  //   News(
-  //       title: "assa",
-  //       description:
-  //           "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year ended on 31.03.2021 under the Companies Act, 2013",
-  //       createdAt: DateTime.now().millisecondsSinceEpoch),
-  // ];
-
-  final _StatssData = [
-    Stats(title: "1500", description: "Orders"),
-    Stats(title: "86%", description: "Successful Orders"),
-    Stats(title: "15", description: "Lorem Ipsum"),
-    Stats(title: "567", description: "Users"),
-  ];
-
-  final _frequentlyUsedServicesList = [
-    "Business",
-    "Taxation",
-    "GST",
-    "Other Business",
-    "Lorem Ipsum",
-    "Lorem Ipsum",
-    "Lorem Ipsum",
-    "Lorem Ipsum",
-  ];
-
+ 
   late bool isAuthenticated;
 
   late final LandingPageViewModel _viewModel;
@@ -84,10 +49,10 @@ class _NewsDetailState extends ConsumerState<NewsDetail> {
   @override
   void initState() {
     _viewModel = ref.read(LandingPageViewModel.provider);
-    _viewModel.fetchServices();
+    // _viewModel.fetchServices();
     _viewModel.fetchNews();
     super.initState();
-    print(widget.title);
+    
   }
 
   @override
@@ -113,18 +78,18 @@ class _NewsDetailState extends ConsumerState<NewsDetail> {
                       bannerDetails: _viewModel.getBanners,
                     ),
                   ),
-                  Services(height: 0, category: _viewModel.getCategories),
-                  _frequentlyUsedServices(300, mobile: true),
+                  // Services(height: 0, category: _viewModel.getCategories),
+                  // _frequentlyUsedServices(300, mobile: true),
                   _newsAndUpdates(800),
-                  Center(child: _Statss(300, mobile: true)),
-                  Visibility(
-                    visible: _viewModel.getReviews.isNotEmpty,
-                    child: CustomerReviewSlides(
-                        customerReviews: _viewModel.getReviews,
-                        height: MediaQuery.of(context).size.width,
-                        mobile: true),
-                  ),
-                  const ContactUs(height: 250, mobile: true),
+                  // Center(child: _Statss(300, mobile: true)),
+                  // Visibility(
+                  //   visible: _viewModel.getReviews.isNotEmpty,
+                  //   child: CustomerReviewSlides(
+                  //       customerReviews: _viewModel.getReviews,
+                  //       height: MediaQuery.of(context).size.width,
+                  //       mobile: true),
+                  // ),
+                  // const ContactUs(height: 250, mobile: true),
                   const Footer(),
                 ],
               ),
@@ -158,80 +123,7 @@ class _NewsDetailState extends ConsumerState<NewsDetail> {
     );
   }
 
-  Widget _frequentlyUsedServices(double height, {bool mobile = false}) {
-    return SizedBox(
-      height: height,
-      child: Stack(
-        children: [
-          Container(
-            height: height * 0.75,
-            color: AppColors.blueColor,
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: SizedBox(
-              width: height * 3,
-              child: Column(
-                mainAxisAlignment:
-                    mobile ? MainAxisAlignment.start : MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Visibility(visible: mobile, child: const SizedBox(height: 8)),
-                  Padding(
-                    padding: mobile == true
-                        ? const EdgeInsets.all(0)
-                        : const EdgeInsets.all(8.0).copyWith(
-                            bottom: MediaQuery.of(context).size.height * 0.04),
-                    child: Text("Frequently used services",
-                        style: FontStyles.font24Semibold
-                            .copyWith(color: AppColors.yellowColor)),
-                  ),
-                  Visibility(visible: mobile, child: const SizedBox(height: 8)),
-                  Wrap(
-                    spacing: mobile ? 20 : 8,
-                    alignment: WrapAlignment.start,
-                    runSpacing: mobile ? 14 : 8,
-                    children:
-                        // _viewModel.getService.asMap().entries.map((entry) {
-                        _viewModel.getService.take(8).map((service) {
-                      // int index = entry.key;
-                      // model.Service service = entry.value;
-
-                      return FrequentServiceContainer(
-                        serviceName: service.title,
-                        width: height * 3,
-                        mobile: mobile,
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _Statss(double height, {bool mobile = false}) {
-    return SizedBox(
-      height: height,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: mobile ? 8 : 0),
-        child: Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          alignment: WrapAlignment.start,
-          children: _viewModel.getStats
-              .map((e) => StatsContainer(
-                  stat: e,
-                  width: mobile ? height * 3 : height * 4,
-                  b: _viewModel.getStats.indexOf(e) % 2 == 0))
-              .toList(),
-        ),
-      ),
-    );
-  }
+  
 
   Widget _newsAndUpdates(double height) {
     return SizedBox(
