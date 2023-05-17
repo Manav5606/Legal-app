@@ -23,6 +23,7 @@ class AddContactViewModel extends BaseViewModel {
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController detailController = TextEditingController();
 
   String? imageUrl;
 
@@ -53,6 +54,9 @@ class AddContactViewModel extends BaseViewModel {
     if (descriptionController.text.isEmpty) {
       descriptionError = "Description can't be empty.";
     }
+    if (detailController.text.isEmpty) {
+      descriptionError = "Details can't be empty.";
+    }
 
     return titleError == null && descriptionError == null;
   }
@@ -61,6 +65,7 @@ class AddContactViewModel extends BaseViewModel {
   void dispose() {
     titleController.dispose();
     descriptionController.dispose();
+    detailController.dispose();
     super.dispose();
   }
 
@@ -68,6 +73,9 @@ class AddContactViewModel extends BaseViewModel {
     if (contactDetail != null) {
       titleController.text = contactDetail.name;
       descriptionController.text = contactDetail.description;
+      detailController.text =
+          contactDetail.detail == null ? "" : contactDetail.detail!;
+
       imageUrl = contactDetail.iconUrl;
       notifyListeners();
     }
@@ -114,6 +122,7 @@ class AddContactViewModel extends BaseViewModel {
           description: descriptionController.text,
           iconUrl: imageUrl ?? "",
           name: titleController.text,
+          detail: detailController.text,
         );
         result = await _databaseRepositoryImpl.updateContact(contact: contact);
       } else {
@@ -121,6 +130,7 @@ class AddContactViewModel extends BaseViewModel {
           description: descriptionController.text,
           iconUrl: imageUrl ?? "",
           name: titleController.text,
+          detail: detailController.text,
           addedBy: "",
         );
         result = await _databaseRepositoryImpl.createContact(contact: contact);

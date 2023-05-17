@@ -7,6 +7,7 @@ class Category {
   final String description;
   final int? addedAt;
   final String addedBy;
+  final String? detail;
   final bool isDeactivated;
 
   Category({
@@ -14,6 +15,7 @@ class Category {
     required this.name,
     required this.iconUrl,
     required this.description,
+    this.detail,
     this.addedAt,
     required this.addedBy,
     this.isDeactivated = false,
@@ -26,6 +28,7 @@ class Category {
       name: data['name'],
       iconUrl: data['icon_url'],
       description: data['description'],
+      detail: data['detail'],
       addedAt: data['added_at'],
       addedBy: data['added_by'],
       isDeactivated: data['is_deactivated'],
@@ -36,6 +39,7 @@ class Category {
     String? name,
     String? iconUrl,
     String? description,
+    String? detail,
     bool? isDeactivated,
   }) =>
       Category(
@@ -43,6 +47,7 @@ class Category {
         name: name ?? this.name,
         iconUrl: iconUrl ?? this.iconUrl,
         description: description ?? this.description,
+        detail: detail ?? this.detail,
         addedAt: addedAt,
         addedBy: addedBy,
         isDeactivated: isDeactivated ?? this.isDeactivated,
@@ -51,6 +56,7 @@ class Category {
   Map<String, dynamic> toJson() => {
         "name": name,
         "icon_url": iconUrl,
+        "detail": detail,
         "description": description,
         "added_at": addedAt ?? DateTime.now().millisecondsSinceEpoch,
         "added_by": addedBy,

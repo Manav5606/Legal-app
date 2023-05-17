@@ -18,7 +18,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  
   runApp(ProviderScope(child: LayoutBuilder(builder: (context, constraints) {
     ScreenUtil.init(constraints,
         designSize: Size(constraints.maxWidth, constraints.maxHeight));

@@ -1,6 +1,7 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
+import 'package:admin/core/enum/contact.dart';
 import 'package:admin/core/utils/messenger.dart';
 import 'package:admin/data/models/models.dart';
 import 'package:admin/presentation/pages/category_client/category_client_page.dart';
@@ -8,6 +9,8 @@ import 'package:admin/presentation/pages/widgets/circular_arrow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ContactServiceContainer extends StatelessWidget {
   final Category category;
@@ -21,12 +24,28 @@ class ContactServiceContainer extends StatelessWidget {
     this.contactCard = false,
   });
 
+  void openGoogleMaps(String address) async {
+    final url = 'https://www.google.com/maps/search/?api=1&query=$address';
+
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(url);
+    } else {
+      throw 'Could not launch Google Maps';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         if (contactCard) {
-          Messenger.showSnackbar("Implementation Pending");
+          if (category.detail == ContactDetails.phone.name) {
+            launchUrlString("tel:+918125504448");
+          }
+          if (category.detail == ContactDetails.address.name) {
+            openGoogleMaps(
+                "SAI NAGAR COLONY,MANSOORABAD Hyderabad TG 500068 IN");
+          }
         } else {
           Routemaster.of(context).push(CategoryClientPage.routeName,
               queryParameters: {"categoryId": category.id!});
@@ -74,7 +93,9 @@ class ContactServiceContainer extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(category.description, style: FontStyles.font10Medium),
                   const SizedBox(height: 8),
-                  const CircularArrow(),
+                  Visibility(
+                      visible: category.detail != ContactDetails.none.name,
+                      child: const CircularArrow()),
                 ],
               ),
             ),

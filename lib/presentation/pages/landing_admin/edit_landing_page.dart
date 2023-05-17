@@ -209,7 +209,7 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
       children: _viewModel.getNewsImage.map((newsImages) {
         return ListTile(
           dense: true,
-          title: Image.network(newsImages.imageUrl),
+          leading: Image.network(newsImages.imageUrl),
           // subtitle: Text(stats.description),
           onTap: () {
             showDialog(
