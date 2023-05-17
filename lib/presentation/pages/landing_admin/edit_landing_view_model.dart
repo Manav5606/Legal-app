@@ -31,7 +31,6 @@ class EditLandingViewModel extends BaseViewModel {
   final List<Stats> _stats = [];
   List<Stats> get getStats => _stats;
 
-
   final List<CustomerReview> _reviews = [];
   List<CustomerReview> get getReviews => _reviews;
 
@@ -50,6 +49,7 @@ class EditLandingViewModel extends BaseViewModel {
       toggleLoadingOn(false);
     });
   }
+
   Future<void> initNewsImage() async {
     toggleLoadingOn(true);
     final res = await _databaseRepositoryImpl.getNewsImage();
@@ -59,9 +59,11 @@ class EditLandingViewModel extends BaseViewModel {
     }, (r) {
       _newsImage.clear();
       _newsImage.addAll(r);
+   
       toggleLoadingOn(false);
     });
   }
+
   Future<void> initNews() async {
     toggleLoadingOn(true);
     final res = await _databaseRepositoryImpl.getNews();
@@ -74,6 +76,7 @@ class EditLandingViewModel extends BaseViewModel {
       toggleLoadingOn(false);
     });
   }
+
   Future<void> initStats() async {
     toggleLoadingOn(true);
     final res = await _databaseRepositoryImpl.getStats();
@@ -85,9 +88,7 @@ class EditLandingViewModel extends BaseViewModel {
       _stats.addAll(r);
       toggleLoadingOn(false);
     });
-    
   }
-
 
   Future<void> initReview() async {
     toggleLoadingOn(true);

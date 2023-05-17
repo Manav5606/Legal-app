@@ -265,18 +265,21 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
             Text("Your News Image is here", style: FontStyles.font14Semibold),
           ],
         ),
-        CTAButton(
-            title: "Add NewsImage",
-            onTap: () {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (_) => const Dialog(
-                  insetPadding: EdgeInsets.all(24),
-                  child: AddImageNewsDialog(),
-                ),
-              );
-            }),
+        Visibility(
+          visible: _viewModel.getNewsImage.isEmpty,
+          child: CTAButton(
+              title: "Add News Image",
+              onTap: () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (_) => const Dialog(
+                    insetPadding: EdgeInsets.all(24),
+                    child: AddImageNewsDialog(),
+                  ),
+                );
+              }),
+        ),
       ],
     );
   }

@@ -4,7 +4,6 @@ import 'package:admin/core/constant/resource.dart';
 import 'package:admin/core/provider.dart';
 import 'package:admin/data/models/general_stat.dart';
 import 'package:admin/presentation/pages/landing/landing_page_view_model.dart';
-import 'package:admin/presentation/pages/landing/show_news.dart';
 import 'package:admin/presentation/pages/landing/widgets/services.dart';
 import 'package:admin/presentation/pages/widgets/banner.dart';
 import 'package:admin/presentation/pages/widgets/contact_us.dart';
@@ -22,22 +21,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:admin/data/models/models.dart' as model;
-import 'package:routemaster/routemaster.dart';
 import '../../../data/models/news.dart';
 import '../../../data/models/stats.dart';
 
 final landingScaffold = GlobalKey<ScaffoldState>();
 
-class LandingPage extends ConsumerStatefulWidget {
-  static const String routeName = "/landing";
+class ShowNews extends ConsumerStatefulWidget {
+  static const String routeName = "/news";
 
-  const LandingPage({super.key});
+  const ShowNews({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _LandingPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ShowNewsState();
 }
 
-class _LandingPageState extends ConsumerState<LandingPage> {
+class _ShowNewsState extends ConsumerState<ShowNews> {
   // final _news = [
   //   News(
   //       title: "assa",
@@ -135,17 +133,18 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                       bannerDetails: _viewModel.getBanners,
                     ),
                   ),
-                  Services(height: 700, category: _viewModel.getCategories),
-                  _frequentlyUsedServices(350),
+                  // Services(height: 700, category: _viewModel.getCategories),
+                  // _frequentlyUsedServices(350),
                   _newsAndUpdates(800),
-                  Center(child: _Statss(300)),
-                  Visibility(
-                      visible: _viewModel.getReviews.isNotEmpty,
-                      child: CustomerReviewSlides(
-                          customerReviews: _viewModel.getReviews, height: 700)),
-                  const ContactUs(height: 250),
-                  ContactUsCard(
-                      contactDetails: _viewModel.getContacts, height: 250),
+                  // Center(child: _Statss(300)),
+                  // Visibility(
+                  //     visible: _viewModel.getReviews.isNotEmpty,
+                  //     child: CustomerReviewSlides(
+                  //         customerReviews: _viewModel.getReviews, height: 700)),
+
+                  // const ContactUs(height: 250),
+                  // ContactUsCard(
+                  //     contactDetails: _viewModel.getContacts, height: 250),
                   const Footer(),
                 ],
               ),
@@ -238,77 +237,27 @@ class _LandingPageState extends ConsumerState<LandingPage> {
         children: [
           Expanded(
             flex: 1,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0).copyWith(left: 20),
-                    child: Text("Recent news and \nupdates",
-                        textAlign: TextAlign.left,
-                        style: FontStyles.font24Semibold.copyWith(
-                            color: AppColors.blackColor, fontSize: 32)),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0).copyWith(left: 20),
+                      child: Text("Recent news and \nupdates",
+                          textAlign: TextAlign.left,
+                          style: FontStyles.font24Semibold.copyWith(
+                              color: AppColors.blackColor, fontSize: 32)),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 18),
-                ..._viewModel.getNews
-                    .take(3)
-                    .map((e) => NewsTile(news: e))
-                    .toList(),
-                const SizedBox(height: 18),
-              
-                CTAButton(
-                    onTap: () {
-                      Routemaster.of(context).replace(ShowNews.routeName);
-                    },
-                    title: "Show all",
-                    radius: 100),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Column(
-              children: [
-                const Spacer(),
-                SizedBox(
-                  height: height * 0.8,
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: SvgPicture.asset(Assets.iconsVectoryellowSquare,
-                            height: 100, width: 100),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: SvgPicture.asset(Assets.iconsVectorblueSquare,
-                            height: 50, width: 50),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12).copyWith(
-                            left: MediaQuery.of(context).size.width * 0.04,
-                            top: MediaQuery.of(context).size.width * 0.03),
-                        child: Expanded(
-                          child: Container(
-                            height: height / 2,
-                            width: height / 2,
-                            color: Colors.pink,
-                            child: _viewModel.getNewsImage.isNotEmpty &&
-                                    _viewModel.getNewsImage[0].imageUrl != null
-                                ? Image.network(
-                                    _viewModel.getNewsImage[0].imageUrl,
-                                    fit: BoxFit.cover,
-                                  )
-                                : CircularProgressIndicator(),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
+                  const SizedBox(height: 18),
+                  ..._viewModel.getNews.map((e) => NewsTile(news: e)).toList(),
+                  const SizedBox(height: 18),
+                  // const CTAButton(title: "Show all", radius: 100),
+                ],
+              ),
             ),
           ),
         ],

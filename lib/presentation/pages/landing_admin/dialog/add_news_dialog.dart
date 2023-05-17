@@ -63,7 +63,7 @@ class _AddNewsDialogState extends ConsumerState<AddNewsDialog> {
                 hintText: "Type here",
                 controller: _viewModel.descriptionController,
                 maxLines: 3,
-                maxLength: null,
+                maxLength: 500,
                 keyboardType: TextInputType.multiline,
               ),
               const SizedBox(height: 12),

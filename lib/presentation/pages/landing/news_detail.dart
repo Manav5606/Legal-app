@@ -2,9 +2,9 @@ import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
 import 'package:admin/core/provider.dart';
+import 'package:intl/intl.dart';
 import 'package:admin/data/models/general_stat.dart';
 import 'package:admin/presentation/pages/landing/landing_page_view_model.dart';
-import 'package:admin/presentation/pages/landing/show_news.dart';
 import 'package:admin/presentation/pages/landing/widgets/services.dart';
 import 'package:admin/presentation/pages/widgets/banner.dart';
 import 'package:admin/presentation/pages/widgets/contact_us.dart';
@@ -22,22 +22,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:admin/data/models/models.dart' as model;
-import 'package:routemaster/routemaster.dart';
 import '../../../data/models/news.dart';
 import '../../../data/models/stats.dart';
+import '../widgets/circular_arrow.dart';
 
 final landingScaffold = GlobalKey<ScaffoldState>();
 
-class LandingPage extends ConsumerStatefulWidget {
-  static const String routeName = "/landing";
+class NewsDetail extends ConsumerStatefulWidget {
+  final String? title;
+  final String? desc;
+  final String? createdAt;
+  static const String routeName = "/newsDetails";
 
-  const LandingPage({super.key});
+  const NewsDetail({super.key, this.title, this.desc, this.createdAt});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _LandingPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _NewsDetailState();
 }
 
-class _LandingPageState extends ConsumerState<LandingPage> {
+class _NewsDetailState extends ConsumerState<NewsDetail> {
   // final _news = [
   //   News(
   //       title: "assa",
@@ -84,6 +87,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
     _viewModel.fetchServices();
     _viewModel.fetchNews();
     super.initState();
+    print(widget.title);
   }
 
   @override
@@ -135,17 +139,18 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                       bannerDetails: _viewModel.getBanners,
                     ),
                   ),
-                  Services(height: 700, category: _viewModel.getCategories),
-                  _frequentlyUsedServices(350),
-                  _newsAndUpdates(800),
-                  Center(child: _Statss(300)),
-                  Visibility(
-                      visible: _viewModel.getReviews.isNotEmpty,
-                      child: CustomerReviewSlides(
-                          customerReviews: _viewModel.getReviews, height: 700)),
-                  const ContactUs(height: 250),
-                  ContactUsCard(
-                      contactDetails: _viewModel.getContacts, height: 250),
+                  // Services(height: 700, category: _viewModel.getCategories),
+                  // _frequentlyUsedServices(350),
+                  _newsAndUpdates(400),
+                  // Center(child: _Statss(300)),
+                  // Visibility(
+                  //     visible: _viewModel.getReviews.isNotEmpty,
+                  //     child: CustomerReviewSlides(
+                  //         customerReviews: _viewModel.getReviews, height: 700)),
+
+                  // const ContactUs(height: 250),
+                  // ContactUsCard(
+                  //     contactDetails: _viewModel.getContacts, height: 250),
                   const Footer(),
                 ],
               ),
@@ -238,77 +243,81 @@ class _LandingPageState extends ConsumerState<LandingPage> {
         children: [
           Expanded(
             flex: 1,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0).copyWith(left: 20),
-                    child: Text("Recent news and \nupdates",
-                        textAlign: TextAlign.left,
-                        style: FontStyles.font24Semibold.copyWith(
-                            color: AppColors.blackColor, fontSize: 32)),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0).copyWith(left: 20),
+                      child: Text("Recent news and \nupdates",
+                          textAlign: TextAlign.left,
+                          style: FontStyles.font24Semibold.copyWith(
+                              color: AppColors.blackColor, fontSize: 32)),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 18),
-                ..._viewModel.getNews
-                    .take(3)
-                    .map((e) => NewsTile(news: e))
-                    .toList(),
-                const SizedBox(height: 18),
-              
-                CTAButton(
-                    onTap: () {
-                      Routemaster.of(context).replace(ShowNews.routeName);
-                    },
-                    title: "Show all",
-                    radius: 100),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Column(
-              children: [
-                const Spacer(),
-                SizedBox(
-                  height: height * 0.8,
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: SvgPicture.asset(Assets.iconsVectoryellowSquare,
-                            height: 100, width: 100),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: SvgPicture.asset(Assets.iconsVectorblueSquare,
-                            height: 50, width: 50),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12).copyWith(
-                            left: MediaQuery.of(context).size.width * 0.04,
-                            top: MediaQuery.of(context).size.width * 0.03),
-                        child: Expanded(
-                          child: Container(
-                            height: height / 2,
-                            width: height / 2,
-                            color: Colors.pink,
-                            child: _viewModel.getNewsImage.isNotEmpty &&
-                                    _viewModel.getNewsImage[0].imageUrl != null
-                                ? Image.network(
-                                    _viewModel.getNewsImage[0].imageUrl,
-                                    fit: BoxFit.cover,
-                                  )
-                                : CircularProgressIndicator(),
-                          ),
+                  const SizedBox(height: 18),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const CircularArrow(),
+                        SizedBox(
+                          width: 20,
                         ),
-                      )
-                    ],
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(widget.title! ?? "",
+                                    style: FontStyles.font14Semibold
+                                        .copyWith(color: AppColors.blueColor)),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(widget.desc! ?? "",
+                                    style: FontStyles.font14Semibold
+                                        .copyWith(color: AppColors.blueColor)),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                    DateFormat('MM-dd-yyyy').format(
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            int.parse(widget.createdAt! ?? "") *
+                                                1000)),
+                                    // textAlign: TextAlign.start,
+                                    style: FontStyles.font14Bold
+                                        .copyWith(color: AppColors.blueColor)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 18),
+                  // const CTAButton(title: "Show all", radius: 100),
+                ],
+              ),
             ),
           ),
         ],

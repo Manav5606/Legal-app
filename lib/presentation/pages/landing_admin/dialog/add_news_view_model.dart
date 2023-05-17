@@ -53,10 +53,10 @@ class AddNewsViewModel extends BaseViewModel {
     clearError();
 
     if (titleController.text.isEmpty) {
-      titleError = "Banner title description can't be empty.";
+      titleError = "News title description can't be empty.";
     }
     if (descriptionController.text.isEmpty) {
-      descriptionError = "Banner description can't be empty.";
+      descriptionError = "News description can't be empty.";
     }
 
     return titleError == null && descriptionError == null;
@@ -68,7 +68,6 @@ class AddNewsViewModel extends BaseViewModel {
 
     super.dispose();
   }
-
 
   void initNews(model.News? news) {
     if (news != null) {
@@ -123,7 +122,7 @@ class AddNewsViewModel extends BaseViewModel {
   }
 
   Future createNews({model.News? existingNews}) async {
-    // if (_validateValues()) {
+    if (_validateValues()) {
       toggleLoadingOn(true);
       late final Either<AppError, model.News> result;
       if (existingNews != null) {
@@ -153,6 +152,6 @@ class AddNewsViewModel extends BaseViewModel {
         toggleLoadingOn(false);
         return r;
       });
-    
+    }
   }
 }
