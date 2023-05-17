@@ -1,28 +1,17 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
-import 'package:admin/core/constant/resource.dart';
 import 'package:admin/core/provider.dart';
-import 'package:admin/data/models/general_stat.dart';
+import 'package:intl/intl.dart';
 import 'package:admin/presentation/pages/landing/landing_page_view_model.dart';
-import 'package:admin/presentation/pages/landing/widgets/services.dart';
 import 'package:admin/presentation/pages/widgets/banner.dart';
-import 'package:admin/presentation/pages/widgets/contact_us.dart';
-import 'package:admin/presentation/pages/widgets/contact_us_card.dart';
-import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/pages/widgets/custom_mobile_drawer.dart';
-import 'package:admin/presentation/pages/widgets/customer_review_slider.dart';
 import 'package:admin/presentation/pages/widgets/footer.dart';
-import 'package:admin/presentation/pages/widgets/frequent_service_container.dart';
-import 'package:admin/presentation/pages/widgets/general_stat_container.dart';
 import 'package:admin/presentation/pages/widgets/header.dart';
-import 'package:admin/presentation/pages/widgets/news_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:admin/data/models/models.dart' as model;
-import '../../../data/models/news.dart';
-import '../../../data/models/stats.dart';
+import '../widgets/circular_arrow.dart';
+import '../widgets/news_tile.dart';
 
 final landingScaffold = GlobalKey<ScaffoldState>();
 
@@ -36,42 +25,6 @@ class ShowNews extends ConsumerStatefulWidget {
 }
 
 class _ShowNewsState extends ConsumerState<ShowNews> {
-  // final _news = [
-  //   News(
-  //       title: "assa",
-  //       description:
-  //           "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year ended on 31.03.2021 under the Companies Act, 2013",
-  //       createdAt: DateTime.now().millisecondsSinceEpoch),
-  //   News(
-  //       title: "asas",
-  //       description:
-  //           "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year ended on 31.03.2021 under the Companies Act, 2013",
-  //       createdAt: DateTime.now().millisecondsSinceEpoch),
-  //   News(
-  //       title: "assa",
-  //       description:
-  //           "Relaxation on levy of additional fees in filling of e-forms AOC-4, AOC-4 Non-XBRL and MGT-7/MGT-7A for the financial year ended on 31.03.2021 under the Companies Act, 2013",
-  //       createdAt: DateTime.now().millisecondsSinceEpoch),
-  // ];
-
-  final _StatssData = [
-    Stats(title: "1500", description: "Orders"),
-    Stats(title: "86%", description: "Successful Orders"),
-    Stats(title: "15", description: "Lorem Ipsum"),
-    Stats(title: "567", description: "Users"),
-  ];
-
-  final _frequentlyUsedServicesList = [
-    "Business",
-    "Taxation",
-    "GST",
-    "Other Business",
-    "Lorem Ipsum",
-    "Lorem Ipsum",
-    "Lorem Ipsum",
-    "Lorem Ipsum",
-  ];
-
   late bool isAuthenticated;
 
   late final LandingPageViewModel _viewModel;
@@ -79,7 +32,6 @@ class _ShowNewsState extends ConsumerState<ShowNews> {
   @override
   void initState() {
     _viewModel = ref.read(LandingPageViewModel.provider);
-    // _viewModel.fetchServices();
     _viewModel.fetchNews();
     super.initState();
   }
@@ -107,17 +59,9 @@ class _ShowNewsState extends ConsumerState<ShowNews> {
                       bannerDetails: _viewModel.getBanners,
                     ),
                   ),
-                  // Services(height: 0, category: _viewModel.getCategories),
-                  // _frequentlyUsedServices(300, mobile: true),
+
                   _newsAndUpdates(800),
-                  // Center(child: _Statss(300, mobile: true)),
-                  // Visibility(
-                  //   visible: _viewModel.getReviews.isNotEmpty,
-                  //   child: CustomerReviewSlides(
-                  //       customerReviews: _viewModel.getReviews,
-                  //       height: MediaQuery.of(context).size.width,
-                  //       mobile: true),
-                  // ),
+
                   // const ContactUs(height: 250, mobile: true),
                   const Footer(),
                 ],
@@ -133,14 +77,8 @@ class _ShowNewsState extends ConsumerState<ShowNews> {
                       bannerDetails: _viewModel.getBanners,
                     ),
                   ),
-                  // Services(height: 700, category: _viewModel.getCategories),
-                  // _frequentlyUsedServices(350),
+
                   _newsAndUpdates(800),
-                  // Center(child: _Statss(300)),
-                  // Visibility(
-                  //     visible: _viewModel.getReviews.isNotEmpty,
-                  //     child: CustomerReviewSlides(
-                  //         customerReviews: _viewModel.getReviews, height: 700)),
 
                   // const ContactUs(height: 250),
                   // ContactUsCard(
@@ -151,8 +89,6 @@ class _ShowNewsState extends ConsumerState<ShowNews> {
             ),
     );
   }
-
- 
 
   Widget _newsAndUpdates(double height) {
     return SizedBox(

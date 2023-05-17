@@ -1,30 +1,18 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
-import 'package:admin/core/constant/resource.dart';
 import 'package:admin/core/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:admin/data/models/general_stat.dart';
 import 'package:admin/presentation/pages/landing/landing_page_view_model.dart';
-import 'package:admin/presentation/pages/landing/widgets/services.dart';
 import 'package:admin/presentation/pages/widgets/banner.dart';
-import 'package:admin/presentation/pages/widgets/contact_us.dart';
-import 'package:admin/presentation/pages/widgets/contact_us_card.dart';
-import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:admin/presentation/pages/widgets/custom_mobile_drawer.dart';
-import 'package:admin/presentation/pages/widgets/customer_review_slider.dart';
 import 'package:admin/presentation/pages/widgets/footer.dart';
-import 'package:admin/presentation/pages/widgets/frequent_service_container.dart';
-import 'package:admin/presentation/pages/widgets/general_stat_container.dart';
 import 'package:admin/presentation/pages/widgets/header.dart';
-import 'package:admin/presentation/pages/widgets/news_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:admin/data/models/models.dart' as model;
-import '../../../data/models/news.dart';
-import '../../../data/models/stats.dart';
 import '../widgets/circular_arrow.dart';
+import '../widgets/contact_us.dart';
+import '../widgets/contact_us_card.dart';
 
 final landingScaffold = GlobalKey<ScaffoldState>();
 
@@ -41,7 +29,6 @@ class NewsDetail extends ConsumerStatefulWidget {
 }
 
 class _NewsDetailState extends ConsumerState<NewsDetail> {
- 
   late bool isAuthenticated;
 
   late final LandingPageViewModel _viewModel;
@@ -49,10 +36,8 @@ class _NewsDetailState extends ConsumerState<NewsDetail> {
   @override
   void initState() {
     _viewModel = ref.read(LandingPageViewModel.provider);
-    // _viewModel.fetchServices();
     _viewModel.fetchNews();
     super.initState();
-    
   }
 
   @override
@@ -78,17 +63,9 @@ class _NewsDetailState extends ConsumerState<NewsDetail> {
                       bannerDetails: _viewModel.getBanners,
                     ),
                   ),
-                  // Services(height: 0, category: _viewModel.getCategories),
-                  // _frequentlyUsedServices(300, mobile: true),
+
                   _newsAndUpdates(800),
-                  // Center(child: _Statss(300, mobile: true)),
-                  // Visibility(
-                  //   visible: _viewModel.getReviews.isNotEmpty,
-                  //   child: CustomerReviewSlides(
-                  //       customerReviews: _viewModel.getReviews,
-                  //       height: MediaQuery.of(context).size.width,
-                  //       mobile: true),
-                  // ),
+
                   // const ContactUs(height: 250, mobile: true),
                   const Footer(),
                 ],
@@ -104,26 +81,16 @@ class _NewsDetailState extends ConsumerState<NewsDetail> {
                       bannerDetails: _viewModel.getBanners,
                     ),
                   ),
-                  // Services(height: 700, category: _viewModel.getCategories),
-                  // _frequentlyUsedServices(350),
                   _newsAndUpdates(400),
-                  // Center(child: _Statss(300)),
-                  // Visibility(
-                  //     visible: _viewModel.getReviews.isNotEmpty,
-                  //     child: CustomerReviewSlides(
-                  //         customerReviews: _viewModel.getReviews, height: 700)),
-
-                  // const ContactUs(height: 250),
-                  // ContactUsCard(
-                  //     contactDetails: _viewModel.getContacts, height: 250),
+                  const ContactUs(height: 250),
+                  ContactUsCard(
+                      contactDetails: _viewModel.getContacts, height: 250),
                   const Footer(),
                 ],
               ),
             ),
     );
   }
-
-  
 
   Widget _newsAndUpdates(double height) {
     return SizedBox(

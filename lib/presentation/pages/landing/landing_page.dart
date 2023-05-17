@@ -257,7 +257,6 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                     .map((e) => NewsTile(news: e))
                     .toList(),
                 const SizedBox(height: 18),
-              
                 CTAButton(
                     onTap: () {
                       Routemaster.of(context).replace(ShowNews.routeName);
@@ -281,11 +280,6 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                         child: SvgPicture.asset(Assets.iconsVectoryellowSquare,
                             height: 100, width: 100),
                       ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: SvgPicture.asset(Assets.iconsVectorblueSquare,
-                            height: 50, width: 50),
-                      ),
                       Padding(
                         padding: const EdgeInsets.all(12).copyWith(
                             left: MediaQuery.of(context).size.width * 0.04,
@@ -304,7 +298,16 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                                 : CircularProgressIndicator(),
                           ),
                         ),
-                      )
+                      ),
+                      // Padding(
+                      //   padding: EdgeInsets.only(
+                      //       right: MediaQuery.of(context).size.width * 0.08),
+                      //   child: Align(
+                      //     alignment: Alignment.centerRight,
+                      //     child: SvgPicture.asset(Assets.iconsVectorblueSquare,
+                      //         height: 50, width: 50),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

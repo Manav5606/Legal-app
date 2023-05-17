@@ -31,44 +31,47 @@ class NewsTile extends StatelessWidget {
       },
       child: Padding(
         padding: const EdgeInsets.all(20),
-        child: Row(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const CircularArrow(),
-            const SizedBox(
-              width: 20,
-            ),
-            Column(
-              children: [
-                SizedBox(
-                  width: 400,
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(news.title,
-                        style: FontStyles.font14Semibold
-                            .copyWith(color: AppColors.blueColor)),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const CircularArrow(),
+              const SizedBox(
+                width: 20,
+              ),
+              Column(
+                children: [
+                  SizedBox(
+                    width: 400,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(news.title,
+                          style: FontStyles.font14Semibold
+                              .copyWith(color: AppColors.blueColor)),
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
-                  width: 400,
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                        DateFormat('MM-dd-yyyy').format(
-                            DateTime.fromMillisecondsSinceEpoch(
-                                news.createdAt! * 1000)),
-                        // textAlign: TextAlign.start,
-                        style: FontStyles.font14Bold
-                            .copyWith(color: AppColors.blueColor)),
+                  const SizedBox(
+                    height: 20,
                   ),
-                ),
-              ],
-            ),
-          ],
+                  SizedBox(
+                    width: 400,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                          DateFormat('MM-dd-yyyy').format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  news.createdAt! * 1000)),
+                          // textAlign: TextAlign.start,
+                          style: FontStyles.font14Bold
+                              .copyWith(color: AppColors.blueColor)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

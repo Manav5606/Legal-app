@@ -21,7 +21,6 @@ class ContactUsCard extends StatefulWidget {
 }
 
 class _ContactUsCardState extends State<ContactUsCard> {
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -44,7 +43,6 @@ class _ContactUsCardState extends State<ContactUsCard> {
                   .map((contact) => ContactServiceContainer(
                       contactCard: true,
                       category: contact,
-                      
                       width: MediaQuery.of(context).size.width))
                   .toList(),
             ),

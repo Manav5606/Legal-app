@@ -57,7 +57,7 @@ final routeLoggedOut = RouteMap(
   },
 );
 final routeLoggedIn = RouteMap(
-  onUnknownRoute: (_) => const Redirect(LandingPage.routeName),
+  onUnknownRoute: (_) => const Redirect(HomePage.routeName),
   routes: {
     LandingPage.routeName: (_) => const MaterialPage(child: LandingPage()),
     HomePage.routeName: (_) => const MaterialPage(child: HomePage()),
