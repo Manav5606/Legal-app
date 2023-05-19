@@ -6,6 +6,8 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/utils/messenger.dart';
+
 final _authProvider =
     StateNotifierProvider<AuthProvider, AuthState>((ref) => AuthProvider(
           ref.read(Repository.auth),
@@ -69,6 +71,24 @@ class AuthProvider extends StateNotifier<AuthState> {
     return result;
   }
 
+  Future<Either<AppError, User>> forgot({
+    required User user,
+    required String password,
+    bool streamUser = false,
+  }) async {
+    final result = await _authRepositoryImpl.registerWithEmailPassword(
+      password: password,
+      user: user,
+      createdByAdmin: !streamUser,
+    );
+    if (result.isRight()) {
+      if (streamUser) {
+        startStreamingUserData();
+      }
+    }
+    return result;
+  }
+
   Future<Either<AppError, User>> login({
     required String email,
     required String password,
@@ -80,6 +100,17 @@ class AuthProvider extends StateNotifier<AuthState> {
     if (result.isRight()) {
       startStreamingUserData();
     }
+    return result;
+  }
+
+  Future<Either<AppError, bool>> forgotPasswordd({
+    required String email,
+
+  }) async {
+    final result = await _authRepositoryImpl.forgotPassword(
+      email: email,
+    );
+    
     return result;
   }
 }

@@ -38,6 +38,22 @@ class AuthRepositoryImpl extends AuthRepository with RepositoryExceptionMixin {
       return Left(AppError(message: "Unkown Error, Plese try again later."));
     }
   }
+  @override
+  Future<Either<model.AppError, bool>> forgotPassword(
+      {required String email}) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(
+          email: email);
+     return const Right(true);
+    } on FirebaseAuthException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
 
   Future<Either<model.AppError, model.User>> getCurrentUserDetailByID(
       {required String uID}) async {
