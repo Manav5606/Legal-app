@@ -38,40 +38,53 @@ class AdminContactServiceContainer extends StatelessWidget {
           ),
         );
       },
-      child: Container(
-        width: width / 5,
-        height: MediaQuery.of(context).size.height * 0.35,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: AppColors.yellowColor,
-        ),
-        child: Stack(
+      child: Flexible(
+        child: Wrap(
+          alignment: WrapAlignment.start,
+          spacing: 20,
+          runSpacing: 20,
           children: [
-            Positioned(
-              right: 0,
-              top: 20,
-              child: SvgPicture.asset(
-                Assets.iconsVectoroverlayright,
-                height: 80,
-                width: 80,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(category.firstName.toUpperCase(),
-                      style: FontStyles.font24Semibold),
-                  Text(category.lastName.toUpperCase(),
-                      style: FontStyles.font24Semibold),
-                  const SizedBox(height: 8),
-                  Text(category.companyName, style: FontStyles.font14Semibold),
-                  const SizedBox(height: 8),
-                  Text(category.email ?? "", style: FontStyles.font14Semibold),
-                  const CircularArrow(),
-                ],
+            LimitedBox(
+              maxHeight: MediaQuery.of(context).size.height * 0.45,
+              child: Container(
+                width: width / 5,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: AppColors.yellowColor,
+                ),
+                child: Stack(
+                  children: [
+                    Positioned(
+                      right: 0,
+                      top: 20,
+                      child: SvgPicture.asset(
+                        Assets.iconsVectoroverlayright,
+                        height: 80,
+                        width: 80,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(category.firstName.toUpperCase(),
+                              style: FontStyles.font24Semibold),
+                          Text(category.lastName.toUpperCase(),
+                              style: FontStyles.font24Semibold),
+                          const SizedBox(height: 8),
+                          Text(category.companyName,
+                              style: FontStyles.font14Semibold),
+                          const SizedBox(height: 8),
+                          Text(category.email ?? "",
+                              style: FontStyles.font14Semibold),
+                          const CircularArrow(),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

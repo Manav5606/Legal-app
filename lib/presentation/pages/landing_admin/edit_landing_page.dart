@@ -35,8 +35,7 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
     _viewModel.initReview();
     _viewModel.initContactDetails();
     _viewModel.initNewsImage();
-    _viewModel.initContactUsCardDetails();
-    // _viewModel.initNewss();
+
     super.initState();
   }
 
@@ -62,7 +61,7 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
                   _editStats(),
                   _editNews(),
                   _editNewsImages(),
-                  _contactUsCard(),
+        
                 ],
               ),
             ),
@@ -322,27 +321,7 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
     );
   }
 
-  Widget _contactUsCard() {
-    return ExpansionTile(title: _contactUsHeading(), children: [
-      ViewContactUsCard(contactDetails: _viewModel.getContactUs, height: 1000)
-    ]);
-  }
-
-  Widget _contactUsHeading() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Contact Us", style: FontStyles.font24Semibold),
-            Text("Your list of contact us details is here",
-                style: FontStyles.font14Semibold),
-          ],
-        ),
-      ],
-    );
-  }
+  
 
   Widget _reviewHeading() {
     return Row(
