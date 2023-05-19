@@ -58,7 +58,7 @@ class ContactUsCustomTextField extends FormField<String> {
 
             BoxBorder setBorder() {
               Color borderColor = (!field.isValid && field.errorText == null)
-                  ? AppColors.blackColor
+                  ? AppColors.lightGreyColor
                   : field.isValid
                       ? AppColors.blackColor
                       : Colors.red;
@@ -75,7 +75,7 @@ class ContactUsCustomTextField extends FormField<String> {
                       visible: label != null,
                       child: Text(label ?? "",
                           style: FontStyles.font14Semibold
-                              .copyWith(color: AppColors.greyColor))),
+                              .copyWith(color: AppColors.blackColor))),
                   Container(
                     padding: suffixIcon != null
                         ? EdgeInsets.only(left: Sizes.s12.h)
@@ -96,7 +96,7 @@ class ContactUsCustomTextField extends FormField<String> {
                       cursorColor: AppColors.greyColor,
                       autocorrect: false,
                       style: TextStyle(
-                        color: Colors.black,
+                        color: AppColors.blueColor,
                         fontSize: Sizes.s16.sp,
                         fontWeight: FontWeight.w400,
                       ),

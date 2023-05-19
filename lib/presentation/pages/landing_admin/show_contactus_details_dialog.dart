@@ -4,36 +4,43 @@ import 'package:admin/data/models/models.dart';
 import 'package:admin/presentation/pages/landing_admin/dialog/add_banner_view_model.dart';
 import 'package:admin/presentation/pages/landing_admin/dialog/contact_us_view_model.dart';
 import 'package:admin/presentation/pages/landing_admin/edit_landing_view_model.dart';
+import 'package:admin/presentation/pages/landing_admin/show_contact_us_view_model.dart';
 import 'package:admin/presentation/pages/widgets/contactus_custom_textfield.dart';
 import 'package:admin/presentation/pages/widgets/dialog_textfield.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../widgets/custom_textfield.dart';
-
-class ContactUsDialog extends ConsumerStatefulWidget {
-  final BannerDetail? bannerDetail;
-  const ContactUsDialog({
+class AdminShowContactUsDialog extends ConsumerStatefulWidget {
+  final ContactUsForm? contact;
+  const AdminShowContactUsDialog({
     super.key,
-    this.bannerDetail,
+    this.contact,
   });
 
   @override
-  ConsumerState<ContactUsDialog> createState() => _ContactUsDialogState();
+  ConsumerState<AdminShowContactUsDialog> createState() =>
+      _AdminShowContactUsDialogState();
 }
 
-class _ContactUsDialogState extends ConsumerState<ContactUsDialog> {
-  late final ContactUsViewModel _viewModel;
+class _AdminShowContactUsDialogState
+    extends ConsumerState<AdminShowContactUsDialog> {
+  late final AdminShowContactUsViewModel _viewModel;
   @override
   void initState() {
     super.initState();
-    _viewModel = ref.read(ContactUsViewModel.provider);
+    _viewModel = ref.read(AdminShowContactUsViewModel.provider);
+    _viewModel.firstNameController.text = widget.contact!.firstName;
+    _viewModel.lastNameController.text = widget.contact!.lastName;
+    _viewModel.mobileNumberController.text = widget.contact!.mobileNumber;
+    _viewModel.companyNameController.text = widget.contact!.companyName;
+    _viewModel.emailController.text = widget.contact!.email ?? "";
+    _viewModel.notesController.text = widget.contact!.notes;
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(ContactUsViewModel.provider);
+    ref.watch(AdminShowContactUsViewModel.provider);
     return Padding(
       padding: const EdgeInsets.all(24),
       child: SizedBox(
@@ -51,8 +58,9 @@ class _ContactUsDialogState extends ConsumerState<ContactUsDialog> {
               ContactUsCustomTextField(
                 label: "First Name",
                 hintText: "Enter Your First Name",
+
                 controller: _viewModel.firstNameController,
-                readOnly: _viewModel.isLoading,
+                readOnly: true,
                 backgroundColor: AppColors.whiteColor,
                 showBorder: true,
                 // obscureText: !_viewModel.showPassword,
@@ -67,7 +75,7 @@ class _ContactUsDialogState extends ConsumerState<ContactUsDialog> {
                 label: "Last Name",
                 hintText: "Enter Your Last Name",
                 controller: _viewModel.lastNameController,
-                readOnly: _viewModel.isLoading,
+                readOnly: true,
                 backgroundColor: AppColors.whiteColor,
                 showBorder: true,
                 // obscureText: !_viewModel.showPassword,
@@ -82,7 +90,7 @@ class _ContactUsDialogState extends ConsumerState<ContactUsDialog> {
                 label: "Mobile Number",
                 hintText: "Enter Your Mobile Number",
                 controller: _viewModel.mobileNumberController,
-                readOnly: _viewModel.isLoading,
+                readOnly: true,
                 backgroundColor: AppColors.whiteColor,
                 showBorder: true,
                 // obscureText: !_viewModel.showPassword,
@@ -97,7 +105,7 @@ class _ContactUsDialogState extends ConsumerState<ContactUsDialog> {
                 label: "Company Name",
                 hintText: "Enter Your Company Name",
                 controller: _viewModel.companyNameController,
-                readOnly: _viewModel.isLoading,
+                readOnly: true,
                 backgroundColor: AppColors.whiteColor,
                 showBorder: true,
                 // obscureText: !_viewModel.showPassword,
@@ -112,7 +120,7 @@ class _ContactUsDialogState extends ConsumerState<ContactUsDialog> {
                 label: "Email",
                 hintText: "Enter Your Email",
                 controller: _viewModel.emailController,
-                readOnly: _viewModel.isLoading,
+                readOnly: true,
                 backgroundColor: AppColors.whiteColor,
                 showBorder: true,
                 suffixIcon: Row(
@@ -125,7 +133,7 @@ class _ContactUsDialogState extends ConsumerState<ContactUsDialog> {
                 label: "Notes",
                 hintText: "Type here...",
                 controller: _viewModel.notesController,
-                readOnly: _viewModel.isLoading,
+                readOnly: true,
                 backgroundColor: AppColors.whiteColor,
                 showBorder: true,
                 maxLines: 7,
@@ -147,26 +155,6 @@ class _ContactUsDialogState extends ConsumerState<ContactUsDialog> {
                       child: Text("Back",
                           style: FontStyles.font12Regular
                               .copyWith(color: AppColors.blueColor))),
-                  ElevatedButton(
-                    onPressed: _viewModel.isLoading
-                        ? null
-                        : () async {
-                            await _viewModel
-                                .createContactUs()
-                                .then((value) async {
-                              if (value != null) {
-                                Navigator.pop(context);
-                              }
-                            });
-                          },
-                    child: _viewModel.isLoading
-                        ? const CircularProgressIndicator.adaptive()
-                        : Text(
-                            "Submit",
-                            style: FontStyles.font12Regular
-                                .copyWith(color: AppColors.whiteColor),
-                          ),
-                  ),
                 ],
               ),
             ],

@@ -12,3 +12,4 @@ export 'stats.dart';
 export 'notifications.dart';
 export 'news.dart';
 export 'news_image.dart';
+export 'contact_us.dart';

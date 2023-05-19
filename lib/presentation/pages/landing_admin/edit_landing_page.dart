@@ -6,6 +6,7 @@ import 'package:admin/presentation/pages/landing_admin/dialog/add_news_dialog.da
 import 'package:admin/presentation/pages/landing_admin/dialog/add_review_dialog.dart';
 import 'package:admin/presentation/pages/landing_admin/dialog/add_stats.dart';
 import 'package:admin/presentation/pages/landing_admin/edit_landing_view_model.dart';
+import 'package:admin/presentation/pages/landing_admin/view_contact_us_card.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,6 +35,7 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
     _viewModel.initReview();
     _viewModel.initContactDetails();
     _viewModel.initNewsImage();
+    _viewModel.initContactUsCardDetails();
     // _viewModel.initNewss();
     super.initState();
   }
@@ -60,6 +62,7 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
                   _editStats(),
                   _editNews(),
                   _editNewsImages(),
+                  _contactUsCard(),
                 ],
               ),
             ),
@@ -316,6 +319,28 @@ class _ServicePageState extends ConsumerState<EditLandingPage> {
                 },
               ))
           .toList(),
+    );
+  }
+
+  Widget _contactUsCard() {
+    return ExpansionTile(title: _contactUsHeading(), children: [
+      ViewContactUsCard(contactDetails: _viewModel.getContactUs, height: 1000)
+    ]);
+  }
+
+  Widget _contactUsHeading() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Contact Us", style: FontStyles.font24Semibold),
+            Text("Your list of contact us details is here",
+                style: FontStyles.font14Semibold),
+          ],
+        ),
+      ],
     );
   }
 

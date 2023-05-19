@@ -36,6 +36,8 @@ class EditLandingViewModel extends BaseViewModel {
 
   final List<Category> _contactDetails = [];
   List<Category> get getContactDetails => _contactDetails;
+  final List<ContactUsForm> _contactUs = [];
+  List<ContactUsForm> get getContactUs => _contactUs;
 
   Future<void> initBanner() async {
     toggleLoadingOn(true);
@@ -112,6 +114,18 @@ class EditLandingViewModel extends BaseViewModel {
     }, (r) {
       _contactDetails.clear();
       _contactDetails.addAll(r);
+      toggleLoadingOn(false);
+    });
+  }
+  Future<void> initContactUsCardDetails() async {
+    toggleLoadingOn(true);
+    final res = await _databaseRepositoryImpl.getContactUs();
+    res.fold((l) {
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+    }, (r) {
+      _contactUs.clear();
+      _contactUs.addAll(r);
       toggleLoadingOn(false);
     });
   }

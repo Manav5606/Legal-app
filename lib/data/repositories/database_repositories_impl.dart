@@ -880,6 +880,47 @@ class DatabaseRepositoryImpl extends DatabaseRepository
   }
 
   @override
+  Future<Either<model.AppError, model.ContactUsForm>> createContactUs(
+      {required model.ContactUsForm contact}) async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.contactUsCollection)
+          .add(contact.toJson());
+
+      return Right(model.ContactUsForm.fromSnapshot(await response.get()));
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+    @override
+  Future<Either<model.AppError, List<model.ContactUsForm>>> getContactUs() async {
+    try {
+      final response = await _firebaseFirestore
+          .collection(FirebaseConfig.contactUsCollection)
+          .get();
+
+      return Right(response.docs
+          .map((doc) => model.ContactUsForm.fromSnapshot(doc))
+          .toList());
+    } on FirebaseException catch (fae) {
+      logger.severe(fae);
+      return Left(
+          model.AppError(message: fae.message ?? "Server Failed to Respond."));
+    } catch (e) {
+      logger.severe(e);
+      return Left(
+          model.AppError(message: "Unkown Error, Plese try again later."));
+    }
+  }
+
+  @override
   Future<Either<model.AppError, model.BannerDetail>> createBanner(
       {required model.BannerDetail banner}) async {
     try {

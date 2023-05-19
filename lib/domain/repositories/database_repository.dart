@@ -68,9 +68,12 @@ abstract class DatabaseRepository {
   Future<Either<model.AppError, model.Order>> fetchOrderByID(String uid);
   Future<Either<model.AppError, model.BannerDetail>> createBanner(
       {required model.BannerDetail banner});
+  Future<Either<model.AppError, model.ContactUsForm>> createContactUs(
+      {required model.ContactUsForm contact});
+      Future<Either<model.AppError, List<model.ContactUsForm>>> getContactUs();
   Future<Either<model.AppError, model.BannerDetail>> updateBanner(
       {required model.BannerDetail banner});
-  Future<Either<model.AppError, bool>> deleteBanner(
+  Future<Either<model.AppError, bool>> deleteBanner(  
       {required model.BannerDetail banner});
   Future<Either<model.AppError, List<model.BannerDetail>>> getBanners();
   Future<Either<model.AppError, model.News>> createNews(
