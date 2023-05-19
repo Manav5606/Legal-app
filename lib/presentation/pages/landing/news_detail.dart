@@ -13,6 +13,7 @@ import 'package:responsive_builder/responsive_builder.dart';
 import '../widgets/circular_arrow.dart';
 import '../widgets/contact_us.dart';
 import '../widgets/contact_us_card.dart';
+import '../widgets/freeze_header.dart';
 
 final landingScaffold = GlobalKey<ScaffoldState>();
 
@@ -52,25 +53,40 @@ class _NewsDetailState extends ConsumerState<NewsDetail> {
       body: _viewModel.isLoading
           ? const Center(child: CircularProgressIndicator.adaptive())
           : ScreenTypeLayout.builder(
-              mobile: (context) => ListView(
-                children: [
-                  const Header(mobile: true),
-
+              mobile: (context) =>  CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    delegate:
+                        CustomSliverPersistentHeaderDelegate(mobile: true),
+                    floating: false,
+                    pinned: true,
+                  ),
+SliverList(
+                    delegate: SliverChildListDelegate([
                   _newsAndUpdates(800),
 
                   // const ContactUs(height: 250, mobile: true),
                   const Footer(),
+                    ],),),
                 ],
               ),
-              desktop: (context) => ListView(
-                children: [
-                  const Header(mobile: false),
-
+              desktop: (context) => CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    delegate:
+                        CustomSliverPersistentHeaderDelegate(mobile: false),
+                    floating: false,
+                    pinned: true,
+                  ),
+                   SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
                   _newsAndUpdates(600),
                   // const ContactUs(height: 250),
                   // ContactUsCard(
                   //     contactDetails: _viewModel.getContacts, height: 250),
                   const Footer(),
+                      ],),),
                 ],
               ),
             ),

@@ -25,6 +25,7 @@ import 'package:admin/data/models/models.dart' as model;
 import 'package:routemaster/routemaster.dart';
 import '../../../data/models/news.dart';
 import '../../../data/models/stats.dart';
+import '../widgets/freeze_header.dart';
 
 final landingScaffold = GlobalKey<ScaffoldState>();
 
@@ -98,57 +99,83 @@ class _LandingPageState extends ConsumerState<LandingPage> {
       body: _viewModel.isLoading
           ? const Center(child: CircularProgressIndicator.adaptive())
           : ScreenTypeLayout.builder(
-              mobile: (context) => ListView(
-                children: [
-                  const Header(mobile: true),
-                  Visibility(
-                    visible: _viewModel.getBanners.isNotEmpty,
-                    child: BannerSlides(
-                      mobile: true,
-                      height: 250,
-                      bannerDetails: _viewModel.getBanners,
-                    ),
+              mobile: (context) => CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    delegate:
+                        CustomSliverPersistentHeaderDelegate(mobile: true),
+                    floating: false,
+                    pinned: true,
                   ),
-                  Services(height: 0, category: _viewModel.getCategories),
-                  _frequentlyUsedServices(300, mobile: true),
-                  _newsAndUpdates(1000),
-                  Center(child: _Statss(300, mobile: true)),
-                  Visibility(
-                    visible: _viewModel.getReviews.isNotEmpty,
-                    child: CustomerReviewSlides(
-                        customerReviews: _viewModel.getReviews,
-                        height: MediaQuery.of(context).size.width,
-                        mobile: true),
+                  SliverList(
+                    delegate: SliverChildListDelegate([
+                      Visibility(
+                        visible: _viewModel.getBanners.isNotEmpty,
+                        child: BannerSlides(
+                          mobile: true,
+                          height: 250,
+                          bannerDetails: _viewModel.getBanners,
+                        ),
+                      ),
+                      Services(height: 0, category: _viewModel.getCategories),
+                      _frequentlyUsedServices(300, mobile: true),
+                      _newsAndUpdates(1000),
+                      Center(child: _Statss(300, mobile: true)),
+                      Visibility(
+                        visible: _viewModel.getReviews.isNotEmpty,
+                        child: CustomerReviewSlides(
+                            customerReviews: _viewModel.getReviews,
+                            height: MediaQuery.of(context).size.width,
+                            mobile: true),
+                      ),
+                      const ContactUs(height: 250, mobile: true),
+                      ContactUsCard(
+                          contactDetails: _viewModel.getContacts, height: 1000),
+                      const Footer(),
+                    ]),
                   ),
-                  const ContactUs(height: 250, mobile: true),
-                  ContactUsCard(
-                      contactDetails: _viewModel.getContacts, height: 1000),
-                  const Footer(),
                 ],
               ),
-              desktop: (context) => ListView(
-                children: [
-                  const Header(mobile: false),
-                  Visibility(
-                    visible: _viewModel.getBanners.isNotEmpty,
-                    child: BannerSlides(
-                      mobile: false,
-                      height: 700,
-                      bannerDetails: _viewModel.getBanners,
+              desktop: (context) => CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    delegate:
+                        CustomSliverPersistentHeaderDelegate(mobile: false),
+                    floating: false,
+                    pinned: true,
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        Visibility(
+                          visible: _viewModel.getBanners.isNotEmpty,
+                          child: BannerSlides(
+                            mobile: false,
+                            height: 700,
+                            bannerDetails: _viewModel.getBanners,
+                          ),
+                        ),
+                        Services(
+                            height: 700, category: _viewModel.getCategories),
+                        _frequentlyUsedServices(350),
+                        _newsAndUpdates(800),
+                        Center(child: _Statss(300)),
+                        Visibility(
+                          visible: _viewModel.getReviews.isNotEmpty,
+                          child: CustomerReviewSlides(
+                            customerReviews: _viewModel.getReviews,
+                            height: 700,
+                          ),
+                        ),
+                        const ContactUs(height: 250),
+                        ContactUsCard(
+                          contactDetails: _viewModel.getContacts,
+                          height: 250,
+                        ),
+                        const Footer(),
+                      ],
                     ),
                   ),
-                  Services(height: 700, category: _viewModel.getCategories),
-                  _frequentlyUsedServices(350),
-                  _newsAndUpdates(800),
-                  Center(child: _Statss(300)),
-                  Visibility(
-                      visible: _viewModel.getReviews.isNotEmpty,
-                      child: CustomerReviewSlides(
-                          customerReviews: _viewModel.getReviews, height: 700)),
-                  const ContactUs(height: 250),
-                  ContactUsCard(
-                      contactDetails: _viewModel.getContacts, height: 250),
-                  const Footer(),
                 ],
               ),
             ),

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import '../widgets/circular_arrow.dart';
+import '../widgets/freeze_header.dart';
 import '../widgets/news_tile.dart';
 
 final landingScaffold = GlobalKey<ScaffoldState>();
@@ -48,9 +49,16 @@ class _ShowNewsState extends ConsumerState<ShowNews> {
       body: _viewModel.isLoading
           ? const Center(child: CircularProgressIndicator.adaptive())
           : ScreenTypeLayout.builder(
-              mobile: (context) => ListView(
-                children: [
-                  const Header(mobile: true),
+              mobile: (context) => CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    delegate:
+                        CustomSliverPersistentHeaderDelegate(mobile: true),
+                    floating: false,
+                    pinned: true,
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate([
                   // Visibility(
                   //   visible: _viewModel.getBanners.isNotEmpty,
                   //   child: BannerSlides(
@@ -64,11 +72,20 @@ class _ShowNewsState extends ConsumerState<ShowNews> {
 
                   // const ContactUs(height: 250, mobile: true),
                   const Footer(),
+                    ],),),
                 ],
               ),
-              desktop: (context) => ListView(
-                children: [
-                  const Header(mobile: false),
+              desktop: (context) => CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    delegate:
+                        CustomSliverPersistentHeaderDelegate(mobile: false),
+                    floating: false,
+                    pinned: true,
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
                   // Visibility(
                   //   visible: _viewModel.getBanners.isNotEmpty,
                   //   child: BannerSlides(
@@ -84,6 +101,7 @@ class _ShowNewsState extends ConsumerState<ShowNews> {
                   // ContactUsCard(
                   //     contactDetails: _viewModel.getContacts, height: 250),
                   const Footer(),
+                      ],),),
                 ],
               ),
             ),

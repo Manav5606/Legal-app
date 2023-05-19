@@ -21,6 +21,7 @@ import 'package:responsive_builder/responsive_builder.dart';
 import 'package:routemaster/routemaster.dart';
 
 import '../../successfull_order/successfull_order.dart';
+import '../widgets/freeze_header.dart';
 
 class ServiceInfoPage extends ConsumerStatefulWidget {
   static const String routeName = "/serviceInfo";
@@ -83,20 +84,37 @@ class _ServiceInfoPageState extends ConsumerState<ServiceInfoPage> {
       body: _viewModel.isLoading || _viewModel.selectedService == null
           ? const Center(child: CircularProgressIndicator.adaptive())
           : ScreenTypeLayout.builder(
-              mobile: (context) => ListView(
-                children: const [
-                  Header(mobile: true),
+              mobile: (context) => CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    delegate:
+                        CustomSliverPersistentHeaderDelegate(mobile: true),
+                    floating: false,
+                    pinned: true,
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate([
                   ServiceInfo(mobile: true),
                   ContactUs(height: 250, mobile: true),
                   Footer(),
                 ],
+                    ),),],
               ),
-              desktop: (context) => ListView(
-                children: const [
-                  Header(mobile: false),
+              desktop: (context) => CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    delegate:
+                        CustomSliverPersistentHeaderDelegate(mobile: false),
+                    floating: false,
+                    pinned: true,
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
                   ServiceInfo(),
                   ContactUs(height: 250),
                   Footer(),
+                      ],),),
                 ],
               ),
             ),

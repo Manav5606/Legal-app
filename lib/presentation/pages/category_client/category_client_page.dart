@@ -14,6 +14,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../widgets/freeze_header.dart';
+
 class CategoryClientPage extends ConsumerStatefulWidget {
   static const String routeName = "/categoryClient";
   final String categoryId;
@@ -78,17 +80,33 @@ class _CategoryClientPageState extends ConsumerState<CategoryClientPage> {
       body: _viewModel.isLoading || _viewModel.selectedCategory == null
           ? const Center(child: CircularProgressIndicator.adaptive())
           : ScreenTypeLayout.builder(
-              mobile: (context) => ListView(
-                children: const [
-                  Header(mobile: true),
+              mobile: (context) => CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    delegate:
+                        CustomSliverPersistentHeaderDelegate(mobile: true),
+                    floating: false,
+                    pinned: true,
+                  ),
+                    SliverList(
+                    delegate: SliverChildListDelegate([
                   CategoryContainer(mobile: true),
                   ContactUs(height: 250, mobile: true),
                   Footer(),
+                    ],),)
                 ],
               ),
-              desktop: (context) => ListView(
-                children: [
-                  const Header(mobile: false),
+              desktop: (context) => CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    delegate:
+                        CustomSliverPersistentHeaderDelegate(mobile: false),
+                    floating: false,
+                    pinned: true,
+                  ),
+                   SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
                   Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: MediaQuery.of(context).size.width * 0.2,
@@ -99,6 +117,7 @@ class _CategoryClientPageState extends ConsumerState<CategoryClientPage> {
                       contactDetails: _viewModel.getContacts,
                       height: MediaQuery.of(context).size.height * 0.4),
                   const Footer(),
+                      ],),),
                 ],
               ),
             ),

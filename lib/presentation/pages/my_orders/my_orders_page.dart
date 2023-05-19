@@ -15,6 +15,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../widgets/freeze_header.dart';
+
 class MyOrdersPage extends ConsumerStatefulWidget {
   static const String routeName = "/myOrders";
   const MyOrdersPage({super.key});
@@ -70,21 +72,38 @@ class _MyOrdersPageState extends ConsumerState<MyOrdersPage> {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       body: ScreenTypeLayout.builder(
-        mobile: (context) => ListView(
-          children: const [
-            Header(mobile: true),
+        mobile: (context) => CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    delegate:
+                        CustomSliverPersistentHeaderDelegate(mobile: true),
+                    floating: false,
+                    pinned: true,
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate([
             MyOrdersList(),
             ContactUs(height: 250, mobile: true),
             Footer(),
+                    ],),),
           ],
         ),
-        desktop: (context) => ListView(
-          children: [
-            const Header(mobile: false),
+        desktop: (context) => CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    delegate:
+                        CustomSliverPersistentHeaderDelegate(mobile: false),
+                    floating: false,
+                    pinned: true,
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
             const MyOrdersList(),
             const ContactUs(height: 250),
             ContactUsCard(contactDetails: _viewModel.getContacts, height: 300),
             const Footer(),
+                      ],),),
           ],
         ),
       ),

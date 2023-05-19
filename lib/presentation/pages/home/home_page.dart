@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/provider.dart';
 import '../../../data/models/user.dart';
+import '../widgets/freeze_header.dart';
 import 'tabs/dashboard/dashboard_view.dart';
 import 'tabs/inbox/inbox_view.dart';
 import 'tabs/notification/notification_view.dart';
@@ -42,61 +43,73 @@ class _HomePageState extends ConsumerState<HomePage>
     ref.watch(HomeViewModel.provider);
     return Scaffold(
         backgroundColor: AppColors.whiteColor,
-        body: ListView(
-          children: [
-            const Header(mobile: false),
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: AppColors.lightBlueColor,
-              ),
-              child: Row(
-                children: [
-                  const Expanded(flex: 1, child: SizedBox()),
-                  Expanded(
-                    flex: 3,
-                    child: TabBar(
-                        controller: _tabController,
-                        indicatorColor: AppColors.blueColor,
-                        onTap: (value) {
-                          _viewModel.updateTabView(true);
-                          _tabController.animateTo(value);
-                        },
-                        tabs: user?.userType.name != UserType.admin.name
-                            ? ["Inbox", "Notification"]
-                                .map((e) => Text(e,
-                                    style: FontStyles.font24Semibold
-                                        .copyWith(color: AppColors.blueColor)))
-                                .toList()
-                            : ["Dashboard", "Inbox", "Notification"]
-                                .map((e) => Text(e,
-                                    style: FontStyles.font24Semibold
-                                        .copyWith(color: AppColors.blueColor)))
-                                .toList()),
+        body: CustomScrollView(
+          slivers: [
+            SliverPersistentHeader(
+              delegate: CustomSliverPersistentHeaderDelegate(mobile: false),
+              floating: false,
+              pinned: true,
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: AppColors.lightBlueColor,
+                    ),
+                    child: Row(
+                      children: [
+                        const Expanded(flex: 1, child: SizedBox()),
+                        Expanded(
+                          flex: 3,
+                          child: TabBar(
+                              controller: _tabController,
+                              indicatorColor: AppColors.blueColor,
+                              onTap: (value) {
+                                _viewModel.updateTabView(true);
+                                _tabController.animateTo(value);
+                              },
+                              tabs: user?.userType.name != UserType.admin.name
+                                  ? ["Inbox", "Notification"]
+                                      .map((e) => Text(e,
+                                          style: FontStyles.font24Semibold
+                                              .copyWith(
+                                                  color: AppColors.blueColor)))
+                                      .toList()
+                                  : ["Dashboard", "Inbox", "Notification"]
+                                      .map((e) => Text(e,
+                                          style: FontStyles.font24Semibold
+                                              .copyWith(
+                                                  color: AppColors.blueColor)))
+                                      .toList()),
+                        ),
+                        const Expanded(flex: 1, child: SizedBox()),
+                      ],
+                    ),
                   ),
-                  const Expanded(flex: 1, child: SizedBox()),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.9,
+                    child: _viewModel.showTabView
+                        ? TabBarView(
+                            controller: _tabController,
+                            children: user?.userType.name != UserType.admin.name
+                                ? const [
+                                    // DashboardTab(),
+                                    InboxTab(),
+                                    NotificationTab(),
+                                  ]
+                                : const [
+                                    DashboardTab(),
+                                    InboxTab(),
+                                    NotificationTab(),
+                                  ])
+                        : _viewModel.otherView,
+                  ),
+                  const Footer(),
                 ],
               ),
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.9,
-              child: _viewModel.showTabView
-                  ? TabBarView(
-                      controller: _tabController,
-                      children: user?.userType.name != UserType.admin.name
-                          ? const [
-                              // DashboardTab(),
-                              InboxTab(),
-                              NotificationTab(),
-                            ]
-                          : const [
-                              DashboardTab(),
-                              InboxTab(),
-                              NotificationTab(),
-                            ])
-                  : _viewModel.otherView,
-            ),
-            const Footer(),
           ],
         ));
   }

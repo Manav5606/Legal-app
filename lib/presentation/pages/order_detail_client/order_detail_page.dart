@@ -19,6 +19,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import '../widgets/freeze_header.dart';
+
 class OrderDetailPage extends ConsumerStatefulWidget {
   static const String routeName = "/order_detail_page";
   const OrderDetailPage({super.key, required this.orderID});
@@ -51,20 +53,37 @@ class _OrderDetailPageState extends ConsumerState<OrderDetailPage> {
       body: _viewModel.isLoading || _viewModel.order == null
           ? const Center(child: CircularProgressIndicator.adaptive())
           : ScreenTypeLayout.builder(
-              mobile: (context) => ListView(
-                children: [
-                  const Header(mobile: true),
+              mobile: (context) => CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    delegate:
+                        CustomSliverPersistentHeaderDelegate(mobile: true),
+                    floating: false,
+                    pinned: true,
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate([
                   _orderDetails(mobile: true),
                   const ContactUs(height: 250, mobile: true),
                   const Footer(),
                 ],
+                    ),),],
               ),
-              desktop: (context) => ListView(
-                children: [
-                  const Header(mobile: false),
+              desktop: (context) => CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    delegate:
+                        CustomSliverPersistentHeaderDelegate(mobile: false),
+                    floating: false,
+                    pinned: true,
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
                   _orderDetails(),
                   const ContactUs(height: 250),
                   const Footer(),
+                      ],),),
                 ],
               ),
             ),
