@@ -87,8 +87,8 @@ class ServiceInfoPageViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> createNotification(
-      String userId, String meesage, String type, String orderId,String serviceId) async {
+  Future<void> createNotification(String userId, String meesage, String type,
+      String orderId, String serviceId) async {
     toggleLoadingOn(true);
     final user = _ref.read(AppState.auth).user;
     if (user == null) {
@@ -168,23 +168,24 @@ class ServiceInfoPageViewModel extends BaseViewModel {
       serviceId: selectedService!.id!,
     );
     final res = await _databaseRepositoryImpl.createTransaction(
-        transaction: transaction);
+      transaction: transaction,
+    );
     return await res.fold((l) {
       Messenger.showSnackbar(l.message);
       toggleLoadingOn(false);
       return null;
     }, (r) async {
-      // TODO orderId is received from RazorPay
       final String orderId = DateTime.now().millisecondsSinceEpoch.toString();
-      await createOrderOnServer(
+      final String orderItemId = await createOrderOnServer(
         orderId: orderId,
         transactionId: r.id!,
       );
-      return orderId;
+      
+      return orderItemId; // Return the order ID instead of null
     });
   }
 
-  Future<void> createOrderOnServer({
+  Future<String> createOrderOnServer({
     required String orderId,
     required String transactionId,
   }) async {
@@ -192,11 +193,11 @@ class ServiceInfoPageViewModel extends BaseViewModel {
     final user = _ref.read(AppState.auth).user;
     if (user == null) {
       Messenger.showSnackbar("User is not authenticated");
-      return;
+      // return null;
     }
     final Order order = Order(
       id: orderId,
-      clientID: user.id!,
+      clientID: user!.id!,
       status: OrderStatus.created,
       vendorID: null,
       serviceID: selectedService!.id!,
@@ -204,14 +205,86 @@ class ServiceInfoPageViewModel extends BaseViewModel {
       transactionID: transactionId,
     );
     final res = await _databaseRepositoryImpl.createOrder(order: order);
-    await res.fold((l) {
+    return await res.fold((l) {
       Messenger.showSnackbar(l.message);
       toggleLoadingOn(false);
+      return null!;
     }, (r) async {
       await createNotification(
-          user.id!, user.name, NotificationType.private.name, r.id!,r.serviceID!);
+        user.id!,
+        user.name,
+        NotificationType.private.name,
+        r.id!,
+        r.serviceID!,
+      );
       Messenger.showSnackbar("Order Purchased and Created ✅");
       toggleLoadingOn(false);
+      return r.id!; // Return the orderId instead of null
     });
   }
+
+  // Future<String?> createTransaction(
+  //     {required Map<String, dynamic> rpData}) async {
+  //   toggleLoadingOn(true);
+  //   final user = _ref.read(AppState.auth).user;
+  //   if (user == null) {
+  //     Messenger.showSnackbar("User is not authenticated");
+  //     return null;
+  //   }
+  //   final Transaction transaction = Transaction(
+  //     userID: user.id!,
+  //     amount: (selectedService!.ourPrice!) * 100,
+  //     createdAt: DateTime.now().millisecondsSinceEpoch,
+  //     successDetails: rpData,
+  //     status: TransactionStatus.success,
+  //     serviceId: selectedService!.id!,
+  //   );
+  //   final res = await _databaseRepositoryImpl.createTransaction(
+  //       transaction: transaction);
+  //   return await res.fold((l) {
+  //     Messenger.showSnackbar(l.message);
+  //     toggleLoadingOn(false);
+  //     return null;
+  //   }, (r) async {
+  //     // TODO orderId is received from RazorPay
+  //     final String orderId = DateTime.now().millisecondsSinceEpoch.toString();
+  //     final orderDetailId = await createOrderOnServer(
+  //       orderId: orderId,
+  //       transactionId: r.id!,
+  //     );
+  //     print(orderDetailId);
+  //     return orderDetailId;
+  //   });
+  // }
+
+  // Future<String?> createOrderOnServer({
+  //   required String orderId,
+  //   required String transactionId,
+  // }) async {
+  //   toggleLoadingOn(true);
+  //   final user = _ref.read(AppState.auth).user;
+  //   if (user == null) {
+  //     Messenger.showSnackbar("User is not authenticated");
+  //   }
+  //   final Order order = Order(
+  //     id: orderId,
+  //     clientID: user!.id!,
+  //     status: OrderStatus.created,
+  //     vendorID: null,
+  //     serviceID: selectedService!.id!,
+  //     orderServiceRequest: getRequiredDataFields,
+  //     transactionID: transactionId,
+  //   );
+  //   final res = await _databaseRepositoryImpl.createOrder(order: order);
+  //   await res.fold((l) {
+  //     Messenger.showSnackbar(l.message);
+  //     toggleLoadingOn(false);
+  //   }, (r) async {
+  //     await createNotification(user.id!, user.name,
+  //         NotificationType.private.name, r.id!, r.serviceID!);
+  //     Messenger.showSnackbar("Order Purchased and Created ✅");
+  //     toggleLoadingOn(false);
+  //     return r.id;
+  //   });
+  // }
 }

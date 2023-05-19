@@ -19,7 +19,7 @@ class Vendor {
   final int? landline;
   final int? mobile;
   final VendorDocuments? documents;
-
+    
   Vendor({
     this.id,
     this.userID,
@@ -39,6 +39,7 @@ class Vendor {
   });
 
   Vendor copyWith({
+    
     String? companyName,
     String? permanentAddress,
     WorkingHour? workingHour,
@@ -49,6 +50,7 @@ class Vendor {
     int? qualifiedYear,
     int? practiceExperience,
     String? expertServices,
+    String? userId,
     int? landline,
     int? mobile,
     VendorDocuments? documents,

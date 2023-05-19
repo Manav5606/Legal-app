@@ -14,18 +14,22 @@ abstract class DatabaseRepository {
       {required model.User user});
   Future<Either<model.AppError, model.Vendor>> updateVendor(
       {required model.Vendor vendor});
+  Future<Either<model.AppError, model.Vendor>> updateVendorrr(
+      {required model.Vendor vendor, required String id});
   Future<Either<model.AppError, bool>> deactivateUser(
       {required model.User user});
   Future<Either<model.AppError, bool>> activateUser({required model.User user});
   Future<Either<model.AppError, List<model.User>>> fetchUsersByType(
       UserType type);
   Future<Either<model.AppError, List<model.User>>> fetchAvailabelServiceVendors(
-      UserType type,List<String> myList);
+      UserType type, List<String> myList);
   Future<Either<model.AppError, model.Vendor>> fetchVendorByID(String uid);
   Future<Either<model.AppError, model.User>> fetchUserByID(String uid);
   Future<Either<model.AppError, List<model.Order>>> fetchOrders();
   Future<Either<model.AppError, model.Category>> createCategory(
       {required model.Category category});
+  Future<Either<model.AppError, model.Vendor>> createVendorr(
+      {required model.Vendor vendor});
   Future<Either<model.AppError, model.Category>> updateCategory(
       {required model.Category category});
   Future<Either<model.AppError, bool>> deactivateCategory(
@@ -56,7 +60,7 @@ abstract class DatabaseRepository {
       {required model.Transaction transaction});
   Future<Either<model.AppError, model.Notification>> createNotifications(
       {required model.Notification notifications});
-       Future<Either<model.AppError, List<model.Notification>>> fetchNotifications();
+  Future<Either<model.AppError, List<model.Notification>>> fetchNotifications();
   Future<Either<model.AppError, model.Order>> createOrder(
       {required model.Order order});
   Future<Either<model.AppError, model.Order>> updateOrder(
@@ -73,20 +77,19 @@ abstract class DatabaseRepository {
       {required model.News news});
   Future<Either<model.AppError, model.News>> updateNews(
       {required model.News news});
-  Future<Either<model.AppError, bool>> deleteNews(
-      {required model.News news});
+  Future<Either<model.AppError, bool>> deleteNews({required model.News news});
   Future<Either<model.AppError, List<model.News>>> getNews();
   Future<Either<model.AppError, model.Stats>> createStats(
       {required model.Stats stats});
   Future<Either<model.AppError, model.Stats>> updateStats(
-      {required model.Stats stats});  
+      {required model.Stats stats});
   Future<Either<model.AppError, bool>> deleteStats(
       {required model.Stats stats});
   Future<Either<model.AppError, List<model.Stats>>> getStats();
   Future<Either<model.AppError, model.NewsImage>> createNewsImage(
       {required model.NewsImage news});
   Future<Either<model.AppError, model.NewsImage>> updateNewsImage(
-      {required model.NewsImage news});  
+      {required model.NewsImage news});
   Future<Either<model.AppError, bool>> deleteNewsImage(
       {required model.NewsImage news});
   Future<Either<model.AppError, List<model.NewsImage>>> getNewsImage();

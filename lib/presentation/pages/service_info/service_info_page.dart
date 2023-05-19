@@ -238,12 +238,13 @@ class _ServiceInfoState extends ConsumerState<ServiceInfo> {
                       
                       final orderId =
                           await _viewModel.createTransaction(rpData: {});
+                            Routemaster.of(context).push(OrderDetailPage.routeName,
+                            queryParameters: {"orderID": orderId!});
                       if (orderId != null) {
-                        await Routemaster.of(context).popUntil((routeData) {
-                          return routeData.path == LandingPage.routeName;
-                        });
-                        Routemaster.of(context).push(OrderDetailPage.routeName,
-                            queryParameters: {"orderID": orderId});
+                        // await Routemaster.of(context).popUntil((routeData) {
+                        //   return routeData.path == LandingPage.routeName;
+                        // });
+                     
                         // showDialog(
                         //   context: context,
                         //   barrierDismissible: false,

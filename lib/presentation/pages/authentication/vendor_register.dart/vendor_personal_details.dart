@@ -9,7 +9,7 @@ import 'package:admin/core/constant/sizes.dart';
 import 'package:admin/core/enum/role.dart';
 import 'package:admin/presentation/pages/authentication/index.dart';
 import 'package:admin/presentation/pages/authentication/register/register_view_model.dart';
-import 'package:admin/presentation/pages/authentication/vendor_register.dart/vendor_personal_details.dart';
+import 'package:admin/presentation/pages/authentication/vendor_register.dart/vendor_qualifications.dart';
 import 'package:admin/presentation/pages/authentication/vendor_register.dart/vendor_register_view_model.dart';
 import 'package:admin/presentation/pages/home/home_page.dart';
 import 'package:admin/presentation/pages/landing/landing_page.dart';
@@ -25,17 +25,17 @@ import 'package:routemaster/routemaster.dart';
 
 import '../../../../core/enum/qualification.dart';
 
-class VendorRegisterPage extends ConsumerStatefulWidget {
-  static const String routeName = "/vendor_register";
+class VendorPersonalDetails extends ConsumerStatefulWidget {
+  static const String routeName = "/personal_details";
   final bool navigateBack;
-  const VendorRegisterPage({super.key, this.navigateBack = false});
+  const VendorPersonalDetails({super.key, this.navigateBack = false});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _VendorRegisterPageState();
+      _VendorPersonalDetailsState();
 }
 
-class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
+class _VendorPersonalDetailsState extends ConsumerState<VendorPersonalDetails> {
   late final VendorRegisterViewModel _viewModel;
   int _widgetIndex = 0;
   int _widgetDetialIndex = 0;
@@ -101,15 +101,8 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
               children: [
                 Expanded(
                   flex: 1,
-                  child: registerAuth(false),
+                  child: detailView1(false),
                 ),
-                // Visibility(
-                //   visible: _widgetIndex == 1,
-                //   child: Expanded(
-                //     flex: 1,
-                //     child: registerAuth1(false),
-                //   ),
-                // ),
                 // Visibility(
                 //   visible: _widgetIndex == 2,
                 //   child: Expanded(
@@ -127,7 +120,7 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
               ],
             );
           },
-          mobile: (context) => registerAuth(true),
+          mobile: (context) => detailView1(true),
         ),
       ),
     );
@@ -173,7 +166,7 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
                         child: CustomTextField(
                           label: "Name",
                           hintText: "Enter First Name",
-                          controller: _viewModel.numberController,
+                          controller: _viewModel.companyNameController,
                           readOnly: _viewModel.isLoading,
                           errorText: _viewModel.numberError,
                         ),
@@ -211,7 +204,7 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
                             child: CustomTextField(
                               label: "Name",
                               hintText: "Name Of Associate",
-                              controller: _viewModel.numberController,
+                              controller: _viewModel.associateAddressController,
                               readOnly: _viewModel.isLoading,
                               errorText: _viewModel.numberError,
                             ),
@@ -236,7 +229,7 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
                         child: CustomTextField(
                           label: "Address",
                           hintText: "Address Of Associate as per power bill",
-                          controller: _viewModel.numberController,
+                          controller: _viewModel.associateAddressController,
                           readOnly: _viewModel.isLoading,
                           errorText: _viewModel.numberError,
                         ),
@@ -260,7 +253,8 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
                           label: "Permanent Address",
                           hintText:
                               "Permanent Address Of Associate as per power bill",
-                          controller: _viewModel.numberController,
+                          controller:
+                              _viewModel.associatePermanentAddressController,
                           readOnly: _viewModel.isLoading,
                           errorText: _viewModel.numberError,
                         ),
@@ -293,7 +287,7 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
     );
   }
 
-  Widget detailView1() {
+  Widget detailView1(bool mobile) {
     return SizedBox(
       height: double.infinity,
       // width: double.infinity,
@@ -331,7 +325,7 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
                     child: CustomTextField(
                       label: "Name",
                       hintText: "Enter First Name",
-                      controller: _viewModel.numberController,
+                      controller: _viewModel.usernameController,
                       readOnly: _viewModel.isLoading,
                       errorText: _viewModel.numberError,
                     ),
@@ -369,7 +363,7 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
                         child: CustomTextField(
                           label: "Name",
                           hintText: "Name Of Associate",
-                          controller: _viewModel.numberController,
+                          controller: _viewModel.associateNameController,
                           readOnly: _viewModel.isLoading,
                           errorText: _viewModel.numberError,
                         ),
@@ -394,7 +388,7 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
                     child: CustomTextField(
                       label: "Address",
                       hintText: "Address Of Associate as per power bill",
-                      controller: _viewModel.numberController,
+                      controller: _viewModel.associateAddressController,
                       readOnly: _viewModel.isLoading,
                       errorText: _viewModel.numberError,
                     ),
@@ -418,7 +412,8 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
                       label: "Permanent Address",
                       hintText:
                           "Permanent Address Of Associate as per power bill",
-                      controller: _viewModel.numberController,
+                      controller:
+                          _viewModel.associatePermanentAddressController,
                       readOnly: _viewModel.isLoading,
                       errorText: _viewModel.numberError,
                     ),
@@ -432,8 +427,20 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
             CTAButton(
               title: "Next",
               onTap: () {
-                print(_widgetDetialIndex);
-                _widgetDetialIndex = _widgetDetialIndex + 1;
+                print(_viewModel.usernameController.text);
+                          print(_viewModel.accountNumberController.text);
+                          print(_viewModel.ifscController.text);
+                          print(_viewModel.mobileController.text);
+                          print(_viewModel.landlineController.text);
+                          print(_viewModel.endWorkingHours);
+                          print(_viewModel.startWorkingHours);
+                          print(_viewModel.qualifiedYearController.text);
+                          print(_viewModel.practicingExperienceController.text);
+                          print(_viewModel.expertServicesController.text);
+                Routemaster.of(context).push(
+                  VendorQualificationsDetails.routeName,
+                  queryParameters: {"navigateBack": "true"},
+                );
               },
             ),
           ],
@@ -705,7 +712,15 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
   Widget registerAuth(bool mobile) {
     return Container(
       height: double.infinity,
-      color: AppColors.darkBlueColor,
+      decoration: BoxDecoration(
+        color: AppColors.darkBlueColor,
+        borderRadius: mobile
+            ? null
+            : const BorderRadius.only(
+                topRight: Radius.circular(24),
+                bottomRight: Radius.circular(24),
+              ),
+      ),
       child: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -721,7 +736,7 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
                   children: [
                     SvgPicture.asset(Assets.iconsTwentyseven, height: 160),
                     const SizedBox(height: 24),
-                    Text("Vendor Sign Up",
+                    Text("Login/Sign Up",
                         style: FontStyles.font20Semibold
                             .copyWith(color: AppColors.whiteColor)),
                   ],
@@ -791,11 +806,9 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
                         title: "Register",
                         loading: _viewModel.isLoading,
                         onTap: () {
-                          
-                          Routemaster.of(context).push(
-                            VendorPersonalDetails.routeName,
-                            queryParameters: {"navigateBack": "true"},
-                          );
+                          setState(() {
+                            _widgetIndex = 1;
+                          });
                         }),
                     // const SizedBox(height: 24),
                     // Row(
@@ -899,7 +912,9 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
                     CTAButton(
                         title: "Send Otp",
                         loading: _viewModel.isLoading,
-                        onTap: () {}),
+                        onTap: () {
+                          _widgetIndex = (_widgetIndex + 1) % 3;
+                        }),
                   ],
                 ),
                 const SizedBox(height: 12),

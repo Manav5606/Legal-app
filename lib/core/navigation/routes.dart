@@ -1,4 +1,8 @@
+import 'package:admin/data/models/vendor.dart';
 import 'package:admin/presentation/pages/authentication/index.dart';
+import 'package:admin/presentation/pages/authentication/vendor_register.dart/vendor_documnets.dart';
+import 'package:admin/presentation/pages/authentication/vendor_register.dart/vendor_personal_details.dart';
+import 'package:admin/presentation/pages/authentication/vendor_register.dart/vendor_qualifications.dart';
 import 'package:admin/presentation/pages/authentication/vendor_register.dart/vendor_register.dart';
 import 'package:admin/presentation/pages/category_client/category_client_page.dart';
 import 'package:admin/presentation/pages/home/home_page.dart';
@@ -24,6 +28,10 @@ abstract class AppRoutes {
   static String get chatView => ChatView.routeName;
   static String get showNews => ShowNews.routeName;
   static String get detailNews => NewsDetail.routeName;
+  static String get vendorPersonalDetails => VendorPersonalDetails.routeName;
+  static String get vendorQualification => VendorQualificationsDetails.routeName;
+  static String get vendorDocumentsDetails => VendorDocumentsDetails.routeName;
+ 
 }
 
 final routeLoggedOut = RouteMap(
@@ -42,7 +50,19 @@ final routeLoggedOut = RouteMap(
     VendorRegisterPage.routeName: (data) => MaterialPage(
         child: VendorRegisterPage(
             navigateBack:
-                data.queryParameters['navigateBack'] == "true" ? true : false)),
+                data.queryParameters['navigateBack'] == "false" ? false : true)),
+    VendorPersonalDetails.routeName: (data) => MaterialPage(
+        child: VendorPersonalDetails(
+            navigateBack:
+                data.queryParameters['navigateBack'] == "false" ? false : true)),
+    VendorQualificationsDetails.routeName: (data) => MaterialPage(
+        child: VendorQualificationsDetails(
+            navigateBack:
+                data.queryParameters['navigateBack'] == "false" ? false : true)),
+    VendorDocumentsDetails.routeName: (data) => MaterialPage(
+        child: VendorDocumentsDetails(
+            navigateBack:
+                data.queryParameters['navigateBack'] == "false" ? false : true)),
     CategoryClientPage.routeName: (data) => MaterialPage(
         child: CategoryClientPage(
             categoryId: data.queryParameters['categoryId'] ?? "")),

@@ -9,6 +9,7 @@ import 'package:admin/core/constant/sizes.dart';
 import 'package:admin/core/enum/role.dart';
 import 'package:admin/presentation/pages/authentication/index.dart';
 import 'package:admin/presentation/pages/authentication/register/register_view_model.dart';
+import 'package:admin/presentation/pages/authentication/vendor_register.dart/vendor_documnets.dart';
 import 'package:admin/presentation/pages/authentication/vendor_register.dart/vendor_personal_details.dart';
 import 'package:admin/presentation/pages/authentication/vendor_register.dart/vendor_register_view_model.dart';
 import 'package:admin/presentation/pages/home/home_page.dart';
@@ -25,17 +26,18 @@ import 'package:routemaster/routemaster.dart';
 
 import '../../../../core/enum/qualification.dart';
 
-class VendorRegisterPage extends ConsumerStatefulWidget {
-  static const String routeName = "/vendor_register";
+class VendorQualificationsDetails extends ConsumerStatefulWidget {
+  static const String routeName = "/vendor_qualifications";
   final bool navigateBack;
-  const VendorRegisterPage({super.key, this.navigateBack = false});
+  const VendorQualificationsDetails({super.key, this.navigateBack = false});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _VendorRegisterPageState();
+      _VendorQualificationsDetailsState();
 }
 
-class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
+class _VendorQualificationsDetailsState
+    extends ConsumerState<VendorQualificationsDetails> {
   late final VendorRegisterViewModel _viewModel;
   int _widgetIndex = 0;
   int _widgetDetialIndex = 0;
@@ -101,15 +103,8 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
               children: [
                 Expanded(
                   flex: 1,
-                  child: registerAuth(false),
+                  child: detailView2(false),
                 ),
-                // Visibility(
-                //   visible: _widgetIndex == 1,
-                //   child: Expanded(
-                //     flex: 1,
-                //     child: registerAuth1(false),
-                //   ),
-                // ),
                 // Visibility(
                 //   visible: _widgetIndex == 2,
                 //   child: Expanded(
@@ -127,7 +122,7 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
               ],
             );
           },
-          mobile: (context) => registerAuth(true),
+          mobile: (context) => detailView2(true),
         ),
       ),
     );
@@ -442,261 +437,628 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
     );
   }
 
-  Widget detailView2() {
+  Widget detailView2(bool mobile) {
     return SizedBox(
       height: double.infinity,
       // width: double.infinity,
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.04),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Eductaional Qualification",
-                    style: FontStyles.font18Semibold,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.1,
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width * 0.05),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // const SizedBox(height: 18),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Qualified"),
-                      DropdownMenu(
-                        initialSelection: university.name,
-                        dropdownMenuEntries: QualificationUniversity.values
-                            .map((e) => DropdownMenuEntry(
-                                value: e.name, label: e.title))
-                            .toList(),
-                        onSelected: (v) {
-                          if (v != null) {
-                            setState(() {
-                              university = QualificationUniversity.values
-                                  .firstWhere((element) => element.name == v);
-                            });
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        right: MediaQuery.of(context).size.width * 0.05),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Qualification University"),
-                        DropdownMenu(
-                          initialSelection: degree.name,
-                          dropdownMenuEntries: QualificationDegree.values
-                              .map((e) => DropdownMenuEntry(
-                                  value: e.name, label: e.title))
-                              .toList(),
-                          onSelected: (v) {
-                            if (v != null) {
-                              setState(() {
-                                degree = QualificationDegree.values
-                                    .firstWhere((element) => element.name == v);
-                              });
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.06,
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width * 0.05),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text("Years of Qualification"),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.02,
-                  ),
-                  DropdownMenu(
-                    initialSelection: years.name,
-                    dropdownMenuEntries: YearsQualification.values
-                        .map((e) =>
-                            DropdownMenuEntry(value: e.name, label: e.title))
-                        .toList(),
-                    onSelected: (v) {
-                      if (v != null) {
-                        setState(() {
-                          years = YearsQualification.values
-                              .firstWhere((element) => element.name == v);
-                        });
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.06,
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width * 0.05),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Text("Practice Experience"),
-                  CustomTextField(
-                    label: "Practice Experience",
-                    hintText: "Pease enter practice experience details",
-                    controller: _viewModel.numberController,
-                    readOnly: _viewModel.isLoading,
-                    errorText: _viewModel.numberError,
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                  CustomTextField(
-                    label: "Expert Services",
-                    hintText: "Pease enter expert service details",
-                    controller: _viewModel.numberController,
-                    readOnly: _viewModel.isLoading,
-                    errorText: _viewModel.numberError,
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                  CustomTextField(
-                    label: "Working Hours",
-                    hintText: "Pease enter working hours",
-                    controller: _viewModel.numberController,
-                    readOnly: _viewModel.isLoading,
-                    errorText: _viewModel.numberError,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.06,
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width * 0.05),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Column(
+        child: SizedBox(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.04),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text("Account Number"),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.02,
-                        ),
-                        CustomTextField(
-                          // label: "",
-                          hintText: "Please enter bank account number",
-                          controller: _viewModel.numberController,
-                          readOnly: _viewModel.isLoading,
-                          errorText: _viewModel.numberError,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.04,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text("IFSC Number"),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.02,
-                        ),
-                        CustomTextField(
-                          // label: "",
-                          hintText: "Please enter ifsc number",
-                          controller: _viewModel.numberController,
-                          readOnly: _viewModel.isLoading,
-                          errorText: _viewModel.numberError,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.04,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text("Landline Number"),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.02,
-                        ),
-                        CustomTextField(
-                          // label: "",
-                          hintText: "Please enter landline number",
-                          controller: _viewModel.numberController,
-                          readOnly: _viewModel.isLoading,
-                          errorText: _viewModel.numberError,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.04,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text("Mobile Number"),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.02,
-                        ),
-                        CustomTextField(
-                          // label: "",
-                          hintText: "Please enter mobile number",
-                          controller: _viewModel.numberController,
-                          readOnly: _viewModel.isLoading,
-                          errorText: _viewModel.numberError,
-                        ),
-                      ],
+                    Text(
+                      "Eductaional Qualification",
+                      style: FontStyles.font18Semibold,
                     ),
                   ],
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            CTAButton(
-              title: "Next",
-              onTap: () {
-                _showNewWidget = !_showNewWidget;
-              },
-            ),
-          ],
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.1,
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05),
+                child: !mobile
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // const SizedBox(height: 18),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text("Qualified"),
+                              DropdownMenu(
+                                initialSelection: university.name,
+                                dropdownMenuEntries: QualificationDegree.values
+                                    .map((e) => DropdownMenuEntry(
+                                        value: e.name, label: e.title))
+                                    .toList(),
+                                onSelected: (v) {
+                                  if (v != null) {
+                                    setState(() {
+                                      degree = QualificationDegree.values
+                                          .firstWhere(
+                                              (element) => element.name == v);
+                                      _viewModel
+                                          .addQualificationDegree(degree.name);
+                                    });
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                right:
+                                    MediaQuery.of(context).size.width * 0.05),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text("Qualification University"),
+                                DropdownMenu(
+                                  initialSelection: degree.name,
+                                  dropdownMenuEntries: QualificationUniversity
+                                      .values
+                                      .map((e) => DropdownMenuEntry(
+                                          value: e.name, label: e.title))
+                                      .toList(),
+                                  onSelected: (v) {
+                                    if (v != null) {
+                                      setState(() {
+                                        university = QualificationUniversity
+                                            .values
+                                            .firstWhere(
+                                                (element) => element.name == v);
+                                        _viewModel.addQualificationUniversity(
+                                            university.name);
+                                      });
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // const SizedBox(height: 18),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Align(
+                                  alignment: Alignment.center,
+                                  child: const Text(
+                                    "Qualified      ",
+                                  )),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.02,
+                              ),
+                              DropdownMenu(
+                                initialSelection: university.name,
+                                dropdownMenuEntries: QualificationDegree.values
+                                    .map((e) => DropdownMenuEntry(
+                                        value: e.name, label: e.title))
+                                    .toList(),
+                                onSelected: (v) {
+                                  if (v != null) {
+                                    setState(() {
+                                      degree = QualificationDegree.values
+                                          .firstWhere(
+                                              (element) => element.name == v);
+                                      _viewModel
+                                          .addQualificationDegree(degree.name);
+                                    });
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                right:
+                                    MediaQuery.of(context).size.width * 0.05),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Text("Qualification\nUniversity"),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.02,
+                                ),
+                                DropdownMenu(
+                                  initialSelection: degree.name,
+                                  dropdownMenuEntries: QualificationUniversity
+                                      .values
+                                      .map((e) => DropdownMenuEntry(
+                                          value: e.name, label: e.title))
+                                      .toList(),
+                                  onSelected: (v) {
+                                    if (v != null) {
+                                      setState(() {
+                                        university = QualificationUniversity
+                                            .values
+                                            .firstWhere(
+                                                (element) => element.name == v);
+                                        _viewModel.addQualificationUniversity(
+                                            university.name);
+                                      });
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.06,
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("Years of     \nQualification"),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.02,
+                    ),
+                    DropdownMenu(
+                      initialSelection: years.name,
+                      dropdownMenuEntries: YearsQualification.values
+                          .map((e) =>
+                              DropdownMenuEntry(value: e.name, label: e.title))
+                          .toList(),
+                      onSelected: (v) {
+                        if (v != null) {
+                          setState(() {
+                            years = YearsQualification.values
+                                .firstWhere((element) => element.name == v);
+                            _viewModel.qualifiedYearController.text =
+                                years.name;
+                          });
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.06,
+              ),
+              !mobile
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                          left: MediaQuery.of(context).size.width * 0.05),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: 11.0,
+                                ),
+                                child: Text("Practice Experience"),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 8.0,
+                                ),
+                                child: CustomTextField(
+                                  label: "",
+                                  hintText:
+                                      "Pease enter practice experience details",
+                                  controller:
+                                      _viewModel.practicingExperienceController,
+                                  readOnly: _viewModel.isLoading,
+                                  errorText:
+                                      _viewModel.practicingExperienceError,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 15.0,
+                                ),
+                                child: Text(
+                                  "Expert Services         ",
+                                ),
+                              ),
+                              CustomTextField(
+                                label: "",
+                                hintText: "Pease enter expert service details",
+                                controller: _viewModel.expertServicesController,
+                                readOnly: _viewModel.isLoading,
+                                errorText: _viewModel.numberError,
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
+                          InkWell(
+                            onTap: () async {
+                              TimeOfDay? pickedTime = await showTimePicker(
+                                initialTime: TimeOfDay.now(),
+                                context: context,
+                              );
+                              if (pickedTime != null) {
+                                _viewModel.setStartingHour(pickedTime);
+                              }
+                            },
+                            child: Row(
+                              children: [
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        top: 18.0,
+                                      ),
+                                      child: Text("Working hours           "),
+                                    ),
+                                  ],
+                                ),
+                                CustomTextField(
+                                  label: "",
+                                  hintText: "Pease enter working hours",
+                                  controller:
+                                      _viewModel.startingWorkHourController,
+                                  readOnly: _viewModel.isLoading,
+                                  errorText: _viewModel.numberError,
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
+                          InkWell(
+                            onTap: () async {
+                              TimeOfDay? pickedTime = await showTimePicker(
+                                initialTime: TimeOfDay.now(),
+                                context: context,
+                              );
+                              if (pickedTime != null) {
+                                _viewModel.setEndingHour(pickedTime);
+                              }
+                            },
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 18.0,
+                                  ),
+                                  child: Text("Ending Hours            "),
+                                ),
+                                CustomTextField(
+                                  label: "",
+                                  hintText: "Pease enter ending hours",
+                                  controller:
+                                      _viewModel.endingWorkHourController,
+                                  readOnly: _viewModel.isLoading,
+                                  errorText: _viewModel.numberError,
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.04),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: 11.0,
+                                ),
+                                child: Text("Account Number   "),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 8.0,
+                                ),
+                                child: CustomTextField(
+                                  // label: "",
+                                  hintText: "Please enter bank account number",
+                                  controller:
+                                      _viewModel.accountNumberController,
+                                  readOnly: _viewModel.isLoading,
+                                  errorText: _viewModel.accountNumberError,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.04),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: 11.0,
+                                ),
+                                child: Text("IFSC Number         "),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 8.0,
+                                ),
+                                child: CustomTextField(
+                                  // label: "",
+                                  hintText: "Please enter ifsc number",
+                                  controller: _viewModel.ifscController,
+                                  readOnly: _viewModel.isLoading,
+                                  errorText: _viewModel.ifscError,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.04),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: 11.0,
+                                ),
+                                child: Text("Landline Number  "),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 8.0,
+                                ),
+                                child: CustomTextField(
+                                  // label: "",
+                                  hintText: "Please enter landline number",
+                                  controller: _viewModel.landlineController,
+                                  readOnly: _viewModel.isLoading,
+                                  errorText: _viewModel.landlineError,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.04),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: 11.0,
+                                ),
+                                child: Text("Mobile Number     "),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 8.0,
+                                ),
+                                child: CustomTextField(
+                                  // label: "",
+                                  hintText: "Please enter mobile number",
+                                  controller: _viewModel.mobileController,
+                                  readOnly: _viewModel.isLoading,
+                                  errorText: _viewModel.mobileError,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  : Padding(
+                      padding: EdgeInsets.only(
+                          left: MediaQuery.of(context).size.width * 0.05),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Text("Practice Experience"),
+                          CustomTextField(
+                            label: "Practice Experience",
+                            hintText: "Pease enter practice experience details",
+                            controller:
+                                _viewModel.practicingExperienceController,
+                            readOnly: _viewModel.isLoading,
+                            errorText: _viewModel.practicingExperienceError,
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
+                          CustomTextField(
+                            label: "Expert Services",
+                            hintText: "Pease enter expert service details",
+                            controller: _viewModel.expertServicesController,
+                            readOnly: _viewModel.isLoading,
+                            errorText: _viewModel.numberError,
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
+                          InkWell(
+                            onTap: () async {
+                              TimeOfDay? pickedTime = await showTimePicker(
+                                initialTime: TimeOfDay.now(),
+                                context: context,
+                              );
+                              if (pickedTime != null) {
+                                _viewModel.setStartingHour(pickedTime);
+                              }
+                            },
+                            child: CustomTextField(
+                              label: "Working Hours",
+                              hintText: "Pease enter working hours",
+                              controller: _viewModel.startingWorkHourController,
+                              readOnly: _viewModel.isLoading,
+                              errorText: _viewModel.numberError,
+                            ),
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
+                          InkWell(
+                            onTap: () async {
+                              TimeOfDay? pickedTime = await showTimePicker(
+                                initialTime: TimeOfDay.now(),
+                                context: context,
+                              );
+                              if (pickedTime != null) {
+                                _viewModel.setEndingHour(pickedTime);
+                              }
+                            },
+                            child: CustomTextField(
+                              label: "Ending Hours",
+                              hintText: "Pease enter ending hours",
+                              controller: _viewModel.endingWorkHourController,
+                              readOnly: _viewModel.isLoading,
+                              errorText: _viewModel.numberError,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.06,
+              ),
+              Visibility(
+                visible: mobile,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.05),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Account Number"),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.02,
+                          ),
+                          CustomTextField(
+                            // label: "",
+                            hintText: "Please enter bank account number",
+                            controller: _viewModel.accountNumberController,
+                            readOnly: _viewModel.isLoading,
+                            errorText: _viewModel.numberError,
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.04,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("IFSC Number"),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.02,
+                          ),
+                          CustomTextField(
+                            // label: "",
+                            hintText: "Please enter ifsc number",
+                            controller: _viewModel.ifscController,
+                            readOnly: _viewModel.isLoading,
+                            errorText: _viewModel.numberError,
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.04,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Landline Number"),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.02,
+                          ),
+                          CustomTextField(
+                            // label: "",
+                            hintText: "Please enter landline number",
+                            controller: _viewModel.landlineController,
+                            readOnly: _viewModel.isLoading,
+                            errorText: _viewModel.numberError,
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.04,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Mobile Number"),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.02,
+                          ),
+                          CustomTextField(
+                            // label: "",
+                            hintText: "Please enter mobile number",
+                            controller: _viewModel.mobileController,
+                            readOnly: _viewModel.isLoading,
+                            errorText: _viewModel.numberError,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              CTAButton(
+                title: "Next",
+                onTap: () {
+                  Routemaster.of(context).push(
+                    VendorDocumentsDetails.routeName,
+                    queryParameters: {"navigateBack": "true"},
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -705,7 +1067,15 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
   Widget registerAuth(bool mobile) {
     return Container(
       height: double.infinity,
-      color: AppColors.darkBlueColor,
+      decoration: BoxDecoration(
+        color: AppColors.darkBlueColor,
+        borderRadius: mobile
+            ? null
+            : const BorderRadius.only(
+                topRight: Radius.circular(24),
+                bottomRight: Radius.circular(24),
+              ),
+      ),
       child: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -721,7 +1091,7 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
                   children: [
                     SvgPicture.asset(Assets.iconsTwentyseven, height: 160),
                     const SizedBox(height: 24),
-                    Text("Vendor Sign Up",
+                    Text("Login/Sign Up",
                         style: FontStyles.font20Semibold
                             .copyWith(color: AppColors.whiteColor)),
                   ],
@@ -791,7 +1161,6 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
                         title: "Register",
                         loading: _viewModel.isLoading,
                         onTap: () {
-                          
                           Routemaster.of(context).push(
                             VendorPersonalDetails.routeName,
                             queryParameters: {"navigateBack": "true"},
@@ -899,7 +1268,9 @@ class _VendorRegisterPageState extends ConsumerState<VendorRegisterPage> {
                     CTAButton(
                         title: "Send Otp",
                         loading: _viewModel.isLoading,
-                        onTap: () {}),
+                        onTap: () {
+                          _widgetIndex = (_widgetIndex + 1) % 3;
+                        }),
                   ],
                 ),
                 const SizedBox(height: 12),

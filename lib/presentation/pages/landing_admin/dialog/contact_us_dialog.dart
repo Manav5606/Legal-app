@@ -1,0 +1,221 @@
+import 'package:admin/core/constant/colors.dart';
+import 'package:admin/core/constant/fontstyles.dart';
+import 'package:admin/data/models/models.dart';
+import 'package:admin/presentation/pages/landing_admin/dialog/add_banner_view_model.dart';
+import 'package:admin/presentation/pages/landing_admin/edit_landing_view_model.dart';
+import 'package:admin/presentation/pages/widgets/dialog_textfield.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../widgets/custom_textfield.dart';
+
+class ContactUsDialog extends ConsumerStatefulWidget {
+  final BannerDetail? bannerDetail;
+  const ContactUsDialog({
+    super.key,
+    this.bannerDetail,
+  });
+
+  @override
+  ConsumerState<ContactUsDialog> createState() => _ContactUsDialogState();
+}
+
+class _ContactUsDialogState extends ConsumerState<ContactUsDialog> {
+  late final AddBannerViewModel _viewModel;
+  @override
+  void initState() {
+    super.initState();
+    _viewModel = ref.read(AddBannerViewModel.provider);
+    _viewModel.initBanner(widget.bannerDetail);
+    _viewModel.fetchCategories();
+  }
+
+  String? _selectedCategory;
+  bool? _isExpanded;
+  @override
+  Widget build(BuildContext context) {
+    ref.watch(AddBannerViewModel.provider);
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: SizedBox(
+        width: 600,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                  widget.bannerDetail == null
+                      ? "Add Banner"
+                      : "Update Existing Banner",
+                  style: FontStyles.font24Semibold
+                      .copyWith(color: AppColors.blueColor)),
+              Text(
+                  widget.bannerDetail == null
+                      ? "Add Banner "
+                      : "Update existing Banner",
+                  style: FontStyles.font12Regular
+                      .copyWith(color: AppColors.blueColor)),
+              const SizedBox(height: 12),
+              CustomTextField(
+                label: "SET NEW PASSWORD",
+                hintText: "Enter Password",
+                controller: _viewModel.descriptionController,
+                readOnly: _viewModel.isLoading,
+                backgroundColor: AppColors.whiteColor,
+                showBorder: true,
+                // obscureText: !_viewModel.showPassword,
+                errorText: _viewModel.descriptionError,
+                suffixIcon: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                ),
+              ),
+              const SizedBox(height: 12),
+              DialogTextField(
+                width: 600 * 0.8,
+                errorText: _viewModel.descriptionError,
+                label: "Description",
+                hintText: "Type here",
+                controller: _viewModel.descriptionController,
+                maxLines: 3,
+                maxLength: null,
+                keyboardType: TextInputType.multiline,
+              ),
+              const SizedBox(height: 12),
+              DialogTextField(
+                width: 600 * 0.8,
+                errorText: _viewModel.btnError,
+                label: "Button Name",
+                hintText: "Type here",
+                controller: _viewModel.btnController,
+              ),
+              const SizedBox(height: 12),
+              DialogTextField(
+                readOnly: true,
+                width: 600 * 0.8,
+                errorText: _viewModel.urlError,
+                label: "Url to Load",
+                hintText: "Type here",
+                controller: _viewModel.urlController,
+              ),
+              ExpansionTile(
+                title: Text(_selectedCategory == null
+                    ? "Select Service"
+                    : _selectedCategory.toString()),
+                onExpansionChanged: (value) {
+                  setState(() {
+                    _isExpanded = value;
+                  });
+                },
+                children: [
+                  ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: _viewModel.getCategories.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final category = _viewModel.getCategories[index];
+                        return ListTile(
+                          title: Text(category.name),
+                          selected: _selectedCategory == category.name,
+                          onTap: () {
+                            setState(() {
+                              _selectedCategory = category.name;
+                              _viewModel.urlController.text = category.id!;
+                            });
+                          },
+                        );
+                      }),
+                ],
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                  width: 600 * 0.8,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                          height: 200,
+                          width: 600 * 0.3,
+                          child: Center(
+                              child: _viewModel.imageLoading
+                                  ? const CircularProgressIndicator.adaptive()
+                                  : _viewModel.imageUrl == null
+                                      ? const Text("Add Image")
+                                      : Image.network(_viewModel.imageUrl!))),
+                      TextButton(
+                        onPressed: () async {
+                          final file = await _viewModel
+                              .pickFile(await FilePicker.platform.pickFiles());
+                          if (file != null) {
+                            await _viewModel.uploadImage(file: file);
+                          }
+                        },
+                        child: const Text("Upload new Image"),
+                      )
+                    ],
+                  )),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Visibility(
+                    visible: widget.bannerDetail != null,
+                    child: TextButton(
+                        onPressed: _viewModel.isLoading
+                            ? null
+                            : () async {
+                                await _viewModel
+                                    .deleteBanner(widget.bannerDetail!)
+                                    .then((value) => Navigator.pop(context));
+                                await ref
+                                    .read(EditLandingViewModel.provider)
+                                    .initBanner();
+                              },
+                        child: Text("Delete Banner",
+                            style: FontStyles.font12Regular
+                                .copyWith(color: AppColors.redColor))),
+                  ),
+                  TextButton(
+                      onPressed: _viewModel.isLoading
+                          ? null
+                          : () => Navigator.pop(context),
+                      child: Text("Back",
+                          style: FontStyles.font12Regular
+                              .copyWith(color: AppColors.blueColor))),
+                  ElevatedButton(
+                    onPressed: _viewModel.isLoading
+                        ? null
+                        : () async {
+                            await _viewModel
+                                .createBanner(
+                                    existingBanner: widget.bannerDetail)
+                                .then((value) async {
+                              if (value != null) {
+                                Navigator.pop(context);
+                                await ref
+                                    .read(EditLandingViewModel.provider)
+                                    .initBanner();
+                              }
+                            });
+                          },
+                    child: _viewModel.isLoading
+                        ? const CircularProgressIndicator.adaptive()
+                        : Text(
+                            widget.bannerDetail == null
+                                ? "Add Banner"
+                                : "Update Banner",
+                            style: FontStyles.font12Regular
+                                .copyWith(color: AppColors.whiteColor),
+                          ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

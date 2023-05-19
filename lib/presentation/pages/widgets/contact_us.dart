@@ -1,6 +1,7 @@
 import 'package:admin/core/constant/colors.dart';
 import 'package:admin/core/constant/fontstyles.dart';
 import 'package:admin/core/constant/resource.dart';
+import 'package:admin/presentation/pages/landing_admin/dialog/contact_us_dialog.dart';
 import 'package:admin/presentation/pages/widgets/cta_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -55,7 +56,19 @@ class ContactUs extends StatelessWidget {
                           color: AppColors.blueColor,
                           fontSize: mobile ? 12 : null)),
                   const SizedBox(height: 12),
-                  CTAButton(title: "Contact Us", onTap: () {}, radius: 50),
+                  CTAButton(
+                      title: "Contact Us",
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) => const Dialog(
+                            insetPadding: EdgeInsets.all(24),
+                            child: ContactUsDialog(),
+                          ),
+                        );
+                      },
+                      radius: 50),
                 ],
               ),
             ),
