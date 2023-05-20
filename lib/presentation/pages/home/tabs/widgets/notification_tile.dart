@@ -77,7 +77,7 @@ class NotificationTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(Sizes.s200.h),
         border: Border.all(color: AppColors.darkBlueColor),
       ),
-      child: ClipRRect(
+      child: ClipRRect( 
         borderRadius: BorderRadius.circular(Sizes.s200.sp),
         child: Image.network(
           url,

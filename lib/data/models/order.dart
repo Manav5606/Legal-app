@@ -11,6 +11,7 @@ class Order {
   final String? serviceID;
   final List<ServiceRequest>? orderServiceRequest;
   final String? transactionID;
+  final String? serviceName;
 
   Order({
     this.id,
@@ -21,6 +22,7 @@ class Order {
     this.serviceID,
     this.orderServiceRequest,
     this.transactionID,
+    this.serviceName,
   });
 
   factory Order.fromSnapshot(DocumentSnapshot documentSnapshot) {
@@ -42,6 +44,7 @@ class Order {
               .map((e) => ServiceRequest.fromData(e as Map<String, dynamic>))
               .toList(),
       transactionID: data['transaction_id'],
+      serviceName: data['serviceName'],
     );
   }
 
@@ -53,6 +56,7 @@ class Order {
         "order_service_request":
             orderServiceRequest?.map((e) => e.toOrderJson()).toList(),
         "transaction_id": transactionID,
+        "serviceName": serviceName,
         "created_at": createdAt ?? DateTime.now().millisecondsSinceEpoch,
       };
 }

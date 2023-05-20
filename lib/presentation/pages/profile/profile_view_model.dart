@@ -42,7 +42,7 @@ class ProfileViewModel extends BaseViewModel {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   VendorDocuments _documents = VendorDocuments();
-
+  
   final List<String> _qualificationDegree = [];
   final List<String> _qualificationUniversity = [];
 

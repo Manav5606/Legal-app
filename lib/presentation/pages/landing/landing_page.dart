@@ -130,7 +130,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                       ),
                       const ContactUs(height: 250, mobile: true),
                       ContactUsCard(
-                          contactDetails: _viewModel.getContacts, height: 1000),
+                          contactDetails: _viewModel.getContacts, height: 1010),
                       const Footer(),
                     ]),
                   ),

@@ -73,37 +73,41 @@ class _MyOrdersPageState extends ConsumerState<MyOrdersPage> {
       backgroundColor: AppColors.whiteColor,
       body: ScreenTypeLayout.builder(
         mobile: (context) => CustomScrollView(
-                slivers: [
-                  SliverPersistentHeader(
-                    delegate:
-                        CustomSliverPersistentHeaderDelegate(mobile: true),
-                    floating: false,
-                    pinned: true,
-                  ),
-                  SliverList(
-                    delegate: SliverChildListDelegate([
-            MyOrdersList(),
-            ContactUs(height: 250, mobile: true),
-            Footer(),
-                    ],),),
+          slivers: [
+            SliverPersistentHeader(
+              delegate: CustomSliverPersistentHeaderDelegate(mobile: true),
+              floating: false,
+              pinned: true,
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  MyOrdersList(),
+                  ContactUs(height: 250, mobile: true),
+                  Footer(),
+                ],
+              ),
+            ),
           ],
         ),
         desktop: (context) => CustomScrollView(
-                slivers: [
-                  SliverPersistentHeader(
-                    delegate:
-                        CustomSliverPersistentHeaderDelegate(mobile: false),
-                    floating: false,
-                    pinned: true,
-                  ),
-                  SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
-            const MyOrdersList(),
-            const ContactUs(height: 250),
-            ContactUsCard(contactDetails: _viewModel.getContacts, height: 300),
-            const Footer(),
-                      ],),),
+          slivers: [
+            SliverPersistentHeader(
+              delegate: CustomSliverPersistentHeaderDelegate(mobile: false),
+              floating: false,
+              pinned: true,
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  const MyOrdersList(),
+                  const ContactUs(height: 250),
+                  ContactUsCard(
+                      contactDetails: _viewModel.getContacts, height: 300),
+                  const Footer(),
+                ],
+              ),
+            ),
           ],
         ),
       ),

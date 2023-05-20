@@ -31,7 +31,7 @@ class AdminContactServiceContainer extends StatelessWidget {
       onTap: () {
         showDialog(
           context: context,
-          barrierDismissible: false,
+          barrierDismissible: true,
           builder: (_) => Dialog(
             insetPadding: const EdgeInsets.all(24),
             child: AdminShowContactUsDialog(contact: category),

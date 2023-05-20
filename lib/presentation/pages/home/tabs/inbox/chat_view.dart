@@ -6,18 +6,19 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
-
+import 'package:intl/intl.dart';
 import '../../../../../core/constant/colors.dart';
 import '../../../../../core/constant/firebase_config.dart';
 import '../../../../../core/constant/fontstyles.dart';
 import '../../../../../core/provider.dart';
 import '../../../../../data/models/user.dart';
+import '../../../widgets/chat_custom_textformfield.dart';
 import 'chat_view_mode.dart';
 
 class ChatView extends ConsumerStatefulWidget {
   static const String routeName = "/chat_view";
   const ChatView(this.orderId, this.userId, this.vendorId, this.clientName,
-      this.vendorName, this.adminId,
+      this.vendorName, this.adminId, this.serviceName,
       {super.key});
   final String orderId;
   final String userId;
@@ -25,6 +26,7 @@ class ChatView extends ConsumerStatefulWidget {
   final String clientName;
   final String vendorName;
   final String adminId;
+  final String? serviceName;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ChatViewState();
@@ -51,6 +53,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
   }
 
   late final ChatViewModel chat;
+
   @override
   Widget build(BuildContext context) {
     // final routeSettings = ModalRoute.of(context)!.settings;
@@ -88,12 +91,12 @@ class _ChatViewState extends ConsumerState<ChatView> {
             child: Row(
               children: [
                 Expanded(
-                  child: CustomTextField(
-                    hintText: "type here",
+                  child: ChatCustomTextField(
+                    width: MediaQuery.of(context).size.width,
+                    hintText: "Your Text is written here...",
                     controller: notesController,
                     backgroundColor: AppColors.lightBlueColor,
-
-                    // onSubmitted: "_addMessage",
+                    maxLines: null,
                   ),
                 ),
                 IconButton(
@@ -130,7 +133,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Inbox',
+                widget.serviceName!,
                 style: FontStyles.font24Semibold,
               ),
               Text(
@@ -175,7 +178,10 @@ class _ChatViewState extends ConsumerState<ChatView> {
               bool isSentByUser = senderId == widget.userId;
               bool isSentByVendor = senderId == widget.vendorId;
               bool isSentByAdmin = senderId == "Ml3oMp7rfMTSYk09oHHNWetYUlr2";
+              Timestamp timestamp = data["createdAt"];
+              DateTime dateTime = timestamp.toDate();
 
+              String formattedTime = DateFormat.jm().format(dateTime);
               if (isSentByUser) {
                 return Column(
                   crossAxisAlignment: user == UserType.client.name
@@ -183,6 +189,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
                       : CrossAxisAlignment.end,
                   children: [
                     Container(
+                      // color: Colors.red,
                       child: Wrap(
                         alignment: user == UserType.client.name
                             ? WrapAlignment.start
@@ -192,37 +199,51 @@ class _ChatViewState extends ConsumerState<ChatView> {
                             : WrapCrossAlignment.end,
                         children: [
                           SizedBox(width: 8.0),
-                          Container(
-                            constraints: BoxConstraints(
-                              maxWidth:
-                                  MediaQuery.of(context).size.width * 0.35,
-                            ),
-                            padding: EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              color: AppColors.lightBlueColor,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.clientName,
-                                  style: FontStyles.font10Light,
-                                ),
-                                Text(
-                                  data["msg"] ?? "",
-                                  style: TextStyle(fontSize: 16.0),
-                                ),
-                              ],
+                          IntrinsicWidth(
+                            child: Container(
+                              constraints: BoxConstraints(
+                                maxWidth:
+                                    MediaQuery.of(context).size.width * 0.35,
+                              ),
+                              padding: EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                color: AppColors.lightBlueColor,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.clientName,
+                                    style: FontStyles.font10Light,
+                                  ),
+                                  Text(
+                                    data["msg"] ?? "",
+                                    style: TextStyle(fontSize: 16.0),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: SizedBox(
+                                      width: 100.0,
+                                      child: Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Text(
+                                          formattedTime ?? "",
+                                          style: TextStyle(fontSize: 12.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          SizedBox(width: 48.0),
                         ],
                       ),
                     ),
                     SizedBox(
-                      height: 5,
-                    )
+                      height: 10,
+                    ),
                   ],
                 );
               }
@@ -233,6 +254,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
                       : CrossAxisAlignment.end,
                   children: [
                     Container(
+                      // color: Colors.red,
                       child: Wrap(
                         alignment: user == UserType.vendor.name
                             ? WrapAlignment.start
@@ -242,36 +264,50 @@ class _ChatViewState extends ConsumerState<ChatView> {
                             : WrapCrossAlignment.end,
                         children: [
                           SizedBox(width: 8.0),
-                          Container(
-                            constraints: BoxConstraints(
-                              maxWidth:
-                                  MediaQuery.of(context).size.width * 0.35,
-                            ),
-                            padding: EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "${widget.vendorName + ":Vendor"}",
-                                  style: FontStyles.font10Light,
-                                ),
-                                Text(
-                                  data["msg"] ?? "",
-                                  style: TextStyle(fontSize: 16.0),
-                                ),
-                              ],
+                          IntrinsicWidth(
+                            child: Container(
+                              constraints: BoxConstraints(
+                                maxWidth:
+                                    MediaQuery.of(context).size.width * 0.35,
+                              ),
+                              padding: EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${widget.clientName}:Vendor",
+                                    style: FontStyles.font10Light,
+                                  ),
+                                  Text(
+                                    data["msg"] ?? "",
+                                    style: TextStyle(fontSize: 16.0),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: SizedBox(
+                                      width: 100.0,
+                                      child: Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Text(
+                                          formattedTime ?? "",
+                                          style: TextStyle(fontSize: 12.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          SizedBox(width: 48.0),
                         ],
                       ),
                     ),
                     SizedBox(
-                      height: 5,
+                      height: 10,
                     ),
                   ],
                 );
@@ -292,36 +328,51 @@ class _ChatViewState extends ConsumerState<ChatView> {
                             ? WrapCrossAlignment.start
                             : WrapCrossAlignment.end,
                         children: [
-                          SizedBox(width: 48.0),
-                          Container(
-                            constraints: BoxConstraints(
-                              maxWidth:
-                                  MediaQuery.of(context).size.width * 0.35,
-                            ),
-                            padding: EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              color: Colors.green[200],
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Admin",
-                                  style: FontStyles.font10Light,
-                                ),
-                                Text(
-                                  data["msg"] ?? "",
-                                  style: TextStyle(fontSize: 16.0),
-                                ),
-                              ],
+                          SizedBox(width: 8.0),
+                          IntrinsicWidth(
+                            child: Container(
+                              constraints: BoxConstraints(
+                                maxWidth:
+                                    MediaQuery.of(context).size.width * 0.35,
+                              ),
+                              padding: EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                color: Colors.green[200],
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Admin",
+                                    style: FontStyles.font10Light,
+                                  ),
+                                  Text(
+                                    data["msg"] ?? "",
+                                    style: TextStyle(fontSize: 16.0),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: SizedBox(
+                                      width: 100.0,
+                                      child: Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Text(
+                                          formattedTime ?? "",
+                                          style: TextStyle(fontSize: 12.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
                     SizedBox(
-                      height: 5,
+                      height: 10,
                     ),
                   ],
                 );

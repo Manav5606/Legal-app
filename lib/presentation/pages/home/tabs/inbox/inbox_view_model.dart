@@ -22,7 +22,8 @@ class InboxViewModel extends BaseViewModel {
       _provider;
 
   String? error;
-
+  User? _user;
+  User? get getUser => _user;
   List<Order> _orders = [];
 
   List<Order> get getOrders => _orders;

@@ -203,6 +203,7 @@ class ServiceInfoPageViewModel extends BaseViewModel {
       serviceID: selectedService!.id!,
       orderServiceRequest: getRequiredDataFields,
       transactionID: transactionId,
+      serviceName: selectedService!.title
     );
     final res = await _databaseRepositoryImpl.createOrder(order: order);
     return await res.fold((l) {
@@ -211,7 +212,7 @@ class ServiceInfoPageViewModel extends BaseViewModel {
       return null!;
     }, (r) async {
       await createNotification(
-        user.id!,
+        user.id!, 
         user.name,
         NotificationType.private.name,
         r.id!,

@@ -51,6 +51,7 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           model.AppError(message: "Unkown Error, Plese try again later."));
     }
   }
+
   @override
   Future<Either<model.AppError, model.Vendor>> createVendorr(
       {required model.Vendor vendor}) async {
@@ -487,9 +488,10 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           model.AppError(message: "Unkown Error, Plese try again later."));
     }
   }
+
   @override
   Future<Either<model.AppError, model.Vendor>> updateVendorrr(
-      {required model.Vendor vendor,required String id}) async {
+      {required model.Vendor vendor, required String id}) async {
     try {
       await _firebaseFirestore
           .collection(FirebaseConfig.vendorCollection)
@@ -658,6 +660,7 @@ class DatabaseRepositoryImpl extends DatabaseRepository
     try {
       final response = await _firebaseFirestore
           .collection(FirebaseConfig.notifications)
+          .orderBy("createdAt", descending: true)
           .get();
 
       return Right(response.docs
@@ -748,14 +751,11 @@ class DatabaseRepositoryImpl extends DatabaseRepository
       return Left(
           model.AppError(message: fae.message ?? "Server Failed to Respond."));
     } catch (e) {
- 
       logger.severe(e);
       return Left(
           model.AppError(message: "Unkown Error, Plese try again later."));
     }
   }
-
-  
 
   @override
   Future<Either<model.AppError, model.News>> updateNews(
@@ -796,6 +796,7 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           model.AppError(message: "Unkown Error, Plese try again later."));
     }
   }
+
   @override
   Future<Either<model.AppError, model.NewsImage>> createNewsImage(
       {required model.NewsImage news}) async {
@@ -823,21 +824,19 @@ class DatabaseRepositoryImpl extends DatabaseRepository
           .collection(FirebaseConfig.newsImageCollection)
           .get();
 
-      return Right(
-          response.docs.map((doc) => model.NewsImage.fromSnapshot(doc)).toList());
+      return Right(response.docs
+          .map((doc) => model.NewsImage.fromSnapshot(doc))
+          .toList());
     } on FirebaseException catch (fae) {
       logger.severe(fae);
       return Left(
           model.AppError(message: fae.message ?? "Server Failed to Respond."));
     } catch (e) {
- 
       logger.severe(e);
       return Left(
           model.AppError(message: "Unkown Error, Plese try again later."));
     }
   }
-  
-  
 
   @override
   Future<Either<model.AppError, model.NewsImage>> updateNewsImage(
@@ -899,8 +898,9 @@ class DatabaseRepositoryImpl extends DatabaseRepository
     }
   }
 
-    @override
-  Future<Either<model.AppError, List<model.ContactUsForm>>> getContactUs() async {
+  @override
+  Future<Either<model.AppError, List<model.ContactUsForm>>>
+      getContactUs() async {
     try {
       final response = await _firebaseFirestore
           .collection(FirebaseConfig.contactUsCollection)
@@ -1260,7 +1260,7 @@ class DatabaseRepositoryImpl extends DatabaseRepository
     } catch (e) {
       logger.severe(e);
       return Left(
-          model.AppError(message: "Unkown Error, Plese try again later."));
+          model.AppError(message: "Unkownnn Error, Plese try again later."));
     }
   }
 
