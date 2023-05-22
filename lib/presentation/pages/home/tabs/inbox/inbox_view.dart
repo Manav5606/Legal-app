@@ -27,6 +27,7 @@ class _InboxTabState extends ConsumerState<InboxTab> {
     // TODO: implement initState
     super.initState();
     _viewModel = ref.read(InboxViewModel.provider);
+    _viewModel.getAdminUserId();
     user = ref.read(AppState.auth).user;
   }
 
@@ -178,7 +179,7 @@ class _InboxTabState extends ConsumerState<InboxTab> {
                                         vendorId,
                                         clientName,
                                         vendorName,
-                                        user!.id!,
+                                        _viewModel.adminId,
                                         serviceName)),
                               );
                             },

@@ -223,6 +223,8 @@ class ChatViewModel extends BaseViewModel {
     }
   }
 
+  
+
   Future<void> updateReadBy(String orderId, String user, String userId) async {
     final orderRef =
         firestore.FirebaseFirestore.instance.collection('order').doc(orderId);

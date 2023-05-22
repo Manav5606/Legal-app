@@ -7,6 +7,8 @@ import 'package:admin/presentation/base_view_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../core/constant/firebase_config.dart';
+
 final _provider = ChangeNotifierProvider.autoDispose(
     (ref) => InboxViewModel(ref.read(Repository.database)));
 
@@ -16,6 +18,8 @@ class InboxViewModel extends BaseViewModel {
   int sortIndex = 0;
   InboxViewModel(this._databaseRepositoryImpl) {
     fetchOrders();
+    // fetchAdminId();
+    getAdminUserId();
   }
 
   static AutoDisposeChangeNotifierProvider<InboxViewModel> get provider =>
@@ -27,6 +31,8 @@ class InboxViewModel extends BaseViewModel {
   List<Order> _orders = [];
 
   List<Order> get getOrders => _orders;
+  String adminData = "";
+  String get adminId => adminData;
 
   void clearErrors() {
     error = null;
@@ -45,6 +51,38 @@ class InboxViewModel extends BaseViewModel {
       _orders = r;
       toggleLoadingOn(false);
     });
+  }
+
+  Future<void> fetchAdminId() async {
+    toggleLoadingOn(true);
+    final res = await _databaseRepositoryImpl.fetchUsersByType(UserType.admin);
+    res.fold((l) {
+      error = l.message;
+
+      Messenger.showSnackbar(l.message);
+      toggleLoadingOn(false);
+    }, (r) {
+      clearErrors();
+      toggleLoadingOn(false);
+      print(r);
+      print("objectObject+${r[0].id}");
+      adminData = r[0].id!;
+    });
+  }
+
+  Future<String?> getAdminUserId() async {
+    final response = await firestore.FirebaseFirestore.instance
+        .collection(FirebaseConfig.userCollection)
+        .where("user_type", isEqualTo: "Admin")
+        .get();
+
+    if (response.docs.isNotEmpty) {
+      // Assuming there is only one admin user, return the ID of the first document
+    
+      return adminData = response.docs.first.id;
+    } else {
+      return null; // No admin user found
+    }
   }
 
   // Future<int> getReadByCount(String orderId, String vendorId, String user,
@@ -81,8 +119,10 @@ class InboxViewModel extends BaseViewModel {
   //   return unreadCount;
   // }
 
-Stream<int> getReadByCount(String orderId, String vendorId, String user, String adminId, String clientId) {
-    final orderRef = firestore.FirebaseFirestore.instance.collection('order').doc(orderId);
+  Stream<int> getReadByCount(String orderId, String vendorId, String user,
+      String adminId, String clientId) {
+    final orderRef =
+        firestore.FirebaseFirestore.instance.collection('order').doc(orderId);
 
     return orderRef.collection('chat').snapshots().map((chatQuerySnapshot) {
       int unreadCount = 0;
@@ -113,7 +153,7 @@ Stream<int> getReadByCount(String orderId, String vendorId, String user, String 
 
       return unreadCount;
     });
-}
+  }
 
   Future<Map<String, int>> getReadByCountt(List<String> orderIds,
       String adminId, String clientId, String user) async {
