@@ -177,7 +177,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
               String senderId = data["user_id"] ?? "";
               bool isSentByUser = senderId == widget.userId;
               bool isSentByVendor = senderId == widget.vendorId;
-              bool isSentByAdmin = senderId == "Ml3oMp7rfMTSYk09oHHNWetYUlr2";
+              bool isSentByAdmin = senderId == widget.adminId;
               Timestamp timestamp = data["createdAt"];
               DateTime dateTime = timestamp.toDate();
 
@@ -272,8 +272,12 @@ class _ChatViewState extends ConsumerState<ChatView> {
                               ),
                               padding: EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
-                                color: Colors.grey[200],
+                                color: AppColors.whiteColor,
                                 borderRadius: BorderRadius.circular(8.0),
+                                border: Border.all(
+                                  color: AppColors.blueColor,
+                                  width: 2.0,
+                                ),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -337,8 +341,12 @@ class _ChatViewState extends ConsumerState<ChatView> {
                               ),
                               padding: EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
-                                color: Colors.green[200],
+                                color: AppColors.whiteColor,
                                 borderRadius: BorderRadius.circular(8.0),
+                                border: Border.all(
+                                  color: AppColors.blueColor,
+                                  width: 2.0,
+                                ),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

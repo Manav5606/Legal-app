@@ -155,7 +155,7 @@ class _InboxTabState extends ConsumerState<InboxTab> {
                                     style: FontStyles.font11Light
                                         .copyWith(fontWeight: FontWeight.w500),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 3,
                                   ),
                                   Text(
