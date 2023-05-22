@@ -55,7 +55,7 @@ class Header extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              Routemaster.of(context).push(LandingPage.routeName);
+              Routemaster.of(context).replace(LandingPage.routeName);
             },
             child: SvgPicture.asset(
               Assets.iconsTitleBarlogo,
@@ -109,7 +109,7 @@ class TopBar extends ConsumerStatefulWidget {
 class _TopBarState extends ConsumerState<TopBar> {
   late bool isAuthenticated;
   late User? user;
-  
+
   @override
   void initState() {
     super.initState();
