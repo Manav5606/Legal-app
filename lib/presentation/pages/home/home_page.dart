@@ -6,7 +6,6 @@ import 'package:admin/presentation/pages/widgets/footer.dart';
 import 'package:admin/presentation/pages/widgets/header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../../core/provider.dart';
 import '../../../data/models/user.dart';
 import '../widgets/freeze_header.dart';
