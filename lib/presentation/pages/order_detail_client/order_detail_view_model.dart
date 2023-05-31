@@ -3,6 +3,7 @@ import 'package:admin/core/state/auth_state.dart';
 import 'package:admin/data/models/models.dart';
 import 'package:admin/data/repositories/index.dart';
 import 'package:admin/presentation/base_view_model.dart';
+import 'package:cross_file/cross_file.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _provider = ChangeNotifierProvider.autoDispose((ref) =>
@@ -22,6 +23,7 @@ class OrderDetailViewModel extends BaseViewModel {
   Vendor? vendor;
   User? user;
   Service? service;
+  bool fileloading = false;
 
   Future<void> initOrderDetails({required String orderId}) async {
     toggleLoadingOn(true);
@@ -48,6 +50,20 @@ class OrderDetailViewModel extends BaseViewModel {
     toggleLoadingOn(false);
   }
 
+  Future<String?> uploadFile({required XFile file}) async {
+    try {
+      fileloading = true;
+      notifyListeners();
+      final downloadUrl = await _databaseRepositoryImpl.uploadToFirestore(
+          file: file, userID: user!.id!);
+      return downloadUrl;
+    } catch (_) {
+    } finally {
+      fileloading = false;
+      notifyListeners();
+    }
+  }
+
   Future<void> saveServiceRequestData(
       {required ServiceRequest service,
       required ServiceRequest oldService}) async {
@@ -62,5 +78,6 @@ class OrderDetailViewModel extends BaseViewModel {
       initOrderDetails(orderId: order!.id!);
     });
     toggleLoadingOn(false);
+    notifyListeners();
   }
 }

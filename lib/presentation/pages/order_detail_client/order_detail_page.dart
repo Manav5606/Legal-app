@@ -62,12 +62,15 @@ class _OrderDetailPageState extends ConsumerState<OrderDetailPage> {
                     pinned: true,
                   ),
                   SliverList(
-                    delegate: SliverChildListDelegate([
-                  _orderDetails(mobile: true),
-                  const ContactUs(height: 250, mobile: true),
-                  const Footer(),
+                    delegate: SliverChildListDelegate(
+                      [
+                        _orderDetails(mobile: true),
+                        const ContactUs(height: 250, mobile: true),
+                        const Footer(),
+                      ],
+                    ),
+                  ),
                 ],
-                    ),),],
               ),
               desktop: (context) => CustomScrollView(
                 slivers: [
@@ -80,10 +83,12 @@ class _OrderDetailPageState extends ConsumerState<OrderDetailPage> {
                   SliverList(
                     delegate: SliverChildListDelegate(
                       [
-                  _orderDetails(),
-                  const ContactUs(height: 250),
-                  const Footer(),
-                      ],),),
+                        _orderDetails(),
+                        const ContactUs(height: 250),
+                        const Footer(),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -174,12 +179,19 @@ class OrderFileField extends ConsumerStatefulWidget {
 }
 
 class _OrderFileFieldState extends ConsumerState<OrderFileField> {
+  late final OrderDetailViewModel _viewModel;
   String? fileUrl;
 
   bool uploading = false;
+  @override
+  void initState() {
+    super.initState();
+    _viewModel = ref.read(OrderDetailViewModel.provider);
+  }
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(OrderDetailViewModel.provider);
     final TextEditingController controller = TextEditingController();
     // ignore: prefer_conditional_assignment
     if (fileUrl == null) {
@@ -208,7 +220,7 @@ class _OrderFileFieldState extends ConsumerState<OrderFileField> {
                               Messenger.showSnackbar("Please pick a file");
                               return;
                             }
-                            fileUrl = await uploadFile(file: file);
+                            fileUrl = await _viewModel.uploadFile(file: file);
                             if (fileUrl != null) {
                               final service = widget.serviceRequest
                                   .copyWith(value: fileUrl);
@@ -221,7 +233,7 @@ class _OrderFileFieldState extends ConsumerState<OrderFileField> {
                               Messenger.showSnackbar(
                                   "${widget.serviceRequest.fieldName} Uploaded.");
                             }
-                            setState(() {});
+                            // setState(() {});
                           }
                         : () {
                             launchUrlString(fileUrl ?? "");
@@ -245,7 +257,7 @@ class _OrderFileFieldState extends ConsumerState<OrderFileField> {
                     Messenger.showSnackbar("Please pick a file to replace.");
                     return;
                   }
-                  fileUrl = await uploadFile(file: file);
+                  fileUrl = await _viewModel.uploadFile(file: file);
                   if (fileUrl != null) {
                     final service =
                         widget.serviceRequest.copyWith(value: fileUrl);
@@ -258,7 +270,6 @@ class _OrderFileFieldState extends ConsumerState<OrderFileField> {
                     Messenger.showSnackbar(
                         "${widget.serviceRequest.fieldName} Uploaded.");
                   }
-                  setState(() {});
                 },
                 child: const Text("Replace"),
               ),
@@ -293,9 +304,7 @@ class _OrderFileFieldState extends ConsumerState<OrderFileField> {
     } catch (_) {
       return null;
     } finally {
-      setState(() {
-        uploading = false;
-      });
+      uploading = false;
     }
   }
 }

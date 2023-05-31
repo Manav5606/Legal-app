@@ -93,12 +93,15 @@ class _ServiceInfoPageState extends ConsumerState<ServiceInfoPage> {
                     pinned: true,
                   ),
                   SliverList(
-                    delegate: SliverChildListDelegate([
-                  ServiceInfo(mobile: true),
-                  ContactUs(height: 250, mobile: true),
-                  Footer(),
+                    delegate: SliverChildListDelegate(
+                      [
+                        ServiceInfo(mobile: true),
+                        ContactUs(height: 250, mobile: true),
+                        Footer(),
+                      ],
+                    ),
+                  ),
                 ],
-                    ),),],
               ),
               desktop: (context) => CustomScrollView(
                 slivers: [
@@ -111,10 +114,12 @@ class _ServiceInfoPageState extends ConsumerState<ServiceInfoPage> {
                   SliverList(
                     delegate: SliverChildListDelegate(
                       [
-                  ServiceInfo(),
-                  ContactUs(height: 250),
-                  Footer(),
-                      ],),),
+                        ServiceInfo(),
+                        ContactUs(height: 250),
+                        Footer(),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -244,62 +249,57 @@ class _ServiceInfoState extends ConsumerState<ServiceInfo> {
                     Routemaster.of(context).history.back();
                   },
                   child: const Text("Cancel")),
-              CTAButton(
-                  title: "Buy Now",
-                  color: AppColors.darkGreenColor,
-                  fullWidth: false,
-                  mobile: true,
-                  loading: _viewModel.isLoading,
-                  onTap: () async {
+              ElevatedButton(
+                  onPressed: () async {
                     if (isAuthenticated) {
                       // await _viewModel.createPurchase();
-                      
-                      final orderId =
-                          await _viewModel.createTransaction(rpData: {});
-                            Routemaster.of(context).push(OrderDetailPage.routeName,
-                            queryParameters: {"orderID": orderId!});
-                      if (orderId != null) {
-                        // await Routemaster.of(context).popUntil((routeData) {
-                        //   return routeData.path == LandingPage.routeName;
-                        // });
-                     
-                        // showDialog(
-                        //   context: context,
-                        //   barrierDismissible: false,
-                        //   builder: (_) => AlertDialog(
-                        //     title: Text("Order Placed",
-                        //         style: FontStyles.font20Semibold),
-                        //     content: Column(
-                        //       children: [
-                        //         Text("#OrderID: ${orderId}"),
-                        //         Text("Order Status: Order Created"),
-                        //         Text("Payment Status: Paid"),
-                        //         Text(
-                        //             "Paid Amount: ${_viewModel.selectedService?.ourPrice ?? 0.0}")
-                        //       ],
-                        //     ),
-                        //     actions: [
-                        //       TextButton(
-                        //           onPressed: () async {
-                        //             await Routemaster.of(context).popUntil(
-                        //                 (routeData) =>
-                        //                     routeData.path ==
-                        //                     LandingPage.routeName);
-                        //             Routemaster.of(context).push(
-                        //                 OrderDetailPage.routeName,
-                        //                 queryParameters: {"orderID": orderId});
-                        //           },
-                        //           child: const Text("View")),
-                        //     ],
-                        //   ),
-                        // );
-                      }
+
+                      await _viewModel
+                          .createTransaction(rpData: {}).then((value) {
+                        debugPrint(value);
+                        Future.delayed(Duration(milliseconds: 100), () {
+                          Routemaster.of(context).push(
+                            OrderDetailPage.routeName,
+                            queryParameters: {"orderID": value!},
+                          );
+                        });
+                      });
+
+                      // if (orderId != null) {
+                      // Future.delayed(const Duration(seconds: 5), () {
+                      //   Routemaster.of(context).push(OrderDetailPage.routeName,
+                      //       queryParameters: {"orderID": orderId!});
+                      // });
+                      // }
                     } else {
                       Routemaster.of(context).push(LoginPage.routeName,
                           queryParameters: {"navigateBack": true.toString()});
                     }
                   },
-                  radius: 4),
+                  child: Text("Buy Now")),
+              // CTAButton(
+              //     title: "Buy Now",
+              //     color: AppColors.darkGreenColor,
+              //     fullWidth: false,
+              //     mobile: true,
+              //     loading: _viewModel.isLoading,
+              //     onTap: () async {
+              //       if (isAuthenticated) {
+              //         // await _viewModel.createPurchase();
+
+              //         final orderId =
+              //             await _viewModel.createTransaction(rpData: {});
+              //               Routemaster.of(context).push(OrderDetailPage.routeName,
+              //               queryParameters: {"orderID": orderId!});
+              //         if (orderId != null) {
+
+              //         }
+              //       } else {
+              //         Routemaster.of(context).push(LoginPage.routeName,
+              //             queryParameters: {"navigateBack": true.toString()});
+              //       }
+              //     },
+              //     radius: 4),
             ],
           ),
         ],
